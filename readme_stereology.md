@@ -5,7 +5,7 @@ These scripts are designed to assist with performing unbiased stereology using t
 
 ## Credits
 
-These scripts were written or modified, as noted, by Theresa Swayne, Ph.D., Columbia University, New York NY, USA. This work is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. If you use the material, please [read the license](https://creativecommons.org/licenses/by-nc/3.0/) and give credit appropriately.
+These scripts were written or modified, as noted, by Theresa Swayne, Ph.D., Columbia University, New York, NY, USA. This work is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. If you use the material, please [read the license](https://creativecommons.org/licenses/by-nc/3.0/) and give credit appropriately.
 
 ## Installation
 
