@@ -29,6 +29,8 @@ To install so that the command appears in the ImageJ menu, follow instructions [
 
 Use Fiji or plain ImageJ.
 
+*Note that `batch apply grid.txt` requires the macro `Multipurpose_gridMod.ijm` to be installed in the plugins folder!*
+
 1. Open the Batch Macro command (`Process > Macro...`).
 2. Set the `Input` folder to the folder containing the images you want to process. All files in the folder will be processed.
 1. Set the `Output` folder to a *different* folder where you would like the results to be saved.
