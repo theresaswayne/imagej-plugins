@@ -5,7 +5,7 @@ Custom plugins and macros for ImageJ and Fiji
 
 ## Installation
 
-There are (or will be) java plugins, jython scripts, and macros (in the [ImageJ](http://imagej.nih.gov/ij/) macro language) here.
+These are java plugins, jython scripts, and macros (in the [ImageJ](http://imagej.nih.gov/ij/) macro language) here.
 
 These are designed to work with [Fiji](http://fiji.sc). Plain ImageJ does not support Jython.
 
