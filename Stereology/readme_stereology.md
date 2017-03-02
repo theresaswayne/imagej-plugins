@@ -7,6 +7,8 @@ These scripts are designed to assist with performing unbiased stereology using t
 
 These scripts were written or modified, as noted, by Theresa Swayne, Ph.D., Columbia University, New York, NY, USA. This work is licensed under a Creative Commons Attribution-NonCommercial 3.0 Unported License. If you use the material, please [read the license](https://creativecommons.org/licenses/by-nc/3.0/) and give credit appropriately.
 
+The original [Multipurpose Grid macro](https://imagej.nih.gov/ij/macros/Multipurpose_grid.txt) was written by Aleksandr Mironov.
+
 ## Installation
 
 ### For jython scripts (.py):
@@ -57,4 +59,4 @@ I have tested these at the time of uploading. If you find a bug, please contact 
 
 ## Contact
 
-Theresa Swayne, [Confocal and Specialized Microscopy Facility](http://www.hiccc.columbia.edu/research/sharedresources/confocal), Columbia University
+Theresa Swayne, Ph.D., [Confocal and Specialized Microscopy Shared Resource](http://www.hiccc.columbia.edu/research/sharedresources/confocal), Columbia University
