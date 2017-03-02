@@ -75,9 +75,10 @@ for (index = 0; index < numROIs; index++)
 
 run("Set Measurements...", "area mean min centroid display decimal=2");
 selectImage(id);
-roiManager("deselect");
-run("Measure"); // measures the whole image
+roiManager("Deselect");
 roiManager("multi-measure measure_all"); // measures individual nuclei
+run("Select None");
+run("Measure"); // measures whole image
 
 // SAVING DATA AND CLEANING UP  ------------------------------------------------------
 
