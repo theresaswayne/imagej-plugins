@@ -53,7 +53,7 @@ Here is one way to use these scripts.
 
 ## Disclaimer
 
-I have tested these at the time of uploading, but they may not be actively kept up to date with future versions of ImageJ. If you find a bug, please contact me.
+I have tested these at the time of uploading. If you find a bug, please contact me.
 
 ## Contact
 
