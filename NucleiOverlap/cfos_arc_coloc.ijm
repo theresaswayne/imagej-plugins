@@ -80,27 +80,27 @@ for (c = 1; c <= 2; c ++)
 
 	}
 
-// define overlapping areas
+// define overlapping areas - result is 255 where both masks are 255, and 0 elsewhere  
 
 imageCalculator("Multiply create","C1-Mask-","C2-Mask-");
 
-// assuming the result is selected
 
-rename("Overlap");
+
+rename("Overlap"); // the result window is automatically selected
 save(path+"Overlap-"+basename+".tif");
+
+
 selectWindow("C1-Mask-");
 close();
-
 selectWindow("C2-Mask-");
 close();
-
 selectWindow("Overlap");
 close();
 
 // build a results table 
 // open the image, analyze, add a line to the summary
 // repeat for c1, c2, overlap
-// read out the values and make a new summaru table
+// read out the values and make a new summary table
 // format: image name, n cells, n cells colocalized with other label, % colocalized with other label
 
 function AnalyzePartic(image)
