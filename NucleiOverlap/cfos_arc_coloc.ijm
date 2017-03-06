@@ -11,7 +11,7 @@
 
 // SETUP
 
-CELLMIN = 60 // microns^2
+CELLMIN = 50 // microns^2
 CELLMAX = 300 // microns^2
 
 // make sure the correct channel is opened to begin with

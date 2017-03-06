@@ -18,7 +18,7 @@ OPENCOUNT = 3 // lower value = more smoothing
 ROIADJUST = -0.5; // adjustment of nuclear boundary, in microns. Negative value shrinks the cell.
 
 // The following values govern allowable nuclei sizes in microns^2
-CELLMIN = 70 // minimum area
+CELLMIN = 50 // minimum area
 CELLMAX = 300 // maximum area
 
 // SETUP -----------------------------------------------------------------------
