@@ -1,4 +1,4 @@
-// cfos_analysis.ijm
+// cfos_Analysis.ijm
 // IJ macro to analyze c-fos nuclei
 // Theresa Swayne, Columbia University, 2017
 // input: single-channel single-z image
