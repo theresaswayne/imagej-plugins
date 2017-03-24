@@ -1,4 +1,4 @@
-// split_channels.ijm
+// split_Channels.ijm
 // Theresa Swayne, Columbia University, 2017
 // Input: folder containing multi-channel composite images
 // Output: individual channel images.
