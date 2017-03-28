@@ -52,7 +52,8 @@ run("Auto Local Threshold", "method=Phansalkar radius=" + RADIUS + " parameter_1
 run("Convert to Mask");
 
 selectWindow(procName);
-run("Options...", "iterations=" + OPENITER + " count=" + OPENCOUNT + " black do=Open"); // smooth borders
+run("Options...", "iterations=" + OPENITER + " count=" + OPENCOUNT + " black"); // smooth borders
+run("Open");
 run("Watershed"); // separate touching nuclei
 
 // analyze particles to get initial ROIs
