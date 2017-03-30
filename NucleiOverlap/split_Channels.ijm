@@ -32,7 +32,8 @@
      title = getTitle();
      dotIndex = indexOf(title, ".");
      basename = substring(title, 0, dotIndex);
-     // add code here to analyze or process the image
+
+     // here is the actual processing code
      run("Split Channels");
 	 while (nImages > 0) { // works on any number of channels
 		saveAs ("tiff", dir2+getTitle);				// save every picture
