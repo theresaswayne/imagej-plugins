@@ -34,13 +34,13 @@ roiManager("reset");
 extension = ".tif";
 
 // for testing
-dir1 = "/Users/confocal/Google Drive/Confocal Facility/User projects/Alberini brain image analysis/batch_testing/input/";
-dir2 = "/Users/confocal/Google Drive/Confocal Facility/User projects/Alberini brain image analysis/batch_testing/output/";
+//dir1 = "/Users/confocal/Google Drive/Confocal Facility/User projects/Alberini brain image analysis/batch_testing/input/";
+//dir2 = "/Users/confocal/Google Drive/Confocal Facility/User projects/Alberini brain image analysis/batch_testing/output/";
 
-//dir1 = getDirectory("Choose Source Directory "); // note that on Mac as of 2017 the dialog titles are not visible.
-//print("input = "+dir1);
-//dir2 = getDirectory("Choose Destination Directory "); 
-//print("output = "+dir2);
+dir1 = getDirectory("Choose Source Directory "); // note that on Mac as of 2017 the dialog titles are not visible.
+print("input = "+dir1);
+dir2 = getDirectory("Choose Destination Directory "); 
+print("output = "+dir2);
 setBatchMode(true);
 n = 0;
 
