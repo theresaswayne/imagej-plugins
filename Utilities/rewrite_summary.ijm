@@ -2,7 +2,7 @@
 // build a results table 
 // open the image, analyze, add a line to the summary
 // repeat for c1, c2, overlap
-// read out the values and make a new summaru table
+// read out the values and make a new summary table
 // format: image name, n cells, n cells colocalized with other label, % colocalized with other label
 
 selectWindow("Summary"); 
