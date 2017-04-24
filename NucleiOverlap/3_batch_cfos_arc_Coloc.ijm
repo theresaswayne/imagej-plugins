@@ -10,8 +10,8 @@
 // output: mask of overlapping cells, and custom table: 
 //     # C1 cells, # C2 cells, # C1+C2 cells, % C1 cells with C2 label, % C2 cells with C1 label.
 // 
-// usage: Run the nuclear analysis first to get the ROI sets.  Have them in the same directory as the channel images. 
-//        Then run the macro, and when prompted select the C1 image. They need to have names starting with C1 and C2 
+// usage: Run the nuclear analysis first to get the ROI sets.  Then put them into the same directory as the single-channel images 
+// (which must have names starting with C1 and C2). Then run the macro. 
 // 
 
 
