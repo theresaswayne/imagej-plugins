@@ -8,7 +8,8 @@
 // Theresa Swayne, Columbia University, 2017
 // Based on IJ batch processing template
 // This macro processes all the images in a folder and any subfolders. But note that the results all end up in a single directory.
-// input: a folder of single-channel single-z TIFFs with names starting with either "C1" (arc) or "C2" (cfos)
+// input: a folder of 2-channel single-z TIFFs with channel 1 = (arc) and channel 2= (cfos)
+// the two channels are processed slightly differently and for channel 1, the whole image is measured in addition to the nuclei
 // output: 1 ROIset per image, one csv file per channel containing measurements of all images
 // usage: run the macro, choose input and output folders -- these must be separate, not nested, and output must be empty -- and specify the file suffix.
 
@@ -43,27 +44,59 @@ headers = ",Label,Area,Mean,Min,Max,X,Y,IntDen,RawIntDen";
 File.append(headers,dir2  + File.separator+ "C1_results.csv");
 File.append(headers,dir2  + File.separator+ "C2_results.csv");
 
+splitChannelsFolder(dir1); // splits the 2-channel images into C1 and C2
 processFolder(dir1); // this actually executes the functions
 
-function processFolder(dir1) {
+function splitChannelsFolder(dir1) 
+	{
+	// first step -- split each image into C1 and C2 
    list = getFileList(dir1);
-   for (i=0; i<list.length; i++) {
+   for (i=0; i<list.length; i++) 
+   		{
         if(File.isDirectory(dir1 + File.separator + list[i])) {
 			processFolder("" + dir1 +File.separator+ list[i]);}
+        else if (endsWith(list[i], suffix)) {
+           		splitChannelsImage(dir1, list[i]);}
+    	}
+	}
+
+
+function processFolder(dir1) 
+	{
+	// second step -- analyze the single-channel images
+   list = getFileList(dir1);
+   for (i=0; i<list.length; i++) 
+   		{
+        if(File.isDirectory(dir1 + File.separator + list[i])){
+			processFolder("" + dir1 +File.separator+ list[i]);}
         else if (endsWith(list[i], suffix))
-        	if (startsWith(list[i], "C1"))
-           		processC1Image(dir1, list[i]);
-           	else if (startsWith(list[i], "C2")) {
-           		processC2Image(dir1, list[i]);
-           	}
-    }
-}
+        	{
+        	if (startsWith(list[i], "C1")){
+           		processC1Image(dir1, list[i]);}
+           	else if (startsWith(list[i], "C2")){
+           		processC2Image(dir1, list[i]);}
+        	}
+    	}
+	}
 
 
+function splitChannelsImage(dir1, name) 
+	{
+	open(dir1+File.separator+name);
+	print("splitting",n++, name);
+	run("Split Channels");
+	while (nImages > 0)  // works on any number of channels
+		{
+		saveAs ("tiff", dir1+File.separator+getTitle);	// save every picture in the *input* folder
+		close();
+		}
+	}
 
-function processC1Image(dir1, name) {
+function processC1Image(dir1, name) 
+	{
+	// analyze Arc -- count and measure nuclei, measure whole-image intensity, and save ROIs for overlap analysis
    open(dir1+File.separator+name);
-   print(n++, name);
+   print("analyzing",n++, name);
 
    id = getImageID();
    title = getTitle();
@@ -143,12 +176,13 @@ function processC1Image(dir1, name) {
 	close();
 	selectWindow(title);
 	close();
+	}
 
-}
-
-function processC2Image(dir1, name) {
+function processC2Image(dir1, name) 
+	{
+	// analyze c-Fos-- count and measure nuclei, and save ROIs for overlap analysis
    open(dir1+File.separator+name);
-   print(n++, name);
+   print("analyzing",n++, name);
 
    id = getImageID();
    title = getTitle();
@@ -225,6 +259,6 @@ function processC2Image(dir1, name) {
 	close();
 	run("Clear Results");
 	roiManager("reset");
-}
+	}
 
 
