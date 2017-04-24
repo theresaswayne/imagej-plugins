@@ -52,7 +52,7 @@ function processFolder(dir1) {
 
 function processImage(dir1, name) {
    open(dir1+File.separator+name);
-   print(n++, name);
+   print("analyzing",n++, name);
 
 	// parsing file names
 	dotIndex = indexOf(name, ".");
@@ -88,11 +88,11 @@ function processImage(dir1, name) {
 		
 		if (!(isOpen("C"+channel+"-"+basename+".tif"))) // open the channel image
 			{
-			open(dir1 + File.separator + "C" + channel + "_" + basename + ".tif");
+			open(dir1 + File.separator + "C" + channel + "-" + basename + ".tif");
 			}
 
 		id = getImageID();
-		roiManager("Open", dir1 + File.separator +"RoiSet_C" + channel + "_" + basename + ".zip"); // open the ROI set
+		roiManager("Open", dir1 + File.separator +"RoiSet_C" + channel + "-" + basename + ".zip"); // open the ROI set
 		makeMask(id, channel);
 	
 		selectImage(id); // close the original image
@@ -105,10 +105,10 @@ function processImage(dir1, name) {
 	// save(dir1 + File.separator +"Overlap-"+basename+".tif");
 
 	selectWindow("C1-Mask-");
-	rename("C1-Mask-"+basename+".tif"); // renaming gives us the filename in the results table
+	rename("C1-"+basename+".tif"); // renaming gives us the filename in the results table
 
 	selectWindow("C2-Mask-");
-	rename("C2-Mask-"+basename+".tif");
+	rename("C2-"+basename+".tif");
 
 	function AnalyzePartic(image)
 		{
@@ -120,14 +120,14 @@ function processImage(dir1, name) {
 	run("Clear Results");
 
 	// get cell counts for channel 1
-	selectWindow("C1-Mask-"+basename+".tif");
+	selectWindow("C1-"+basename+".tif");
 	id1 = getImageID();
 	AnalyzePartic(id1);
 	selectImage(id1);
 	close();
 
 	// get cell counts for channel 2
-	selectWindow("C2-Mask-"+basename+".tif");
+	selectWindow("C2-"+basename+".tif");
 	id2 = getImageID();
 	AnalyzePartic(id2);
 	selectImage(id2);
