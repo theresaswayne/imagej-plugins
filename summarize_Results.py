@@ -171,9 +171,9 @@ numFiles = len(imageList)
 print(imageList)
 
 # TODO : gather the data from one image -- rows with same image name
-AllImagesNucArea = []
-ImageNucArea = []
-AllImagesMean = []
+AllImagesNucArea = [] # list of lists, nuclear area
+ImageNucArea = [] # list of areas of all nuclei within one image
+AllImagesMean = [] # list of means of whole images
 for image in imageList:
     for row in C1Data:
         imageName = row[1]
