@@ -161,7 +161,7 @@ function processC1Image(dir1, name)
 
 	// SAVING DATA AND CLEANING UP  ------------------------------------------------------
 
-	roiManager("Save", dir2 + File.separator + roiName); // will be needed for colocalization 
+	roiManager("Save", dir1 + File.separator + roiName); // will be needed for colocalization 
 	roiManager("reset");
 
 	String.copyResults;
@@ -252,7 +252,7 @@ function processC2Image(dir1, name)
 	newResults = replace(newResults, "\t",","); // replace tabs with commas for csv
 	File.append(newResults,dir2 + File.separator + resultName);
 
-	roiManager("Save", dir2 + File.separator + roiName); // will be needed for colocalization 
+	roiManager("Save", dir1 + File.separator + roiName); // will be needed for colocalization 
 	selectWindow(procName);
 	close();
 	selectWindow(title);
