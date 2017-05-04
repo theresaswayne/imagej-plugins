@@ -10,7 +10,8 @@
 // This macro processes all the images in a folder and any subfolders. But note that the results all end up in a single directory.
 // input: a folder of 2-channel single-z TIFFs with channel 1 = (arc) and channel 2= (cfos)
 // the two channels are processed slightly differently and for channel 1, the whole image is measured in addition to the nuclei
-// output: 1 ROIset per image, one csv file per channel containing measurements of all images
+// output: 2 component channels, 1 ROIset per channel image, one csv file per channel containing measurements of all images
+// summarizes as it goes, adding the nuclei count, average size, intensity, etc. per image to a separate file 
 // usage: run the macro, choose input and output folders -- these must be separate, not nested, and output must be empty -- and specify the file suffix.
 
 // ADJUSTABLE PARAMETERS -------------------------
@@ -43,6 +44,17 @@ n = 0;
 headers = ",Label,Area,Mean,Min,Max,X,Y,IntDen,RawIntDen";
 File.append(headers,dir2  + File.separator+ "C1_results.csv");
 File.append(headers,dir2  + File.separator+ "C2_results.csv");
+
+// add headers to summary file
+// desired output format
+// 0 filename, 1-3 c1 whole image (mean, intden, rawintden), 
+// 4 c1 nuclei count, average and sd of c1 (5-6 area, 7-8 mean, 9-10 intden, 11-12 rawintden), 
+// 13 c2 nuclei count, average and sd of c2 (14-15 area, 16-17 mean, 18-19 intden, 20-21 rawintden)
+sumheaders1 = "Label,C1Mean,C1IntDen,C1RawIntDen,";
+sumheaders2= "C1NucleiCount,C1AreaAve,C1AreaStdDev,C1MeanAve,C1MeanStdDev,C1IntDenAve,C1IntDenStdDev,C1RawIntDenAve,C1RawIntDenStdDev,";
+sumheaders3="C2NucleiCount,C2AreaAve,C2AreaStdDev,C2MeanAve,C2MeanStdDev,C2IntDenAve,C2IntDenStdDev,C2RawIntDenAve,C2RawIntDenStdDev"'
+sumheaders=sumheaders1+sumheaders2+sumheaders3;
+File.append(headers,dir2  + File.separator+ "Batch_Summary.csv");
 
 splitChannelsFolder(dir1); // splits the 2-channel images into C1 and C2
 processFolder(dir1); // this actually executes the functions
@@ -169,6 +181,38 @@ function processC1Image(dir1, name)
 	newResults = substring(newResults,0,lengthOf(newResults)-1); // strip the final newline
 	newResults = replace(newResults, "\t",","); // replace tabs with commas for csv
 	File.append(newResults,dir2 + File.separator + resultName);
+
+	// TODO: calculate averages and standard deviations, append to new results file
+
+	//  the input results are in csv format: 
+	// 0 rownumber, 1 label, 2 area, 3 mean, 4 min, 5 max, 6 x, 7 y, 8 intden, 9 rawintden
+	// the label field has the filename; the first 3 chars are the channel (C1-), the last 9 chars are the ROI (:0000-0000)
+
+	// desired output format
+	// 0 filename, 1-3 c1 whole image (mean, intden, rawintden), 
+	// 4 c1 nuclei count, average and sd of c1 (5-6 area, 7-8 mean, 9-10 intden, 11-12 rawintden), 
+	// 13 c2 nuclei count, average and sd of c2 (14-15 area, 16-17 mean, 18-19 intden, 20-21 rawintden)
+
+	// split results by line and comma
+	C1numRows = 0; // get from length of the split results
+	C1wholeImageResults = ""; // last line
+	C1nucCount = 0; // get from length -1
+	C1nucAreas = newArray(nucCount);
+	C1nucMeans = newArray(nucCount);
+	C1nucIDs = newArray(nucCount);
+	C1nucRIDs = newArray(nucCount);
+	
+	// accumulate the values in the arrays
+	// column 0  =  
+
+	// calculate the means and stdevs
+	
+	// write to the summary file -- problem -- this cannot be done in this mode
+	// because each image does not know about the other one, and we have to write one row at a time. cannot put C1 and C2 results in the same row.
+	// column 0 = filename
+	// columns 1-3 = whole image info
+	// columns 4 = nuclei count
+	// columns 
 
 	run("Clear Results");
 
