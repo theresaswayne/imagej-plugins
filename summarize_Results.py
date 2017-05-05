@@ -13,12 +13,12 @@
 
 # takes results written by the batch cfos-Arc analysis macro and summarize:
 # for each image: count particles, and calculate average and SD of (area, mean, intden, rawintden)
-# the input results are in csv format: 
+# -------------  the input format: 
 # 0 rownumber, 1 label, 2 area, 3 mean, 4 min, 5 max, 6 x, 7 y, 8 intden, 9 rawintden
 # the label field has the filename; the first 3 chars are the channel (C1-), the last 9 chars are the ROI (:0000-0000)
 # C1 and C2 are in separate files
 
-# desired output format
+# -----------------desired output format
 # 0 filename, 1-3 c1 whole image (mean, intden, rawintden), 
 # 4 c1 nuclei count, average and sd of c1 (5-6 area, 7-8 mean, 9-10 intden, 11-12 rawintden), 
 # 13 c2 nuclei count, average and sd of c2 (14-15 area, 16-17 mean, 18-19 intden, 20-21 rawintden)
@@ -34,6 +34,7 @@ NUMCHANNELS = 2 # number of channels in the data
 # directory names for testing in Spyder
 input_ = "/Users/confocal/Desktop/input"
 output_ = "/Users/confocal/Desktop/ output"
+
 # most methods require directory names to be expressed as strings
 #input_ = str(inputDir) # underscore to avoid using the name of a function
 #output_ = str(outputDir)
@@ -46,8 +47,10 @@ csvWriter = csv.writer(csvFile) # this object is able to write to the output fil
 
 # write headers of output file
 if not csvExists: # avoids appending multiple headers
-    headers = ['This','That']
-    csvWriter.writerow(headers)
+    headers1 = ['Filename','C1 Whole Image Mean','C1 Whole Image IntDen','C1 Whole Image RawIntDen']
+    headers2 = ['C1 Nuc Count','C1 Ave Nuc Area','C1 StdDev Nuc Area','C1 Ave Nuc Mean','C1 StdDev Nuc Mean','C1 Ave Nuc IntDen','C1 StdDev Nuc IntDen','C1 Ave Nuc RawIntDen','C1 StdDev Nuc RawIntDen']
+    headers3 = ['C2 Nuc Count','C2 Ave Nuc Area','C2 StdDev Nuc Area','C2 Ave Nuc Mean','C2 StdDev Nuc Mean','C2 Ave Nuc IntDen','C2 StdDev Nuc IntDen','C2 Ave Nuc RawIntDen','C2 StdDev Nuc RawIntDen']
+    csvWriter.writerow(headers1+headers2+headers3)
 else:
     print("Cannot write to existing file.")
 
@@ -144,13 +147,12 @@ with open(C2Path, 'rU') as C2File: # r for read-only, U = universal newline form
     C2Reader.next() # skip the header row
     for row in C2Reader:
         C2Data.append(row)
-      
-# TODO: consider creating an object for each image, and storing attributes therein. after all we are collecting exactly that, attributes of an image. 
-# including sub-objects = channels, and each channel has a bunch of similar attributes
 
-# create empty list to hold C1 image names
+# ------------------- TRANSFERRING DATA 
+
+# collect image names
 C1Labels = []
-# read the labels which should be column 1
+
 for row in C1Data:
     imageName = row[1] # 2nd column
     #print("label=",imageName)
@@ -170,33 +172,67 @@ numFiles = len(imageList)
 #print("In",numRows,"rows of data there are",numFiles,"unique filenames")
 print(imageList)
 
-# TODO : gather the data from one image -- rows with same image name
-AllImagesNucArea = [] # list of lists, nuclear area
-ImageNucArea = [] # list of areas of all nuclei within one image
-AllImagesMean = [] # list of means of whole images
-for image in imageList:
-    for row in C1Data:
-        imageName = row[1]
-        #print(imageName)
-        if ":" in imageName: # it's a nucleus
-            if imageName[3:-10] == image: # it's the same image
-                ImageNucArea.append(row[2])
-        elif imageName[3:] == image:
-            AllImagesMean.append(row[3])
-    AllImagesNucArea.append(ImageNucArea)
+
+# gather the data from one image -- rows with same image name
+
+for image in imageList:  # each file in the data batch
+
+    #Start a list to hold the summary data row. It should be filled with zeroes so we can fill in data for it of order
+    imageSummary = [0 for i in range(22)] # number of columns in desired output
+    imageSummary[0] = image
+
+    print("beginning image loop for:")
+    print(imageSummary)
+
+    # ---- collect C1 data
+
+    #Start lists to hold nuclei data per image -- mean, area, id, rid
+    nucAreas = []
+    nucMeans = []
+    nucIDs = []
+    nucRIDs = []
+
+#For row in c1 csv (c2 is same but no whole image loop)
     
-print(AllImagesMean)
-# TODO: check these values, make sure they are getting the correct rows and columns!
+    for row in C1Data: 
+        imageLabel = row[1]
+        # check if filename is the same 
+        if (imageLabel[3:-10] == image or imageLabel[3:] == image):
+            # print(imageLabel,"is from image",image)
+            # now get the data
+            if ":" in imageLabel: # it's a nucleus
+                nucAreas.append(row[2])
+                nucMeans.append(row[3])
+                nucIDs.append(row[8])
+                nucRIDs.append(row[9])
+            elif imageLabel[3:] == image: # it's the whole image measurement
+                imageSummary[1] = row[3] # whole image mean, id, rid
+                imageSummary[2] = row[8]
+                imageSummary[3] = row[9]    
 
+        # finished collecting data from this image
+        # cycle through all the rows then go to the next image name 
+        # TODO: Append this image summary to something otherwise we lose it!!
+        
 
-# ------------------- TRANSFERRING DATA 
-# for each line of data:
-
-    # discard the rownumber
-    # read the label, take the slice [2:-9] and append to a list of filenames
-
-
+    print(imageSummary) 
 # ------------------CALCULATING STATISTICS
+
+# TODO: 
+#  At the end of the file name loop we have all the rois. Now  calculate
+#Meanarea = mean (nucarea)
+#Stdarea eq stdev (nucarea) hopefully we can do this??
+#Now sum(index)=meanarea etc.
+#Proceed to next file name
+#
+#
+#
+#Repeat wth c2 results file
+#
+#Append the summary row to the summary file
+# csvWriter.writerow(summaryrow)
+
+
 
 # for each image (matching filename in the results, if it is an roi and not the whole image):
 # count particles, and calculate average and SD of (area, mean, intden, rawintden)
