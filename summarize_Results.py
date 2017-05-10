@@ -309,27 +309,7 @@ for image in imageList:  # each file in the data batch
 
 
 
-# TODO: 
-#  At the end of the file name loop we have all the rois. Now  calculate
-#Meanarea = mean (nucarea)
-#Stdarea eq stdev (nucarea) hopefully we can do this??
-#Now sum(index)=meanarea etc.
-#Proceed to next file name
-#
-#
-#
-#Repeat wth c2 results file
-#
-#Append the summary row to the summary file
-# csvWriter.writerow(summaryrow)
-
-
-
-# for each image (matching filename in the results, if it is an roi and not the whole image):
-# count particles, and calculate average and SD of (area, mean, intden, rawintden)
-# use the data arrays previously obtained
-
-# write the derived values into the data table
+# TODO: clean up and add comments as needed
 
 # ----------------- FINISHING
 
