@@ -18,7 +18,7 @@
 # the label field has the filename; the first 3 chars are the channel (C1-), the last 9 chars are the ROI (:0000-0000)
 # C1 and C2 are in separate files
 
-# -----------------desired output format
+# ----------------- output format
 # 0 filename, 1-3 c1 whole image (mean, intden, rawintden), 
 # 4 c1 nuclei count, average and sd of c1 (5-6 area, 7-8 mean, 9-10 intden, 11-12 rawintden), 
 # 13 c2 nuclei count, average and sd of c2 (14-15 area, 16-17 mean, 18-19 intden, 20-21 rawintden)
@@ -27,7 +27,7 @@
 
 # ------------------- SETUP
 
-import os, csv
+import os, csv, math
 
 NUMCHANNELS = 2 # number of channels in the data
 
@@ -56,7 +56,7 @@ else:
 
 def uniqueElements(seq):
     '''
-    helper functions for removing duplicates in a list
+    helper function 1 of 2 for removing duplicates in a list
     seq: a list
     returns: a list of unique elements of seq, 
     preserving the order in which they were encountered
@@ -64,12 +64,54 @@ def uniqueElements(seq):
     return list(_uniqueElements(seq))
 
 def _uniqueElements(seq):
+    '''
+    helper function 2 of 2 for removing duplicates in a list
+    seq: a list
+    yields: a list of unique elements of seq, 
+    preserving the order in which they were encountered
+    '''
+    
     seen = set()
     for x in seq:
         if x in seen:
             continue
         seen.add(x)
         yield x
+
+# ---- helper functions for statistics
+
+def MeanOfList(a):
+    '''
+    calculates the average
+    a: list of numbers
+    returns a float
+    '''
+    result = 0.0 # have to use the decimal to make it a float
+    total = 0.0
+    for num in a:
+        total += float(num)
+    result = total/(len(a))
+    return result
+
+def StdDevOfList(a):
+    '''
+    calculates the standard deviation
+    which is the square root of the variance
+    The variance is the average of the squared deviations from the mean
+    a: list of numbers
+    returns a float
+    '''
+    
+    result = 0.0
+    sampleMean = MeanOfList(a)
+    sqDevs = 0.0
+    
+    for num in a:
+        sqDevs += (math.fabs(float(num)-sampleMean))**2 # fabs = absolute value
+    
+    result = math.sqrt(sqDevs/len(a))
+        
+    return result
 
 # ------------------ READING DATA
 
@@ -150,6 +192,8 @@ with open(C2Path, 'rU') as C2File: # r for read-only, U = universal newline form
 
 # ------------------- TRANSFERRING DATA 
 
+# TODO: What if an image has no nuclei in C1? Need to collect all the filenames from both channels
+
 # collect image names
 C1Labels = []
 
@@ -174,26 +218,25 @@ print(imageList)
 
 
 # gather the data from one image -- rows with same image name
-
 for image in imageList:  # each file in the data batch
 
     #Start a list to hold the summary data row. It should be filled with zeroes so we can fill in data for it of order
     imageSummary = [0 for i in range(22)] # number of columns in desired output
     imageSummary[0] = image
 
-    print("beginning image loop for:")
-    print(imageSummary)
+    print("beginning image loop for:", image)
+    #print(imageSummary)
 
-    # ---- collect C1 data
+    # ---- collect data
 
-    #Start lists to hold nuclei data per image -- mean, area, id, rid
-    nucAreas = []
-    nucMeans = []
-    nucIDs = []
-    nucRIDs = []
-
-#For row in c1 csv (c2 is same but no whole image loop)
+    # Collect C1 data
     
+    #Start lists to hold nuclei data per image -- mean, area, id, rid
+    C1nucAreas = []
+    C1nucMeans = []
+    C1nucIDs = []
+    C1nucRIDs = []
+
     for row in C1Data: 
         imageLabel = row[1]
         # check if filename is the same 
@@ -201,22 +244,70 @@ for image in imageList:  # each file in the data batch
             # print(imageLabel,"is from image",image)
             # now get the data
             if ":" in imageLabel: # it's a nucleus
-                nucAreas.append(row[2])
-                nucMeans.append(row[3])
-                nucIDs.append(row[8])
-                nucRIDs.append(row[9])
+                C1nucAreas.append(row[2])
+                C1nucMeans.append(row[3])
+                C1nucIDs.append(row[8])
+                C1nucRIDs.append(row[9])
             elif imageLabel[3:] == image: # it's the whole image measurement
                 imageSummary[1] = row[3] # whole image mean, id, rid
                 imageSummary[2] = row[8]
                 imageSummary[3] = row[9]    
 
         # finished collecting data from this image
-        # cycle through all the rows then go to the next image name 
-        # TODO: Append this image summary to something otherwise we lose it!!
-        
+        # cycle through all the rows then go to the next image name (inefficient but it works)
+    
+    # collect C2 data
 
-    print(imageSummary) 
-# ------------------CALCULATING STATISTICS
+    #Start lists to hold nuclei data per image -- mean, area, id, rid
+    C2nucAreas = []
+    C2nucMeans = []
+    C2nucIDs = []
+    C2nucRIDs = []
+    
+    for row in C2Data: 
+        imageLabel = row[1]
+        # check if filename is the same 
+        if (imageLabel[3:-10] == image):
+            # print(imageLabel,"is from image",image)
+            # now get the data
+            if ":" in imageLabel: # it's a nucleus
+                C2nucAreas.append(row[2])
+                C2nucMeans.append(row[3])
+                C2nucIDs.append(row[8])
+                C2nucRIDs.append(row[9])  
+
+        # finished collecting data from this image
+        
+    # ------------------CALCULATING STATISTICS
+    # 0 filename, 1-3 c1 whole image (mean, intden, rawintden), 
+    # 4 c1 nuclei count, average and sd of c1 (5-6 area, 7-8 mean, 9-10 intden, 11-12 rawintden), 
+    # 13 c2 nuclei count, average and sd of c2 (14-15 area, 16-17 mean, 18-19 intden, 20-21 rawintden)
+
+    imageSummary[4] = len(C1nucAreas)
+    imageSummary[5] = MeanOfList(C1nucAreas)
+    imageSummary[6] = StdDevOfList(C1nucAreas)
+    imageSummary[7] = MeanOfList(C1nucMeans)
+    imageSummary[8] = StdDevOfList(C1nucMeans)
+    imageSummary[9] = MeanOfList(C1nucIDs)
+    imageSummary[10] = StdDevOfList(C1nucIDs)
+    imageSummary[11] = MeanOfList(C1nucRIDs)
+    imageSummary[12] = StdDevOfList(C1nucRIDs)
+    
+    imageSummary[13] = len(C2nucAreas)
+    imageSummary[14] = MeanOfList(C2nucAreas)
+    imageSummary[15] = StdDevOfList(C2nucAreas)
+    imageSummary[16] = MeanOfList(C2nucMeans)
+    imageSummary[17] = StdDevOfList(C2nucMeans)
+    imageSummary[18] = MeanOfList(C2nucIDs)
+    imageSummary[19] = StdDevOfList(C2nucIDs)
+    imageSummary[20] = MeanOfList(C2nucRIDs)
+    imageSummary[21] = StdDevOfList(C2nucRIDs)
+
+    csvWriter.writerow(imageSummary)
+
+
+
+
 
 # TODO: 
 #  At the end of the file name loop we have all the rois. Now  calculate
