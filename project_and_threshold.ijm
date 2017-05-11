@@ -44,7 +44,7 @@ selectWindow(title);
 projName = basename+"_Yproj.tif"
 setMinAndMax(0, 4095); // make sure all images are scaled equally
 //run("3D Project...", "projection=[Brightest Point] axis=Y-Axis slice="+newDepth+" initial=0 total=180 rotation=10 lower=1 upper=255 opacity=0 surface=0 interior=0 interpolate")
-run("3D Project...", "projection=[Brightest Point] axis=Y-Axis slice=.27 initial=0 total=180 rotation=10 lower=1 upper=255 opacity=0 surface=0 interior=0 interpolate")
+run("3D Project...", "projection=[Brightest Point] axis=Y-Axis slice=.27 initial=0 total=180 rotation=10 lower=1 upper=255 opacity=0 surface=0 interior=0 interpolate");
 saveAs("tiff", path+projName);
 
 // apply the threshold to the Y rotations
