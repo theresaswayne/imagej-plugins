@@ -7,28 +7,30 @@
 # jython script  by Theresa Swayne, Columbia University, 2017 
 # usage: open in Fiji script editor and run (note jython is python 2.7 as of this writing) 
 
-# input: 3 csv files, C1_results, C2_results, [possibly in future, Coloc] (the beginning of the filename must be as given)
+# input: 3 csv files, C1_results, C2_results, Coloc (the beginning of the filename must be as given)
 # output: one csv file containing summarized data
 # if the output file exists then nothing is written to it
 
 # takes results written by the batch cfos-Arc analysis macro and summarize:
 # for each image: count particles, and calculate average and SD of (area, mean, intden, rawintden)
 # -------------  the input format: 
+# for channel results:
 # 0 rownumber, 1 label, 2 area, 3 mean, 4 min, 5 max, 6 x, 7 y, 8 intden, 9 rawintden
 # the label field has the filename; the first 3 chars are the channel (C1-), the last 9 chars are the ROI (:0000-0000)
 # C1 and C2 are in separate files
+
+# for coloc results:
+# 0 Filename, 1 Channel, 2 Total Cells, 3 Colocalized Cells, 4 Fraction Colocalized
 
 # ----------------- output format
 # 0 filename, 1-3 c1 whole image (mean, intden, rawintden), 
 # 4 c1 nuclei count, average and sd of c1 (5-6 area, 7-8 mean, 9-10 intden, 11-12 rawintden), 
 # 13 c2 nuclei count, average and sd of c2 (14-15 area, 16-17 mean, 18-19 intden, 20-21 rawintden)
-
-# TODO: include coloc data 
+# 22 Overlapping nuclei, 23 Fraction C1 with C2, 24 Fraction C2 with C1
 
 # ------------------- SETUP
 
-import os, csv, math
-
+import os, csv, math, sys
 NUMCHANNELS = 2 # number of channels in the data
 
 # directory names for testing in Spyder
@@ -50,9 +52,10 @@ if not csvExists: # avoids appending multiple headers
     headers1 = ['Filename','C1 Whole Image Mean','C1 Whole Image IntDen','C1 Whole Image RawIntDen']
     headers2 = ['C1 Nuc Count','C1 Ave Nuc Area','C1 StdDev Nuc Area','C1 Ave Nuc Mean','C1 StdDev Nuc Mean','C1 Ave Nuc IntDen','C1 StdDev Nuc IntDen','C1 Ave Nuc RawIntDen','C1 StdDev Nuc RawIntDen']
     headers3 = ['C2 Nuc Count','C2 Ave Nuc Area','C2 StdDev Nuc Area','C2 Ave Nuc Mean','C2 StdDev Nuc Mean','C2 Ave Nuc IntDen','C2 StdDev Nuc IntDen','C2 Ave Nuc RawIntDen','C2 StdDev Nuc RawIntDen']
-    csvWriter.writerow(headers1+headers2+headers3)
+    headers4 = ['Overlapping Nuclei','Fraction C1 with C2','Fraction C2 with C1']
+    csvWriter.writerow(headers1+headers2+headers3+headers4)
 else:
-    print("Cannot write to existing file.")
+    print("Appending to existing file.")
 
 def uniqueElements(seq):
     '''
@@ -84,8 +87,12 @@ def MeanOfList(a):
     '''
     calculates the average
     a: list of numbers
-    returns a float
+    returns a float, or "undefined" if list is empty
     '''
+    # avoid div by 0 error
+    if len(a) == 0:
+        return "undefined"
+
     result = 0.0 # have to use the decimal to make it a float
     total = 0.0
     for num in a:
@@ -96,12 +103,16 @@ def MeanOfList(a):
 def StdDevOfList(a):
     '''
     calculates the standard deviation
-    which is the square root of the variance
-    The variance is the average of the squared deviations from the mean
+    = square root of variance
+    variance is defined as the average of the squared deviations from the mean
+    Note: this is the same as Excel STDEV.P -- uncorrected population stdev
     a: list of numbers
-    returns a float
+    returns: float
     '''
-    
+    # avoid div by 0 error
+    if len(a) == 0:
+        return "undefined"
+
     result = 0.0
     sampleMean = MeanOfList(a)
     sqDevs = 0.0
@@ -134,7 +145,6 @@ def getInputFiles(input_dir,channel):
 
     # the channel name we are looking for
     prefix = "C"+str(channel)+"_results"
-    #print("prefix =",prefix)
     
     # search the input directory and subdirectories
     for dirpath, dirnames, resultNames in os.walk(input_dir):
@@ -159,15 +169,21 @@ def getInputFiles(input_dir,channel):
             i += 1
         
         for i in range(len(CHeaders)):
-            if CHeaders[i] != DESIREDHEADERS[i]:
-                raise ValueError, ("Results table is in unexpected order: at column",i,"expected",DESIREDHEADERS[i],", found",CHeaders[i])
-        # print("table for channel",str(channel),"is in good format")
+            try:
+                if CHeaders[i] != DESIREDHEADERS[i]:
+                    raise ValueError, ("Results table is in unexpected order: at column",i,"expected",DESIREDHEADERS[i],", found",CHeaders[i])
+                    print("Ending script")
+                    sys.exit()
+            except IndexError:
+                print("Results table has unexpected headers: expected",len(DESIREDHEADERS),", found",len(CHeaders))
+                print("Ending script")
+                sys.exit()
 
     return CFilename
 
+
 Filenames = [] # a list to store the channel result filenames and access them by index
 for i in range (1, NUMCHANNELS+1):
-    #print("reading channel",i)
     Filenames.append(getInputFiles(input_,i))
 
 # open the C1 file and read the data into a list
@@ -190,16 +206,25 @@ with open(C2Path, 'rU') as C2File: # r for read-only, U = universal newline form
     for row in C2Reader:
         C2Data.append(row)
 
+# open the Coloc file and read the data into a list
+# this has to be in the input directory
+ColocPath = os.path.join(input_,"Coloc.csv")
+ColocData = []
+with open(ColocPath, 'rU') as ColocFile: # r for read-only, U = universal newline format, 'with' to auto-close file
+    ColocReader = csv.reader(ColocFile)
+    ColocReader.next() # skip the header row
+    for row in ColocReader:
+        ColocData.append(row)
+
+
+
 # ------------------- TRANSFERRING DATA 
 
-# TODO: What if an image has no nuclei in C1? Need to collect all the filenames from both channels
-
 # collect image names
-C1Labels = []
+Labels = []
 
 for row in C1Data:
     imageName = row[1] # 2nd column
-    #print("label=",imageName)
     try:
         if imageName[-10] == ":" : # it is an ROI measurement
             imageName = imageName[3:-10] # take off channel number and roi info
@@ -207,25 +232,32 @@ for row in C1Data:
             imageName = imageName[3:]
     except IndexError: # in case the whole filename is shorter than 10
         imageName = imageName[3:]
-    C1Labels.append(imageName)
+    Labels.append(imageName)
+    
+    
+for row in C2Data:
+    imageName = row[1] # 2nd column
+    try:
+        if imageName[-10] == ":" : # it is an ROI measurement
+            imageName = imageName[3:-10] # take off channel number and roi info
+    except IndexError: # in case the whole filename is shorter than 10
+        imageName = imageName[3:]
+    Labels.append(imageName)
 
 # get a list of unique filenames
-imageList = uniqueElements(C1Labels)
-numRows = len(C1Labels)
+imageList = uniqueElements(Labels)
+numRows = len(Labels)
 numFiles = len(imageList)
-#print("In",numRows,"rows of data there are",numFiles,"unique filenames")
-print(imageList)
 
 
 # gather the data from one image -- rows with same image name
 for image in imageList:  # each file in the data batch
 
     #Start a list to hold the summary data row. It should be filled with zeroes so we can fill in data for it of order
-    imageSummary = [0 for i in range(22)] # number of columns in desired output
+    imageSummary = [0 for i in range(25)] # number of columns in desired output
     imageSummary[0] = image
 
-    print("beginning image loop for:", image)
-    #print(imageSummary)
+    print("processing", image)
 
     # ---- collect data
 
@@ -241,7 +273,6 @@ for image in imageList:  # each file in the data batch
         imageLabel = row[1]
         # check if filename is the same 
         if (imageLabel[3:-10] == image or imageLabel[3:] == image):
-            # print(imageLabel,"is from image",image)
             # now get the data
             if ":" in imageLabel: # it's a nucleus
                 C1nucAreas.append(row[2])
@@ -268,7 +299,6 @@ for image in imageList:  # each file in the data batch
         imageLabel = row[1]
         # check if filename is the same 
         if (imageLabel[3:-10] == image):
-            # print(imageLabel,"is from image",image)
             # now get the data
             if ":" in imageLabel: # it's a nucleus
                 C2nucAreas.append(row[2])
@@ -276,7 +306,19 @@ for image in imageList:  # each file in the data batch
                 C2nucIDs.append(row[8])
                 C2nucRIDs.append(row[9])  
 
-        # finished collecting data from this image
+
+    # collect coloc data
+    
+    for row in ColocData:
+        imageLabel = row[0]
+        if (imageLabel[3:] == image):
+            if row[1] == "1":
+                imageSummary[22] = row[3] # colocalized cells
+                imageSummary[23] = row[4] # C1 with C2
+            elif row [1] == "2":
+                imageSummary[24] = row[4] # C2 with C1
+
+
         
     # ------------------CALCULATING STATISTICS
     # 0 filename, 1-3 c1 whole image (mean, intden, rawintden), 
@@ -304,12 +346,6 @@ for image in imageList:  # each file in the data batch
     imageSummary[21] = StdDevOfList(C2nucRIDs)
 
     csvWriter.writerow(imageSummary)
-
-
-
-
-
-# TODO: clean up and add comments as needed
 
 # ----------------- FINISHING
 
