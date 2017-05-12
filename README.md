@@ -9,15 +9,17 @@ This material is free to use and modify, for non-commercial use, with attributio
 
 ## Installation
 
-This directory contains java plugins, jython scripts, and macros (in the [ImageJ](http://imagej.nih.gov/ij/) macro language).
+This directory contains jython scripts and macros (in the [ImageJ](http://imagej.nih.gov/ij/) macro language).
 
 These are designed to work with [Fiji](http://fiji.sc). Plain ImageJ does not support Jython.
 
 To install, follow instructions [here](http://fiji.sc/Installing_3rd_party_plugins "Fiji Installing Plugins").
 
+Usage instructions are contained within each script
+
 ## Disclaimer
 
-I have tested these at the time of uploading. If you find a bug, please contact me.
+I have tested these at the time of uploading with the most recent version of Fiji, and Java 8. If you find a bug, please contact me.
 
 ## Acknowledgements and Contact
 
