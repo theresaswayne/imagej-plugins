@@ -1,7 +1,7 @@
-// @File(label = "Input directory") sourceImage
-// @File(label = "Output directory") dir2
+// @File(label = "Input file") sourceimage
+// @File(label = "Output file", style = "directory") dir2
 
-// Note: DO NOT DELETE OR MOVE THE FIRST LINE -- it supplies essential parameters
+// Note: DO NOT DELETE OR MOVE THE FIRST 2 LINES -- they supply essential parameters.
 
 // threshold_Comparison.ijm
 // ImageJ macro testing equivalence of autothreshold implementations
@@ -15,7 +15,7 @@
 
 // setup
 
-open(sourceImage);
+open(sourceimage);
 path = getDirectory("image");
 id = getImageID();
 title = getTitle();
@@ -36,7 +36,7 @@ MAXVAL = 255 // change if using a 12-bit image
 // 4 setAutoThreshold value, 5 setAutoThreshold area, 6 run Auto Threshold value, 7 run Auto Threhold area
 
 headers = "Label,Method,Manual value,Manual area,setAuto value,setAuto area,run Auto value,run Auto area";
-File.append(headers,path  + File.separator+ resultName);
+File.append(headers,dir2 + File.separator+ resultName);
 
 methods = getList("threshold.methods");
 // Array.print(methods);
@@ -92,6 +92,6 @@ for (i=0; i<methods.length; i++)
 
 		}
 	// write data
-	File.append(results,path + File.separator + resultName);
-	close();
+	File.append(results,dir2 + File.separator + resultName);
 	}
+close();
