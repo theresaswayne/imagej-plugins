@@ -1,4 +1,4 @@
-// IJ1 macro to test denoising methods
+// IJ1 macro to evaluate denoising methods
 // usage: have an image open then run macro. 
 // input: tested on single-channel single-slice images.
 // output: series of images denoised by different methods

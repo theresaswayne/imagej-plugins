@@ -1,4 +1,4 @@
-// illustrates how to append results to an existing table
+// illustrates how to save results table and append results to different files
 
 homedir = getDirectory("home");
 run("Clear Results");

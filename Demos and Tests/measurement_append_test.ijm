@@ -1,4 +1,4 @@
-// illustrates how to measure of all ROIs in manager, then measure whole image 
+// illustrates how to measure all ROIs in manager, then measure whole image 
 // workaround for multi-measure apparent bug in which whole-image measurements are erased even when Append Results is checked.
 
 // get ROIs

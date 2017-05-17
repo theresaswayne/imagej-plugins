@@ -1,7 +1,8 @@
 // IJ1 macro to test thresholding methods
 // usage:  have an image open, run macro
 // input: tested on single-channel single-slice images.
-// output: series of images thresholded by different methods
+// output: series of masks thresholded by different methods 
+// (use thresh_eval.ijm to generate ROIs to overlay on the original image)
 
 
 function thresh(id, method) {

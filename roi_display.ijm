@@ -2,7 +2,7 @@
 // Theresa Swayne, Columbia University, 2017
 // IJ1 macro that loads a previously saved ROIset and flattens it on the image, optionally using a multi-hue LUT to show variable cell intensity
 // input: single-channel image, and a saved ROIset with appropriate filename in same directory 
-// usage: open the image then run the macro. Then save the flattened image if desired.
+// usage: open the image then run the macro. 
 
 path = getDirectory("image");
 id = getImageID();
