@@ -10,8 +10,8 @@
 // ADJUSTABLE PARAMETERS -------------------------
 
 // The following neighborhood values should be larger than the largest nucleus in the image, in pixels
-BACKGROUNDSIZE = 50 // used in background subtraction.
-BLOCKSIZE = 50 // used in contrast enhancement
+//BACKGROUNDSIZE = 50 // used in background subtraction.
+BLOCKSIZE = 127 // used in contrast enhancement
 RADIUS = 40 // used in local thresholding
 
 // The following values affect how the nuclear boundaries are adjusted after thresholding
@@ -20,13 +20,13 @@ OPENCOUNT = 2 // lower value = more smoothing
 ROIADJUST = -0.5; // adjustment of nuclear boundary, in microns. Negative value shrinks the cell.
 
 // The following values govern allowable nuclei sizes in microns^2
-CELLMIN = 20 // minimum area
-CELLMAX = 60 // maximum area
+CELLMIN = 0 // minimum area
+CELLMAX = 1000 // maximum area
 
 // SETUP -----------------------------------------------------------------------
 
 // Sample image for testing
-open("/Users/confocal/Google\ Drive/Confocal\ Facility/User\ projects/Alberini\ brain\ image\ analysis/Kiran\ folder/Kiran\ tiffs\ second\ group/Arc+LC3B\ -\ new\ -\ Set\ 1\ -\ Copy_Series049_MIP_7.tif")' 
+//open("/Users/confocal/Google\ Drive/Confocal\ Facility/User\ projects/Alberini\ brain\ image\ analysis/Kiran\ folder/Kiran\ tiffs\ second\ group/Arc+LC3B\ -\ new\ -\ Set\ 1\ -\ Copy_Series049_MIP_7.tif")' 
 
 // get file info
 path = getDirectory("image");
@@ -61,9 +61,11 @@ selectWindow(procName);
 
 // PRE-PROCESSING -----------------------------------------------------------
 
-run("Subtract Background...", "rolling="+BACKGROUNDSIZE);
-run("Median...", "radius=3");
-// run("Enhance Local Contrast (CLAHE)", "blocksize=" + BLOCKSIZE + " histogram=256 maximum=3 mask=*None*"); 
+run("Enhance Local Contrast (CLAHE)", "blocksize=" + BLOCKSIZE + " histogram=256 maximum=3 mask=*None*"); 
+run("Gaussian Blur...", "sigma=8");
+
+//run("Subtract Background...", "rolling="+BACKGROUNDSIZE);
+//run("Median...", "radius=3");
 
 // SEGMENTATION AND MASK PROCESSING -------------------------------------------
 
@@ -72,8 +74,8 @@ run("Auto Local Threshold", "method=Phansalkar radius=" + RADIUS + " parameter_1
 run("Convert to Mask");
 
 selectWindow(procName);
-run("Options...", "iterations=" + OPENITER + " count=" + OPENCOUNT + " black"); // smooth borders
-run("Open");
+//run("Options...", "iterations=" + OPENITER + " count=" + OPENCOUNT + " black"); // smooth borders
+//run("Open");
 run("Watershed"); // separate touching nuclei
 
 // analyze particles to get initial ROIs
@@ -81,13 +83,3 @@ run("Watershed"); // separate touching nuclei
 roiManager("reset");
 run("Analyze Particles...", "size=" + CELLMIN + "-" + CELLMAX + " exclude clear add");
 
-// shrink ROIs to match nuclei
-
-numROIs = roiManager("count");
-roiManager("Show None");
-for (index = 0; index < numROIs; index++) 
-	{
-	roiManager("Select", index);
-	run("Enlarge...", "enlarge=" + ROIADJUST);
-	roiManager("Update");
-	}

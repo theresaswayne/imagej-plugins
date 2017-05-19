@@ -10,10 +10,15 @@ title = getTitle();
 dotIndex = indexOf(title, ".");
 basename = substring(title, 0, dotIndex);
 
-
-// run("16 colors");
-roiManager("Open", path+"RoiSet_" + basename + ".zip");
+run("Select None");
+run("Remove Overlay");
+run("16 colors");
+//roiManager("Open", path+"RoiSet_" + basename + ".zip");
+roiManager("Open", path+ basename + ".zip");
 roiManager("Show All without labels");
 run("Flatten");
+roiManager("Show None");
 roiManager("reset");
 
+selectWindow(basename+"-1.tif");
+close();
