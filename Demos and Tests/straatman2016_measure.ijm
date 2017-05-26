@@ -1,0 +1,10 @@
+run("Blobs (25K)"); 
+run("Clear Results"); 
+doWand(136, 54, 30.0, "Legacy"); 
+roiManager("Add"); 
+doWand(129, 127, 30.0, "Legacy"); 
+roiManager("Add"); 
+roiManager("multi-measure one append"); 
+close(); 
+selectWindow("ROI Manager"); 
+run("Close"); 
