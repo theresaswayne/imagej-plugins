@@ -1,5 +1,5 @@
 // splits multi-channel CZI or ND2 stack, saves channel 2 for czi, 3 for nd2
-// kludgeriffic macro by TCS 4/2017
+// kludgeriffic macro for batch macro window by TCS 4/2017
 
 path = getDirectory("image");
 id = getImageID();

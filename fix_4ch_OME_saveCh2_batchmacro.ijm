@@ -1,3 +1,4 @@
+// paste in batch macro window
 // converts 4-channel OME tiff stack to hyperstack, splits channels, and saves channel 2
 // TCS 4/2017
 
