@@ -10,7 +10,6 @@
 // usage: open the image then run the macro. 
 
 
-
 // process images
 processFolder(input);
 
@@ -57,6 +56,6 @@ function processFile(input, output, file) {
 
 	close(); // original
 
-	print("Processing: " + input + file);
-	print("Saving to: " + output);
+//	print("Processing: " + input + file);
+//	print("Saving to: " + output);
 }
