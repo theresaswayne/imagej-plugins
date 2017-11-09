@@ -6,7 +6,7 @@
 # @DatasetService ds
 
 # Do a projection of a stack. The projection is done along a specified axis.
-# The commin use case of this script is to do a maximum Z projection.
+# The common use case of this script is to do a maximum Z projection.
  
 from net.imagej.axis import Axes
 from net.imagej.ops import Ops
