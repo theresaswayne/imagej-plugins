@@ -30,7 +30,7 @@ basename = substring(title, 0, dotIndex);
 // get background measurement
 setTool("freehand");
 waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
-run("Set Measurements...", "area mean min centroid integrated display redirect=None decimal=3");
+run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
 
 print("Processing channel",fluoChannel);
 channelName = basename+"_C"+fluoChannel;
@@ -66,9 +66,9 @@ print("finished with channel",fluoChannel);
 // find particles, and measure each one in each channel of the original image
 
 selectWindow("inclusion_mask");
-run("Set Measurements...", "area mean min centroid integrated display redirect=["+channelName+"] decimal=3");
+run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
 run("Analyze Particles...", "display exclude stack");
 
 // clean up
 
-run("Set Measurements...", "area mean min centroid integrated display redirect=None decimal=3");
+run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
