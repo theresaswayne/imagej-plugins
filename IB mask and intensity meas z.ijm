@@ -17,10 +17,9 @@
 
 //TODO: 
 // Add a column for filename (or image number) to avoid searching for filename in the crazy label field
-// Write results files: 
-// 1. All measurements. 
-// 2. Max mean from each cell 
-// 3. ROI of inclusion for each cell.
+// propose to do this by adding a column to the results table, then copying the whole thing out and appending to the csv file
+// Find max mean from each cell and append that line to another file that has only the maxes.
+
 
 // setup -- clear results and ROI Manager
 run("Clear Results");
@@ -61,8 +60,11 @@ function processImage(dir1, sourceImage)
 	title = getTitle();
 	dotIndex = indexOf(title, ".");
 	basename = substring(title, 0, dotIndex);
+	getDimensions(width, height, channels, slices, frames);
 	
 	// get background measurement
+	middleSlice = slices/2;
+	Stack.setPosition(fluoChannel, middleSlice, 1); // move to center slice
 	setTool("freehand");
 	waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
@@ -98,12 +100,52 @@ function processImage(dir1, sourceImage)
 	
 	print("finished with channel",fluoChannel);
 	
-	// find particles, and measure each one in each channel of the original image
+	// find particles, measure each one in the original image, save the mask as an ROI
 	
 	selectWindow("inclusion_mask");
-	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
-	run("Analyze Particles...", "display exclude stack");
 
+	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
+	run("Analyze Particles...", "display exclude add stack");
+
+	roiManager("Save", outputDir + File.separator + channelName+".zip");
+	roiManager("reset");
+	run("Select None");
+	print("Saved ROI");
+
+	// go through results table and 1) fix label field, 2) find the max mean and copy that string
+
+	brightestIB = getResult("Mean",1); 
+	brightestRow = 0;
+
+	for (r = 0; r < nResults; r++) {
+		setResult("Label", r, channelName);
+		updateResults();
+		sliceMean = getResult("Mean",r);
+		if (sliceMean > brightestIB){
+			brightestIB = sliceMean;
+			brightestRow = r;
+		}
+	}
+
+
+	print("The brightest row for image ",channelName,"is",brightestRow);
+
+	// TODO: save the brightest row only
+	 
+	// save all measurements for this cell
+	saveAs("Results", outputDir + File.separator + channelName + ".csv");
+
+	// clean up windows
+	selectWindow("inclusion_mask");
+	close();
+	selectWindow(channelName);
+	close();
+	selectWindow(title);
+	close();
+
+	// Clear results before next image
+	run("Clear Results");
+	
 	} // end of image processing loop
 	
 // clean up
