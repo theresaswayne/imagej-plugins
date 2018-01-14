@@ -1,5 +1,5 @@
 // rearrange_results_Demo.ijm
-// IJ macro to show how to read data from the Results table, do calculations, and output to a new table
+// IJ macro to show how to read data from the Summary table, do calculations, and output to a new table
 // 		simulating an object overlap analysis
 // Theresa Swayne, tcs6@cumc.columbia.edu, 2017
 // Output: custom table: 

@@ -25,12 +25,9 @@
 run("Clear Results");
 roiManager("reset");
 
-run("Input/Output...", "file=.csv copy_row save_row"); // saves data as csv, preserves headers, preserves row number for copy/paste 
-run("Set Measurements...", "area shape feret's display stack redirect=None decimal=2");
-
-// add headers to results file
-IBheaders = ",Label,Area,foo";
-File.append(IBheaders,outputDir  + File.separator+ "IB_results.csv");
+// save data as csv, preserve headers for saving, preserve row number for copy/paste 
+run("Input/Output...", "file=.csv copy_row save_column save_row"); 
+resultsFile = outputDir  + File.separator+ "IB_results.csv";
 
 n = 0;
 processFolder(inputDir); // this actually executes the functions
@@ -53,7 +50,7 @@ function processFolder(dir1)
 function processImage(dir1, sourceImage) 
 	{
 	open(dir1+File.separator+sourceImage);
-	print("processing",n++, sourceImage);
+	print("processing",n++, sourceImage); // n is printed as original value, then incremented
 	
 	// get file info 
 	id = getImageID();
@@ -69,14 +66,16 @@ function processImage(dir1, sourceImage)
 	waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
 	
-	print("Processing channel",fluoChannel);
+	// print("Processing channel",fluoChannel);
 	channelName = basename+"_C"+fluoChannel;
 	channelMask = channelName+"_m";
 	
-	// make a copy
-	selectImage(id); // original 2-channel image
+	// make a copy of the channel of interest and close original
+	selectImage(title); // original 2-channel image
 	run("Select None"); // get rid of the ROI temporarily, or else image will be cropped
 	run("Duplicate...", "title=&channelName duplicate channels="+fluoChannel);
+	selectWindow(title);
+	close();
 	
 	// measure background
 	selectWindow(channelName);
@@ -98,7 +97,7 @@ function processImage(dir1, sourceImage)
 	// remove stray pixels
 	run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack");
 	
-	print("finished with channel",fluoChannel);
+	// print("finished with channel",fluoChannel);
 	
 	// find particles, measure each one in the original image, save the mask as an ROI
 	
@@ -107,47 +106,66 @@ function processImage(dir1, sourceImage)
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
 	run("Analyze Particles...", "display exclude add stack");
 
-	roiManager("Save", outputDir + File.separator + channelName+".zip");
-	roiManager("reset");
+	if (roiManager("count") > 0){ // avoids error message "the selection list is empty"
+		roiManager("Save", outputDir + File.separator + channelName+".zip");
+		roiManager("reset");
+	}
 	run("Select None");
 	print("Saved ROI");
 
-	// go through results table and 1) fix label field, 2) find the max mean and copy that string
+	// go through results table and 1) fix label field, 2) find the max mean
 
-	brightestIB = getResult("Mean",1); 
+	brightestIB = 0; 
 	brightestRow = 0;
+
+	// note that internally the rows of the results table start at 0 
+	// so the referenced row number in the loop
+	// will be 1 less than the printed row number in the table
 
 	for (r = 0; r < nResults; r++) {
 		setResult("Label", r, channelName);
-		updateResults();
 		sliceMean = getResult("Mean",r);
+		// print("The mean for row",r+1,"is",sliceMean);
 		if (sliceMean > brightestIB){
 			brightestIB = sliceMean;
 			brightestRow = r;
 		}
 	}
-
-
-	print("The brightest row for image ",channelName,"is",brightestRow);
-
-	// TODO: save the brightest row only
-	 
+	updateResults();
+	brightestZ = getResult("Slice",brightestRow);
+	print("Peak for image ",channelName,"is z=",brightestZ,"at",brightestIB);
+	
 	// save all measurements for this cell
 	saveAs("Results", outputDir + File.separator + channelName + ".csv");
+	
+	// the first time, add headers to collected results file 
+	if (n==1) {
+		if (File.exists(outputDir  + File.separator+ "IB_results.csv")==false) 
+		{
+			IBheaders = String.getResultsHeadings();
+			IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
+			File.append(IBheaders,resultsFile);
+			// print("headings are ",IBheaders);
+	    }
+	}
 
-	// clean up windows
+	// add the row containing the brightest IB to a merged results file
+	// only way to do this with a single row is to loop through columns 
+	headings = split(String.getResultsHeadings);
+	resultLine = "";
+	for (col=0; col<lengthOf(headings); col++){
+	    resultLine = resultLine + getResultString(headings[col],brightestRow) + ",";
+	}
+	File.append(resultLine,resultsFile);
+
+	// clean up windows and results
 	selectWindow("inclusion_mask");
 	close();
 	selectWindow(channelName);
 	close();
-	selectWindow(title);
-	close();
-
-	// Clear results before next image
 	run("Clear Results");
 	
 	} // end of image processing loop
 	
 // clean up
-
 run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
