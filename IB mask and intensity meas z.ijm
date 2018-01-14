@@ -15,12 +15,6 @@
 // Output: Results table containing background measurement and inclusion measurements for the brightest z plane.
 // Usage: Run the macro. (Image should not be open before running)
 
-//TODO: 
-// Add a column for filename (or image number) to avoid searching for filename in the crazy label field
-// propose to do this by adding a column to the results table, then copying the whole thing out and appending to the csv file
-// Find max mean from each cell and append that line to another file that has only the maxes.
-
-
 // setup -- clear results and ROI Manager
 run("Clear Results");
 roiManager("reset");
