@@ -152,7 +152,7 @@ function processImage(dir1, sourceImage)
 	// add the row containing the brightest IB to a merged results file
 	// only way to do this with a single row is to loop through columns 
 	headings = split(String.getResultsHeadings);
-	resultLine = "";
+	resultLine = ",";
 	for (col=0; col<lengthOf(headings); col++){
 	    resultLine = resultLine + getResultString(headings[col],brightestRow) + ",";
 	}
