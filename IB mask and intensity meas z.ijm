@@ -138,6 +138,7 @@ function processImage(dir1, sourceImage)
 		{
 			IBheaders = String.getResultsHeadings();
 			IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
+			IBheaders = IBheaders + ",Background";
 			File.append(IBheaders,resultsFile);
 			// print("headings are ",IBheaders);
 	    }
@@ -145,11 +146,13 @@ function processImage(dir1, sourceImage)
 
 	// add the row containing the brightest IB to a merged results file
 	// only way to do this with a single row is to loop through columns 
+	// include the threshold used
 	headings = split(String.getResultsHeadings);
 	resultLine = ",";
 	for (col=0; col<lengthOf(headings); col++){
 	    resultLine = resultLine + getResultString(headings[col],brightestRow) + ",";
 	}
+	resultLine = resultLine + channelBackground;
 	File.append(resultLine,resultsFile);
 
 	// clean up windows and results
