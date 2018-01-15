@@ -15,6 +15,10 @@
 // Output: Results table containing background measurement and inclusion measurements for the brightest z plane.
 // Usage: Run the macro. (Image should not be open before running)
 
+// TODO: If no particles found, or no pixels above threshold, (MAX <= thresh?)
+//       1) skip measurement, 
+//		 2) write a line to the IB results with blanks except for Label and Background
+
 // setup -- clear results and ROI Manager
 run("Clear Results");
 roiManager("reset");
@@ -40,7 +44,7 @@ function processFolder(dir1)
 	}
 
 
-// processing steps to be done on each image
+// processing steps for each image
 function processImage(dir1, sourceImage) 
 	{
 	open(dir1+File.separator+sourceImage);
@@ -53,7 +57,7 @@ function processImage(dir1, sourceImage)
 	basename = substring(title, 0, dotIndex);
 	getDimensions(width, height, channels, slices, frames);
 	
-	// get background measurement
+	// get background ROI
 	middleSlice = slices/2;
 	Stack.setPosition(fluoChannel, middleSlice, 1); // move to center slice
 	setTool("freehand");
@@ -77,7 +81,8 @@ function processImage(dir1, sourceImage)
 	run("Measure"); // gets the original image measurement
 	channelBackground = getResult("Mean",nResults-1); // from the last row of the table
 	run("Select None"); 
-	
+
+
 	// make initial mask
 	selectWindow(channelName);
 	run("Duplicate...", "title=&channelMask duplicate");	
@@ -94,19 +99,46 @@ function processImage(dir1, sourceImage)
 	// print("finished with channel",fluoChannel);
 	
 	// find particles, measure each one in the original image, save the mask as an ROI
-	
 	selectWindow("inclusion_mask");
 
+	// check if there are any pixels to measure
+	Stack.getStatistics(voxelCount, mean, min, max, stdDev);
+	print("The max value in stack is",max);
+
+	if (max==0){ // no pixels above threshold, therefore don't measure particles
+		resultsForNoParticles();
+	}
+	else { 
+		measureParticles();
+	}
+
+
+	// clean up windows and results
+	selectWindow("inclusion_mask");
+	close();
+	selectWindow(channelName);
+	close();
+	run("Clear Results");
+	
+	} // end of image processing loop
+	
+// clean up
+run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
+print("Finished with",n,"images.");
+
+function measureParticles() {
+	// carry out particle analysis and writing results
+	print("Measuring particles.");
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
-	run("Analyze Particles...", "display exclude add stack");
+	run("Analyze Particles...", "display clear exclude add stack");
 
 	if (roiManager("count") > 0){ // avoids error message "the selection list is empty"
 		roiManager("Save", outputDir + File.separator + channelName+".zip");
 		roiManager("reset");
+		print("Saved ROI");
 	}
 	run("Select None");
-	print("Saved ROI");
-
+	
 	// go through results table and 1) fix label field, 2) find the max mean
 
 	brightestIB = 0; 
@@ -140,13 +172,13 @@ function processImage(dir1, sourceImage)
 			IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
 			IBheaders = IBheaders + ",Background";
 			File.append(IBheaders,resultsFile);
-			// print("headings are ",IBheaders);
+			print("headings are ",IBheaders);
 	    }
 	}
 
 	// add the row containing the brightest IB to a merged results file
 	// only way to do this with a single row is to loop through columns 
-	// include the threshold used
+	// include the background used
 	headings = split(String.getResultsHeadings);
 	resultLine = ",";
 	for (col=0; col<lengthOf(headings); col++){
@@ -154,15 +186,27 @@ function processImage(dir1, sourceImage)
 	}
 	resultLine = resultLine + channelBackground;
 	File.append(resultLine,resultsFile);
+}
 
-	// clean up windows and results
-	selectWindow("inclusion_mask");
-	close();
-	selectWindow(channelName);
-	close();
-	run("Clear Results");
-	
-	} // end of image processing loop
-	
-// clean up
-run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
+function resultsForNoParticles() {
+	// write a line to IB results if there are no particles
+	print("Writing background value to IB results file."); 
+		
+	// if this is the first time, add headers to collected results file 
+	if (n==1) {
+		if (File.exists(outputDir  + File.separator+ "IB_results.csv")==false) 
+		{
+			IBheaders = ",Label,Area,Mean,Min,Max,X,Y,IntDen,RawIntDen,Slice"; // need to change this if we do different measurements!
+			// IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
+			IBheaders = IBheaders + ",Background";
+			File.append(IBheaders,resultsFile);
+			print("since we have no results, headings are ",IBheaders);
+	    }
+	}
+
+	// add a row to the merged results file giving the label and background value
+	headings = split(String.getResultsHeadings);
+	resultLine = ","+channelName+",,,,,,,,,,"; // 10 commas
+	resultLine = resultLine + channelBackground;
+	File.append(resultLine,resultsFile);
+}
