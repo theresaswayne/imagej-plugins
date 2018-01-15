@@ -15,6 +15,10 @@
 // Output: Results table containing background measurement and inclusion measurements for the brightest z plane.
 // Usage: Run the macro. (Image should not be open before running)
 
+// TODO: If no particles found, or no pixels above threshold, (MAX <= thresh?)
+//       1) skip measurement, 
+//		 2) write a line to the IB results with blanks except for Label and Background
+
 // setup -- clear results and ROI Manager
 run("Clear Results");
 roiManager("reset");
@@ -128,60 +132,67 @@ function measureParticles() {
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
 	run("Analyze Particles...", "display clear exclude add stack");
 
-	if (roiManager("count") > 0){ // avoids error message "the selection list is empty"
+	if (roiManager("count") == 0){ // for the case when there are positive pixels but no particles -- presumably on the edges.
+		resultsForNoParticles();
+	}
+	else { // we have particles and results
+
+		// save particles
 		roiManager("Save", outputDir + File.separator + channelName+".zip");
 		roiManager("reset");
 		print("Saved ROI");
-	}
-	run("Select None");
+
+		// go through results table and 1) fix label field, 2) find the max mean
+
+		brightestIB = 0; 
+		brightestRow = 0;
+
+		// note that internally the rows of the results table start at 0 
+		// so the referenced row number in the loop
+		// will be 1 less than the printed row number in the table
 	
-	// go through results table and 1) fix label field, 2) find the max mean
-
-	brightestIB = 0; 
-	brightestRow = 0;
-
-	// note that internally the rows of the results table start at 0 
-	// so the referenced row number in the loop
-	// will be 1 less than the printed row number in the table
-
-	for (r = 0; r < nResults; r++) {
-		setResult("Label", r, channelName);
-		sliceMean = getResult("Mean",r);
-		// print("The mean for row",r+1,"is",sliceMean);
-		if (sliceMean > brightestIB){
-			brightestIB = sliceMean;
-			brightestRow = r;
+		for (r = 0; r < nResults; r++) {
+			setResult("Label", r, channelName);
+			sliceMean = getResult("Mean",r);
+			// print("The mean for row",r+1,"is",sliceMean);
+			if (sliceMean > brightestIB){
+				brightestIB = sliceMean;
+				brightestRow = r;
+			}
 		}
-	}
-	updateResults();
-	brightestZ = getResult("Slice",brightestRow);
-	print("Peak for image ",channelName,"is z=",brightestZ,"at",brightestIB);
+		updateResults();
+		brightestZ = getResult("Slice",brightestRow);
+		print("Peak for image ",channelName,"is z=",brightestZ,"at",brightestIB);
+		
+		// save all measurements for this cell
+		saveAs("Results", outputDir + File.separator + channelName + ".csv");
 	
-	// save all measurements for this cell
-	saveAs("Results", outputDir + File.separator + channelName + ".csv");
+		// the first time, add headers to collected results file 
+		if (n==1) {
+			if (File.exists(outputDir  + File.separator+ "IB_results.csv")==false) 
+			{
+				IBheaders = String.getResultsHeadings();
+				IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
+				IBheaders = IBheaders + ",Background";
+				File.append(IBheaders,resultsFile);
+				print("headings are ",IBheaders);
+		    }
+		}
 	
-	// the first time, add headers to collected results file 
-	if (n==1) {
-		if (File.exists(outputDir  + File.separator+ "IB_results.csv")==false) 
-		{
-			IBheaders = String.getResultsHeadings();
-			IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
-			IBheaders = IBheaders + ",Background";
-			File.append(IBheaders,resultsFile);
-			print("headings are ",IBheaders);
-	    }
-	}
-
-	// add the row containing the brightest IB to a merged results file
-	// only way to do this with a single row is to loop through columns 
-	// include the background used
-	headings = split(String.getResultsHeadings);
-	resultLine = ",";
-	for (col=0; col<lengthOf(headings); col++){
-	    resultLine = resultLine + getResultString(headings[col],brightestRow) + ",";
-	}
-	resultLine = resultLine + channelBackground;
-	File.append(resultLine,resultsFile);
+		// add the row containing the brightest IB to a merged results file
+		// only way to do this with a single row is to loop through columns 
+		// include the background used
+		
+		headings = split(String.getResultsHeadings);
+		resultLine = ",";
+		for (col=0; col<lengthOf(headings); col++){
+		    resultLine = resultLine + getResultString(headings[col],brightestRow) + ",";
+		}
+		resultLine = resultLine + channelBackground;
+		File.append(resultLine,resultsFile);
+	} // end writing particle ROIs and brightest result
+	
+	run("Select None");
 }
 
 function resultsForNoParticles() {
