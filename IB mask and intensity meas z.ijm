@@ -15,10 +15,6 @@
 // Output: Results table containing background measurement and inclusion measurements for the brightest z plane.
 // Usage: Run the macro. (Image should not be open before running)
 
-// TODO: If no particles found, or no pixels above threshold, (MAX <= thresh?)
-//       1) skip measurement, 
-//		 2) write a line to the IB results with blanks except for Label and Background
-
 // setup -- clear results and ROI Manager
 run("Clear Results");
 roiManager("reset");
