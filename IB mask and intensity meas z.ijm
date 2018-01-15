@@ -53,7 +53,7 @@ function processImage(dir1, sourceImage)
 	basename = substring(title, 0, dotIndex);
 	getDimensions(width, height, channels, slices, frames);
 	
-	// get background measurement
+	// get background ROI
 	middleSlice = slices/2;
 	Stack.setPosition(fluoChannel, middleSlice, 1); // move to center slice
 	setTool("freehand");
@@ -98,14 +98,15 @@ function processImage(dir1, sourceImage)
 	selectWindow("inclusion_mask");
 
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
-	run("Analyze Particles...", "display exclude add stack");
+	run("Analyze Particles...", "display clear exclude add stack");
 
 	if (roiManager("count") > 0){ // avoids error message "the selection list is empty"
 		roiManager("Save", outputDir + File.separator + channelName+".zip");
 		roiManager("reset");
+		print("Saved ROI");
 	}
 	run("Select None");
-	print("Saved ROI");
+	
 
 	// go through results table and 1) fix label field, 2) find the max mean
 
