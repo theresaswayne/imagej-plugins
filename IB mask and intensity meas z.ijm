@@ -106,10 +106,10 @@ function processImage(dir1, sourceImage)
 	print("The max value in stack is",max);
 
 	if (max==0){ // no pixels above threshold, therefore don't measure particles
-		resultsForNoParticles;
+		resultsForNoParticles();
 	}
 	else { 
-		measureParticles;
+		measureParticles();
 	}
 
 
@@ -124,9 +124,9 @@ function processImage(dir1, sourceImage)
 	
 // clean up
 run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
+print("Finished with",n,"images.");
 
-
-function measureParticles {
+function measureParticles() {
 	// carry out particle analysis and writing results
 	print("Measuring particles.");
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+channelName+"] decimal=3");
@@ -176,7 +176,6 @@ function measureParticles {
 	    }
 	}
 
-
 	// add the row containing the brightest IB to a merged results file
 	// only way to do this with a single row is to loop through columns 
 	// include the background used
@@ -189,7 +188,7 @@ function measureParticles {
 	File.append(resultLine,resultsFile);
 }
 
-function resultsForNoParticles {
+function resultsForNoParticles() {
 	// write a line to IB results if there are no particles
 	print("Writing background value to IB results file."); 
 		
@@ -197,7 +196,7 @@ function resultsForNoParticles {
 	if (n==1) {
 		if (File.exists(outputDir  + File.separator+ "IB_results.csv")==false) 
 		{
-			IBheaders = "Label,Area,Mean,Min,Max,X,Y,IntDen,RawIntDen,Slice"; // hard-coded because you don't have results!
+			IBheaders = ",Label,Area,Mean,Min,Max,X,Y,IntDen,RawIntDen,Slice"; // need to change this if we do different measurements!
 			// IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
 			IBheaders = IBheaders + ",Background";
 			File.append(IBheaders,resultsFile);
@@ -205,9 +204,9 @@ function resultsForNoParticles {
 	    }
 	}
 
-	// add a row to the merged results file giving the background value
+	// add a row to the merged results file giving the label and background value
 	headings = split(String.getResultsHeadings);
-	resultLine = ",,,,,,,,,,"; // 10 commas
+	resultLine = ","+channelName+",,,,,,,,,,"; // 10 commas
 	resultLine = resultLine + channelBackground;
 	File.append(resultLine,resultsFile);
 }
