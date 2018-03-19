@@ -13,6 +13,7 @@
 // Input: A folder of 1- or multi-channel, z series over 1 or more timepoints. 
 //	NOTE: Each image should represent 1 cell.
 // Output: Results table containing mean intensity of background and inclusion measurements for the brightest z plane in each timepoint.
+// Background is measured and threshold adjusted for every time frame.
 // Usage: Close all images. Run the macro. (Image should not be open before running.) Mark background when prompted.
 
 // setup -- clear results and ROI Manager
@@ -73,58 +74,62 @@ function processImage(dir1, sourceImage)
 
 	// get background ROI
 	// TODO: do this each timepoint, and threshold and measure each timepoint separately
-	middleSlice = slices/2;
-	selectWindow(channelName);
-	Stack.setPosition(1, middleSlice, 1); // move to channel 1 (of 1) center slice, frame 1
-	setTool("freehand");
-	waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
-	run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
+	for (fr = 1; fr <= frames; fr ++) {
+
+		middleSlice = slices/2;
+		selectWindow(channelName);
+		Stack.setPosition(1, middleSlice, 1); // move to channel 1 (of 1) center slice, frame 1
+		setTool("freehand");
+		waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
+		run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
+		
+		// measure background
+		selectWindow(channelName);
+		run("Restore Selection");
+		run("Measure"); // gets the original image measurement
+		channelBackground = getResult("Mean",nResults-1); // from the last row of the table
+		run("Select None"); 
 	
-	// measure background
-	selectWindow(channelName);
-	run("Restore Selection");
-	run("Measure"); // gets the original image measurement
-	channelBackground = getResult("Mean",nResults-1); // from the last row of the table
-	run("Select None"); 
-
-
-	// make initial mask
-	selectWindow(channelName);
-	run("Duplicate...", "title=&channelMask duplicate");	
-	lowerThresh = 1.5 * channelBackground;
-	print("Threshold = ",lowerThresh);
-	setThreshold(lowerThresh, 4095); // lower = 150% of the mean 
-	setOption("BlackBackground", false);
-	run("Convert to Mask", "method=Default background=Dark black");
-	rename("inclusion_mask");
 	
-	// remove stray pixels
-	run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack");
+		// make initial mask
+		selectWindow(channelName);
+		run("Duplicate...", "title=&channelMask duplicate");	
+		lowerThresh = 1.5 * channelBackground;
+		print("Threshold = ",lowerThresh);
+		setThreshold(lowerThresh, 4095); // lower = 150% of the mean 
+		setOption("BlackBackground", false);
+		run("Convert to Mask", "method=Default background=Dark black");
+		rename("inclusion_mask");
+		
+		// remove stray pixels
+		run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack");
+		
+		// print("finished with channel",fluoChannel);
+		
+		// find particles, measure each one in the original image, save the mask as an ROI
+		selectWindow("inclusion_mask");
 	
-	// print("finished with channel",fluoChannel);
+		// check if there are any pixels to measure
+		Stack.getStatistics(voxelCount, mean, min, max, stdDev);
+		print("The max value in stack is",max);
 	
-	// find particles, measure each one in the original image, save the mask as an ROI
-	selectWindow("inclusion_mask");
-
-	// check if there are any pixels to measure
-	Stack.getStatistics(voxelCount, mean, min, max, stdDev);
-	print("The max value in stack is",max);
-
-	if (max==0){ // no pixels above threshold, therefore don't measure particles
-		resultsForNoParticles();
-	}
-	else { 
-		measureParticles();
-	}
-
-
-	// clean up windows and results
-	selectWindow("inclusion_mask");
-	close();
-	selectWindow(channelName);
-	close();
-	run("Clear Results");
+		if (max==0){ // no pixels above threshold, therefore don't measure particles
+			resultsForNoParticles();
+		}
+		else { 
+			measureParticles();
+		}
 	
+	
+		// clean up windows and results
+		selectWindow("inclusion_mask");
+		close();
+		selectWindow(channelName);
+		close();
+		run("Clear Results");
+
+		} // end of time frame loop 	
+
 	} // end of image processing loop
 	
 // clean up
