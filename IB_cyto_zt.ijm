@@ -10,13 +10,10 @@
 // Theresa Swayne, tcs6@cumc.columbia.edu, 2018
 // Measures inclusion body and cytoplasm in fluorescence z-series images.
 //
-// Input: A folder of 1- or multi-channel, z series over 1 or more timepoints. NOTE: Each image should represent 1 cell.
+// Input: A folder of 1- or multi-channel, z series over 1 or more timepoints. 
+//	NOTE: Each image should represent 1 cell.
 // Output: Results table containing mean intensity of background and inclusion measurements for the brightest z plane in each timepoint.
 // Usage: Close all images. Run the macro. (Image should not be open before running.) Mark background when prompted.
-
-// TODO: If no particles found, or no pixels above threshold, (MAX <= thresh?)
-//       1) skip measurement, 
-//		 2) write a line to the IB results with blanks except for Label and Background
 
 // setup -- clear results and ROI Manager
 run("Clear Results");
@@ -61,22 +58,21 @@ function processImage(dir1, sourceImage)
 	channelMask = channelName+"_m";
 	
 	// make a copy of the channel of interest and close original
-	// TODO: make this work with any number of channels
-	selectImage(title); // original 2-channel image
+	selectImage(title);
 	run("Select None"); // get rid of the ROI temporarily, or else image will be cropped
-	if (channels > 1) {
+	if (channels > 1) { // multi-channel
 		run("Duplicate...", "title=&channelName duplicate channels="+fluoChannel);
 		selectWindow(title);
 		close();
-	}
-	else {
+		}
+	else { // 1-channel image
 		run("Duplicate...", "title=&channelName duplicate");
 		selectWindow(title);
 		close();
-	}
+		}
 
 	// get background ROI
-	// TODO: do this each timepoint
+	// TODO: do this each timepoint, and threshold and measure each timepoint separately
 	middleSlice = slices/2;
 	selectWindow(channelName);
 	Stack.setPosition(1, middleSlice, 1); // move to channel 1 (of 1) center slice, frame 1
