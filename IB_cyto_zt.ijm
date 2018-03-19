@@ -70,7 +70,7 @@ function processImage(dir1, sourceImage)
 		close();
 	}
 	else {
-		run("Duplicate...", "title=&channelName duplicate);
+		run("Duplicate...", "title=&channelName duplicate");
 		selectWindow(title);
 		close();
 	}
@@ -78,7 +78,8 @@ function processImage(dir1, sourceImage)
 	// get background ROI
 	// TODO: do this each timepoint
 	middleSlice = slices/2;
-	Stack.setPosition(fluoChannel, middleSlice, 1); // move to center slice
+	selectWindow(channelName);
+	Stack.setPosition(1, middleSlice, 1); // move to channel 1 (of 1) center slice, frame 1
 	setTool("freehand");
 	waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
