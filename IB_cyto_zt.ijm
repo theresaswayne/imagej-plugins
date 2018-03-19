@@ -16,6 +16,8 @@
 // Background is measured and threshold adjusted for every time frame.
 // Usage: Close all images. Run the macro. (Image should not be open before running.) Mark background when prompted.
 
+// TODO: understand why sometimes we get max value in stack = 0 when it is NOT.
+
 // setup -- clear results and ROI Manager
 run("Clear Results");
 roiManager("reset");
@@ -72,27 +74,31 @@ function processImage(dir1, sourceImage)
 		close();
 		}
 
-	// get background ROI
-	// TODO: do this each timepoint, and threshold and measure each timepoint separately
+	// get background ROI and measure
 	for (fr = 1; fr <= frames; fr ++) {
 
+		// TODO: set frame to fr
+		print("Processing frame",fr);
+		Stack.setPosition(1, 1, fr)
+		run("Reduce Dimensionality...", "channels slices keep"); // get a single-frame z stack
+		frameName = channelName+"-1";
+		
 		middleSlice = slices/2;
-		selectWindow(channelName);
-		Stack.setPosition(1, middleSlice, 1); // move to channel 1 (of 1) center slice, frame 1
+		selectWindow(frameName);
+		Stack.setPosition(1, middleSlice, fr); // move to channel 1, center slice, indicated frame
 		setTool("freehand");
 		waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
 		run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
-		
+
 		// measure background
-		selectWindow(channelName);
+		selectWindow(frameName);
 		run("Restore Selection");
-		run("Measure"); // gets the original image measurement
+		run("Measure");
 		channelBackground = getResult("Mean",nResults-1); // from the last row of the table
 		run("Select None"); 
 	
-	
 		// make initial mask
-		selectWindow(channelName);
+		selectWindow(frameName);
 		run("Duplicate...", "title=&channelMask duplicate");	
 		lowerThresh = 1.5 * channelBackground;
 		print("Threshold = ",lowerThresh);
@@ -104,9 +110,6 @@ function processImage(dir1, sourceImage)
 		// remove stray pixels
 		run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack");
 		
-		// print("finished with channel",fluoChannel);
-		
-		// find particles, measure each one in the original image, save the mask as an ROI
 		selectWindow("inclusion_mask");
 	
 		// check if there are any pixels to measure
@@ -124,11 +127,14 @@ function processImage(dir1, sourceImage)
 		// clean up windows and results
 		selectWindow("inclusion_mask");
 		close();
-		selectWindow(channelName);
+		selectWindow(frameName);
 		close();
 		run("Clear Results");
 
 		} // end of time frame loop 	
+
+		selectWindow(channelName);
+		close();
 
 	} // end of image processing loop
 	
@@ -163,6 +169,7 @@ function measureParticles() {
 	
 		for (r = 0; r < nResults; r++) {
 			setResult("Label", r, channelName);
+			setResult("Frame", r, fr);
 			sliceMean = getResult("Mean",r);
 			// print("The mean for row",r+1,"is",sliceMean);
 			if (sliceMean > brightestIB){
@@ -172,7 +179,7 @@ function measureParticles() {
 		}
 		updateResults();
 		brightestZ = getResult("Slice",brightestRow);
-		print("Peak for image ",channelName,"is z=",brightestZ,"at",brightestIB);
+		print("Peak for image ",channelName,"in frame",fr,"is z=",brightestZ,"at",brightestIB);
 		
 		// save all measurements for this cell
 		saveAs("Results", outputDir + File.separator + channelName + ".csv");
@@ -183,13 +190,13 @@ function measureParticles() {
 			{
 				IBheaders = String.getResultsHeadings();
 				IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
-				IBheaders = IBheaders + ",Background";
+				IBheaders = IBheaders + ",Background,Frame";
 				File.append(IBheaders,resultsFile);
 				print("headings are ",IBheaders);
 		    }
 		}
 	
-		// add the row containing the brightest IB to a merged results file
+		// add the row containing the brightest IB per frame to a merged results file
 		// only way to do this with a single row is to loop through columns 
 		// include the background used
 		
@@ -198,7 +205,7 @@ function measureParticles() {
 		for (col=0; col<lengthOf(headings); col++){
 		    resultLine = resultLine + getResultString(headings[col],brightestRow) + ",";
 		}
-		resultLine = resultLine + channelBackground;
+		resultLine = resultLine + channelBackground + "," + fr;
 		File.append(resultLine,resultsFile);
 	} // end writing particle ROIs and brightest result
 	
@@ -215,7 +222,7 @@ function resultsForNoParticles() {
 		{
 			IBheaders = ",Label,Area,Mean,Min,Max,X,Y,IntDen,RawIntDen,Slice"; // need to change this if we do different measurements!
 			// IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
-			IBheaders = IBheaders + ",Background";
+			IBheaders = IBheaders + ",Background,Frame";
 			File.append(IBheaders,resultsFile);
 			print("since we have no results, headings are ",IBheaders);
 	    }
@@ -224,6 +231,6 @@ function resultsForNoParticles() {
 	// add a row to the merged results file giving the label and background value
 	headings = split(String.getResultsHeadings);
 	resultLine = ","+channelName+",,,,,,,,,,"; // 10 commas
-	resultLine = resultLine + channelBackground;
+	resultLine = resultLine + channelBackground + "," + fr;
 	File.append(resultLine,resultsFile);
 }
