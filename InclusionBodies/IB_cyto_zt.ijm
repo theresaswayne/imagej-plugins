@@ -49,12 +49,13 @@ function processImage(dir1, sourceImage)
 	open(dir1+File.separator+sourceImage);
 	print("processing",n++, sourceImage); // n is printed as original value, then incremented
 	
-	// get file info 
+	// get image info 
 	id = getImageID();
 	title = getTitle();
 	dotIndex = indexOf(title, ".");
 	basename = substring(title, 0, dotIndex);
 	getDimensions(width, height, channels, slices, frames);
+	getVoxelSize(voxwidth, voxheight, depth, unit);
 
 	// print("Processing channel",fluoChannel);
 	channelName = basename+"_C"+fluoChannel;
@@ -78,18 +79,21 @@ function processImage(dir1, sourceImage)
 
 	for (fr = 1; fr <= frames; fr ++) {
 
+		run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
 		print("Processing frame",fr);
-		Stack.setPosition(1, 1, fr)
+		Stack.setPosition(1, 1, fr) // go to the frame we want to analyze
 		run("Reduce Dimensionality...", "channels slices keep"); // get a single-frame z stack
-		frameName = channelName+"-1";
+		frameName = channelName+"-1"; // this name is automatically set by IJ
+
 		
 		middleSlice = slices/2;
-		run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
-
+		
 		selectWindow(frameName);
+		setVoxelSize(voxwidth, voxheight, depth, unit); // restore the scale info to the single-frame image
 		Stack.setPosition(1, middleSlice, 1); // move to only channel, middle slice, only frame
 		setTool("freehand");
 		waitForUser("Mark background", "Draw a cytoplasmic background area, then click OK");
+
 		run("Measure");
 		channelBackground = getResult("Mean",nResults-1); // from the last row of the table
 		print("Background =",channelBackground);
@@ -100,8 +104,8 @@ function processImage(dir1, sourceImage)
 		run("Duplicate...", "title=&channelMask duplicate");	
 		lowerThresh = 1.5 * channelBackground;
 		print("Threshold = ",lowerThresh);
-		setThreshold(lowerThresh, 4095); // lower = 150% of the mean 
-		setOption("BlackBackground", false);
+		setThreshold(lowerThresh, 65535); // lower = 150% of the mean 
+		// setOption("BlackBackground", false); // TODO: why was this here?
 		run("Convert to Mask", "method=Default background=Dark black");
 		rename("inclusion_mask");
 		
