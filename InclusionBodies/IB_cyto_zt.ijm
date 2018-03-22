@@ -104,13 +104,13 @@ function processImage(dir1, sourceImage)
 		run("Duplicate...", "title=&channelMask duplicate");	
 		lowerThresh = 1.5 * channelBackground;
 		print("Threshold = ",lowerThresh);
-		setThreshold(lowerThresh, 65535); // lower = 150% of the mean 
+		setThreshold(lowerThresh, 65535); // lower = 150% of the mean cytoplasmic background
 		// setOption("BlackBackground", false); // TODO: why was this here?
 		run("Convert to Mask", "method=Default background=Dark black");
 		rename("inclusion_mask");
 		
 		// remove stray pixels
-		run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack");
+		run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack"); // TODO: try different COUNT values to preserve small inclusions
 
 		// check if there are any pixels to measure
 		selectWindow("inclusion_mask");
@@ -146,7 +146,7 @@ function measureParticles() {
 	// carry out particle analysis and writing results
 	print("Measuring particles.");
 	run("Set Measurements...", "area mean min centroid integrated stack display redirect=["+frameName+"] decimal=3");
-	run("Analyze Particles...", "display clear exclude add stack");
+	run("Analyze Particles...", "display clear exclude add stack"); // TODO: try min filter for small noise particles
 
 	if (roiManager("count") == 0){ // for the case when there are positive pixels but no particles -- presumably on the edges.
 		resultsForNoParticles();
