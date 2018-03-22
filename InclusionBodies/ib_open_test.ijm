@@ -3,28 +3,28 @@
 // @Byte(label = "Fluorescence channel", style = "spinner", value = 1) fluoChannel
 // @File(label = "Output folder:", style = "directory") outputDir
 
+// ib_open_test.ijm
+// testing binary parameters for inclusion body detection
 // Note: DO NOT DELETE OR MOVE THE FIRST FEW LINES -- they supply essential parameters.
 
-// IB_cyto_zt.ijm
-// ImageJ/Fiji macro
-// Theresa Swayne, tcs6@cumc.columbia.edu, 2018
-// Measures inclusion body and cytoplasm in fluorescence z-series images.
-//
-// Input: A folder of 1- or multi-channel, z series over 1 or more timepoints. 
-//	NOTE: Each image should represent 1 cell.
-// Output: Results table containing mean intensity of background and inclusion measurements for the brightest z plane in each timepoint.
-// Background is measured and threshold adjusted for every time frame.
-// Usage: Close all images. Run the macro. (Image should not be open before running.) Mark background when prompted.
+// use a specific threshold
+// do binary open with count of 1-8
+// collect data on particle area and mean
 
-// setup -- clear results and ROI Manager, make sure point tool not auto-measuring
+// maybe vary threshold and repeat
+
+// ultimately chart count vs area, count vs mean, for a given threshold
+// perhaps thresh vs area and mean for each count to look for plateaus
+
+// setup -- clear results and ROI Manager
 run("Clear Results");
 roiManager("reset");
-run("Point Tool...", "type=Hybrid color=Yellow size=Large");
-backgroundDiam = 15; // diameter of background region in PIXELS
 
 // save data as csv, preserve headers for saving, preserve row number for copy/paste 
 run("Input/Output...", "file=.csv copy_row save_column save_row"); 
-resultsFile = outputDir  + File.separator+ "IB_results.csv";
+resultsFile = outputDir  + File.separator+ "Open_results.csv";
+
+BACKGROUND = 3000;
 
 n = 0;
 processFolder(inputDir); // this actually executes the functions
@@ -77,6 +77,8 @@ function processImage(dir1, sourceImage)
 
 	// Measure background and particles
 
+// TODO: use a range of thresholds
+
 	for (fr = 1; fr <= frames; fr ++) {
 
 		run("Set Measurements...", "area mean min centroid integrated stack display redirect=None decimal=3");
@@ -90,22 +92,16 @@ function processImage(dir1, sourceImage)
 		
 		selectWindow(frameName);
 		setVoxelSize(voxwidth, voxheight, depth, unit); // restore the scale info to the single-frame image
-		Stack.setPosition(1, middleSlice, 1); // move to only channel, middle slice, only frame
-		setTool("point");
-		waitForUser("Mark background", "Click a cytoplasmic background area, then click OK");
 
-		// make a circle around the clicked point
-		getSelectionCoordinates(x, y); // arrays
-		run("Specify...", "width=" + backgroundDiam + " height=" + backgroundDiam + " x=" + x[0] + " y=" + y[0] + " slice=" + middleSlice + " oval constrain centered");
 
-		run("Measure");
-		channelBackground = getResult("Mean",nResults-1); // from the last row of the table
-		print("Background =",channelBackground);
-		run("Select None");
+		channelBackground = BACKGROUND; 
 	
 		// make initial mask
 		selectWindow(frameName);
-		run("Duplicate...", "title=&channelMask duplicate");	
+		run("Duplicate...", "title=&channelMask duplicate");
+		
+		// TODO: vary thresholds
+
 		lowerThresh = 1.5 * channelBackground;
 		print("Threshold = ",lowerThresh);
 		setThreshold(lowerThresh, 65535); // lower = 150% of the mean cytoplasmic background
@@ -114,7 +110,10 @@ function processImage(dir1, sourceImage)
 		rename("inclusion_mask");
 		
 		// remove stray pixels
-		run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack"); // TODO: try different COUNT values to preserve small inclusions
+
+		// TODO: try different COUNT values to preserve small inclusions
+
+		run("Options...", "iterations=1 count=1 black edm=16-bit do=Open stack"); 
 
 		// check if there are any pixels to measure
 		selectWindow("inclusion_mask");
