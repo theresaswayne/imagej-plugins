@@ -2,10 +2,10 @@
 // 1) Makes voxels isotropic (same xyz size) by reslicing in Z direction
 // 2) Pads with blank slices at beginning and end.
 // Matches bit depth of input image.
-// Input: single-channel z stack with z spacing <> xy spacing
+// Input: single-channel z stack with z spacing != xy spacing
 // Output: A new image window.
 // Usage: Open an image. Run the macro.
-// Note: if you want to cut out some z slices from the stack for better segmentation, do that before running the macro.
+// Note: if you want to cut out some z slices from the stack for better segmentation, do that *BEFORE* running the macro.
 
 // T. Swayne, for Pon lab, 2017
 
