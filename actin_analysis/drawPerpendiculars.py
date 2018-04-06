@@ -12,11 +12,12 @@ import random
 
 random.seed(9)
 
-# create image for testing
+# ---- create image for testing
+
 imp = IJ.createImage("test", "16-bit black", 200, 200, 1)
 imp.show()
 
-# create a set of coordinates to explicitly define ROI
+# ---- create a test ROI from a set of coordinates
 
 xPoints = []
 for i in range(10,100,10):
@@ -28,10 +29,9 @@ for i in range(10,100,10):
 	yPoints.append(float(i))
 
 # for a crooked line
-for i in range(10):
-	yPoints.append(random.randrange(10,100))
-yPoints = sorted(yPoints)
-
+#for i in range(10):
+#	yPoints.append(random.randrange(10,100))
+#yPoints = sorted(yPoints)
 
 # create ROI
 testLine = PolygonRoi(xPoints, yPoints, Roi.FREELINE)
@@ -53,4 +53,17 @@ def get_roi_manager(new=False):
 rm = get_roi_manager(new=True)
 rm.addRoi(testLine)
 rm.select(0)
+
+# ---- sample the line evenly
+
+sampInt = 2 # pixel units
+sampLine = testLine.getInterpolatedPolygon(sampInt,False)
+
+sampLength = sampLine.getLength(True) # True means it's a line
+
+sampX = sampLine.xpoints
+sampY = sampLine.ypoints
+
+# note the length of the straight line comes out between 113 and 99 depending on the sampInt value, 1 to 100
+print("The line is " + str(sampLength) + " pixels long and there are " + str(len(sampX)) + " samples.")
 
