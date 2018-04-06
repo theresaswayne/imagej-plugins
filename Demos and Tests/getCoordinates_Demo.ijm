@@ -1,10 +1,13 @@
 // getCoordinates_Demo.ijm
 // based on https://imagej.nih.gov/ij/macros/SelectionCoordinates.txt
 // and https://imagej.nih.gov/ij/macros/examples/RoiFunctionsDemo.txt
+// testing ways to get coordinates along a freehand line selection. 
+// unfortunately, none of these gets *evenly spaced* coordinates. 
+// for that you need the API method	getInterpolatedPolygon, not in the macro language.
 
-// output:  
-//	1) list of selection coordinates (position, x, y)
-//	2) new image re-drawing based on the coordinates (should match the original selection well)
+// output (generally):  
+//	1) list of selection coordinates (position, x, y) sufficient to define the shape
+//	for the 1st 2 methods, 2) new image re-drawing based on the coordinates (should match the original selection well)
 
 // usage: Open an image and create a selection. Run the macro.
 
