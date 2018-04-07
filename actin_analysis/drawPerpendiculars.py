@@ -70,5 +70,3 @@ sampY = sampLine.ypoints
 # note the supposed length of the straight line comes out between 113 and 99 depending on the sampInt value, 1 to 100
 # note for a crooked line, the number of samples is consistently half the length for sampInt = 2
 print("The line is " + str(sampLength) + " pixels long and there are " + str(len(sampX)) + " samples.")
-
-# ---- construct a perpendicular line
