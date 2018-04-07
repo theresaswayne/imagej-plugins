@@ -1,16 +1,15 @@
 # drawPerpendiculars.py
 # ImageJ jython script by Theresa Swayne
 
-# input: 
-# output: 
-# usage:
+# input: none
+# output: image with line ROI
+# usage: Adjust seed and straight/crooked as desired by commenting out lines. Run.
 
 from ij import IJ, WindowManager
 from ij.gui import Roi, PolygonRoi, FreehandRoi
 from ij.plugin.frame import RoiManager
 import random
 
-random.seed(9)
 
 # ---- create image for testing
 
@@ -23,12 +22,14 @@ xPoints = []
 for i in range(10,100,10):
 	xPoints.append(float(i))
 
-# for a straight line
 yPoints = []
+
+# for a straight line
 for i in range(10,100,10):
 	yPoints.append(float(i))
 
 # for a crooked line
+#random.seed(9)
 #for i in range(10):
 #	yPoints.append(random.randrange(10,100))
 #yPoints = sorted(yPoints)
@@ -54,6 +55,8 @@ rm = get_roi_manager(new=True)
 rm.addRoi(testLine)
 rm.select(0)
 
+# myRoi = rm.getRoi(0)
+
 # ---- sample the line evenly
 
 sampInt = 2 # pixel units
@@ -64,6 +67,8 @@ sampLength = sampLine.getLength(True) # True means it's a line
 sampX = sampLine.xpoints
 sampY = sampLine.ypoints
 
-# note the length of the straight line comes out between 113 and 99 depending on the sampInt value, 1 to 100
+# note the supposed length of the straight line comes out between 113 and 99 depending on the sampInt value, 1 to 100
+# note for a crooked line, the number of samples is consistently half the length for sampInt = 2
 print("The line is " + str(sampLength) + " pixels long and there are " + str(len(sampX)) + " samples.")
 
+# ---- construct a perpendicular line
