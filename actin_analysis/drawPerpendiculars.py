@@ -6,15 +6,16 @@
 # usage: Adjust seed and straight/crooked as desired by commenting out lines. Run.
 
 from ij import IJ, WindowManager
-from ij.gui import Roi, PolygonRoi, FreehandRoi
+from ij.gui import Roi, PolygonRoi, FreehandRoi, Line
 from ij.plugin.frame import RoiManager
 import random
+import math
 
 # ---- parameters
 
-profileSpacing = 10.0 # how far apart profiles should be along the cable (in scaled units)
-slopeCalcSpacing = 2 # int, how far away we look along the line to calculate the slope (in pixels)
-profileLength = 20.0 # total length of profile line (in pixels for now)
+profileSpacing = 2.0 # how far apart profiles should be along the cable (in scaled units)
+slopeCalcSpacing = 1 # int, how far away we look along the line to calculate the slope (in pixels)
+profileLength = 5.0 # total length of profile line (in pixels for now)
 profileWidth = 1.0 # width of profile line (in pixels for now)
 
 # ---- create image for testing
@@ -22,11 +23,11 @@ profileWidth = 1.0 # width of profile line (in pixels for now)
 imp = IJ.createImage("test", "16-bit black", 200, 200, 1)
 imp.show()
 
-# ---- TODO: calculate scaled parameters
+# get image scale
 
 imageCalib = imp.getCalibration()
 pixSize = imageCalib.pixelHeight # assuming in microns
-profileSpacingPix = profileSpacing/pixSize # float
+
 
 # ---- create a test ROI from a set of coordinates
 
@@ -37,14 +38,14 @@ for i in range(10,100,10):
 yPoints = []
 
 # for a straight line
-for i in range(10,100,10):
-	yPoints.append(float(i))
+#for i in range(10,100,10):
+#	yPoints.append(float(i))
 
 # for a crooked line
 #random.seed(9)
-#for i in range(10):
-#	yPoints.append(random.randrange(10,100))
-#yPoints = sorted(yPoints)
+for i in range(10):
+	yPoints.append(random.randrange(10,100))
+yPoints = sorted(yPoints)
 
 # create ROI
 testLine = PolygonRoi(xPoints, yPoints, Roi.FREELINE)
@@ -96,7 +97,9 @@ def findPerp(xa, ya, xb, yb, perpLength):
 	# Line ab: y = m * x + b
 	# Perpendicular line: y = mp * x + bp
 	# calculate endpoints of new perpendicular line of length r: (xc,yc) and (xd,yd)
-	 
+
+	# TODO: remove slope/intercept??
+	
 	if (xa-xb == 0.0): # vertical line, slope and intercept are undefined
 	
 		print("the original line is vertical")
@@ -136,9 +139,8 @@ def findPerp(xa, ya, xb, yb, perpLength):
 		# intercept b is obtained by solving the equation
 		b = yb - (m*xb)
 		print("original line slope = "+str(m)+", intercept = "+str(b))
-	
 		mp = -1/m
-		bp = xb * ((m**2+1.0)/m) + b # must use ## not ^!
+		bp = xb * ((m**2+1.0)/m) + b # must use ** not ^!
 		print("perpendicular line slope = "+str(mp)+", intercept = "+str(bp))
 	
 		# find points c and d on the perpendicular unit vector through point b
@@ -160,19 +162,21 @@ def findPerp(xa, ya, xb, yb, perpLength):
 # --- step along the line
 # at intervals defined by profileSpacing, calculate the perpendicular line using slopeCalcSpacing
 
-profSpacingPix = int(profileSpacingPix)
+profSpacingPix = int(profileSpacing/pixSize)
 
-for i in range(1, len(sampX)-1, profSpacingPix): 
+for i in range(slopeCalcSpacing, len(sampX)-1, profSpacingPix): 
 
-	# TODO: slope calc should be ints
 	# define the points used to calculate the slope
 	xa = sampX[i-slopeCalcSpacing]
-	ya = sampX[i-slopeCalcSpacing]
+	ya = sampY[i-slopeCalcSpacing]
 	xb = sampX[i]
 	yb = sampY[i]
 
+	print("sample "+str(i)+" points are ("+str(xa)+","+str(ya)+"), ("+str(xb)+","+str(yb)+")")
+	
+
 	# calculate the endpoints of the perp
-	profCoords = findPerp(xa, ya, xb, yb, perpLength)
+	profCoords = findPerp(xa, ya, xb, yb, profileLength)
 	xc = profCoords[0]
 	yc = profCoords[1]
 	xd = profCoords[2]
@@ -180,5 +184,8 @@ for i in range(1, len(sampX)-1, profSpacingPix):
 
 	# make the perp line ROI
 	perpLine = Line(xc, yc, xd, yd)
-	perpLine.setWidth(profileWidth)
+	profWidthPix = int(profileWidth/pixSize)
+	perpLine.setWidth(profWidthPix)
 	rm.addRoi(perpLine)
+
+rm.runCommand("Show All")
