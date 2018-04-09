@@ -86,15 +86,12 @@ profileValues = roiPlot.getProfile() # a double array
 # write the data to the file
 # ['Filename','ROI Name','Position','Value']
 
-
 for i in range(len(profileValues)):
 	print("collecting row " + str(i))
 	resultsRow = [imageName, roiName, i, profileValues[i]]
 	csvWriter.writerow(resultsRow)
 
-
 csvFile.close() # closes the output file so it can be used elsewhere
-
 print("Finished.")
 
 

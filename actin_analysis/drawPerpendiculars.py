@@ -13,10 +13,10 @@ import math
 
 # ---- parameters
 
-profileSpacing = 2.0 # how far apart profiles should be along the cable (in scaled units)
+profileSpacing = 10.0 # how far apart profiles should be along the cable (in scaled units)
 slopeCalcSpacing = 1 # int, how far away we look along the line to calculate the slope (in pixels)
-profileLength = 5.0 # total length of profile line (in pixels for now)
-profileWidth = 1.0 # width of profile line (in pixels for now)
+profileLength = 10.0 # total length of profile line (in pixels for now)
+profileWidth = 5.0 # width of profile line (in pixels for now)
 
 # ---- create image for testing
 
@@ -93,69 +93,21 @@ def findPerp(xa, ya, xb, yb, perpLength):
 	passing through (xb,yb), of length perpLength
 	all parameters = floats
 	"""
-	# get equations for the line and perpendicular, checking for boundary conditions
-	# Line ab: y = m * x + b
-	# Perpendicular line: y = mp * x + bp
 	# calculate endpoints of new perpendicular line of length r: (xc,yc) and (xd,yd)
 
-	# TODO: remove slope/intercept??
-	
-	if (xa-xb == 0.0): # vertical line, slope and intercept are undefined
-	
-		print("the original line is vertical")
-		# slope m is undefined, slope of perp mp = 0
-		mp = 0.0
-		# intercept b is undefined, intercept of perp bp = yb
-		bp = yb
-	
-		# find points c and d on the horizontal line
-		xc = xb + profileLength/2.0
-		yc = yb
-	
-		xd = xb - profileLength/2.0
-		yd = yb
-		
-		
-	elif (ya - yb == 0.0): # horizontal line, slope and intercept of perp are undefined
-	
-		print("the original line is horizontal")
-		# slope m is 0, slope of perp mp = undefined
-		m = 0.0
-		# intercept b is yb, intercept of perp bp is undefined
-		b = yb
-	
-		# find points c and d on the vertical line
-		xc = xb
-		yc = yb + profileLength/2.0
-	
-		xd = xb
-		yd = yb - profileLength/2.0
-	
-		
-	else: # calculate slopes and intercepts in the normal way
-	
-		# slope m is change in y over change in x
-		m = (yb-ya)/(xa-xb)
-		# intercept b is obtained by solving the equation
-		b = yb - (m*xb)
-		print("original line slope = "+str(m)+", intercept = "+str(b))
-		mp = -1/m
-		bp = xb * ((m**2+1.0)/m) + b # must use ** not ^!
-		print("perpendicular line slope = "+str(mp)+", intercept = "+str(bp))
-	
-		# find points c and d on the perpendicular unit vector through point b
-		# thanks to David Nehme on Stack Overflow
-	
-		abDist = math.sqrt((xb-xa)**2 + (yb-ya)**2)
-	
-		dx = (xb-xa)/abDist
-		dy = (yb-ya)/abDist
-	
-		xc = xb + (profileLength/2)*dy
-		yc = yb - (profileLength/2)*dx
-	
-		xd = xb - (profileLength/2)*dy
-		yd = yb + (profileLength/2)*dx
+	# find points c and d on the perpendicular unit vector through point b
+	# thanks to David Nehme on Stack Overflow
+
+	abDist = math.sqrt((xb-xa)**2 + (yb-ya)**2)
+
+	dx = (xb-xa)/abDist
+	dy = (yb-ya)/abDist
+
+	xc = xb + (profileLength/2)*dy
+	yc = yb - (profileLength/2)*dx
+
+	xd = xb - (profileLength/2)*dy
+	yd = yb + (profileLength/2)*dx
 
 	return xc, yc, xd, yd # a tuple
 
