@@ -1,8 +1,8 @@
-# @long(label = "Profile spacing, um", value=1.0) profileSpacing
-# @long(label = "Profile length, um", value=0.5) profileLength
-# @int(label = "Profile line width, pixels", value=1) profileWidth
-# @File(label = "Output directory", style = "directory") outputDir
-# @ImagePlus(label = "Image to analyze") imp
+#@double(label = "Profile spacing, um") profileSpacing
+#@double(label = "Profile length, um", value = 0.5) profileLength
+#@int(label = "Profile line width, pixels", value = 1) profileWidth
+#@File(label = "Output directory", style = "directory") outputDir
+#@ImagePlus(label = "Image to analyze") imp
 
 # Note: Do not change or remove the first few lines! They provide essential parameters.
 
