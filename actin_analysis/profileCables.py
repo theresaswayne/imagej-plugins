@@ -1,7 +1,8 @@
 # @long(label = "Profile spacing, um", value=1.0) profileSpacing
-# @long(label = "Profile length, um", value=1.0) profileLength
+# @long(label = "Profile length, um", value=0.5) profileLength
 # @int(label = "Profile line width, pixels", value=1) profileWidth
 # @File(label = "Output directory", style = "directory") outputDir
+# @ImagePlus(label = "Image to analyze") imp
 
 # Note: Do not change or remove the first few lines! They provide essential parameters.
 
@@ -18,7 +19,6 @@
 
 # TODO: Output a CSV file containing the profile along each original line
 # TODO: Output a snapshot of the image with the original lines, and perpendiculars in a contrasting color, zoomed up for easy viewing
-# TODO: Put all parameters in terms of um
 
 # Usage: Open an image and draw lines along each cable you want to analyze. 
 #	Press T after each one to add to the ROI Manager.
@@ -86,49 +86,52 @@ def findPerp(xa, ya, xb, yb, profileLength):
 # ---- TESTING
 
 # create image
-imp = IJ.createImage("test", "16-bit ramp", 200, 200, 1)
+#imp = IJ.createImage("test", "16-bit ramp", 200, 200, 1)
 
 # give it a test scale factor
-myCal = Calibration()
-myCal.setUnit("um")
-myCal.pixelHeight = 0.06
-myCal.pixelWidth = 0.06
+#myCal = Calibration()
+#myCal.setUnit("um")
+#myCal.pixelHeight = 0.06
+#myCal.pixelWidth = 0.06
 
-imp.setCalibration(myCal)
+#imp.setCalibration(myCal)
 
 # show the image
-imp.show()
+#imp.show()
 
 # create some roughly diagonal ROIs
 
-rm = get_roi_manager(new=True) # reset the ROI mgr
+#rm = get_roi_manager(new=True) # reset the ROI mgr
 
 #random.seed(9)
 
-for n in range(4):
-	xPoints = []
-	for i in range(20):
-		xPoints.append(random.randrange(10,150))
-	xPoints = sorted(xPoints)
+#for n in range(4):
+#	xPoints = []
+#	for i in range(20):
+#		xPoints.append(random.randrange(10,150))
+#	xPoints = sorted(xPoints)
 	
-	yPoints = []
-	for i in range(20):
-		yPoints.append(random.randrange(10,150))
-	yPoints = sorted(yPoints)
-	
+#	yPoints = []
+#	for i in range(20):
+#		yPoints.append(random.randrange(10,150))
+#	yPoints = sorted(yPoints)
+#	
 	# create ROI and add to manager
-	testLine = PolygonRoi(xPoints, yPoints, Roi.FREELINE)
-	rm.addRoi(testLine)
-	RoiName = "Z" + str(n+1)
-	RoiIndex = rm.getCount() - 1
-	rm.rename(RoiIndex, RoiName)
+#	testLine = PolygonRoi(xPoints, yPoints, Roi.FREELINE)
+#	rm.addRoi(testLine)
+#	RoiName = "Z" + str(n+1)
+#	RoiIndex = rm.getCount() - 1
+#	rm.rename(RoiIndex, RoiName)
 
 # ---- SETUP
 
-# get image info
+# get image and ROI info
+# imp = 
 imageName = imp.getTitle()
 imageCalib = imp.getCalibration()
 pixSize = imageCalib.pixelHeight # assuming in microns
+
+rm = get_roi_manager(new=False) # do not reset the ROI mgr
 
 # calibrate the profile spacing and intervals
 profileSpacingPix = int(profileSpacing/pixSize)
@@ -165,8 +168,8 @@ if (numCables == 0):
 
 # Rename ROIs C1, C2, ... for Cable 1, 2, ...
 for i in range(numCables):
-	CableName = "C" + str(i+1)
-	rm.rename(i, CableName)
+	cableName = "C" + str(i+1)
+	rm.rename(i, cableName)
 
 # Loop through ROIs (assuming perps are added at end of list)
 
@@ -174,6 +177,7 @@ for cableIndex in range(numCables):
 	
 	cable = rm.getRoi(cableIndex)
 	cableName = cable.getName()
+	rm.select(cableIndex) # moves to the correct slice
 
 	# sample the line evenly
 	sampLine = cable.getInterpolatedPolygon(1,False) # a FloatPolygon with evenly spaced points, no smoothing
