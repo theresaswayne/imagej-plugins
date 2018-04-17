@@ -54,7 +54,7 @@ rm.runCommand("Open",rois_)
 
 numROIs = rm.getCount()
 
-for roiIndex in range(3, 5):
+for roiIndex in range(0, numROIs): # TESTING: limited range  
 
 	# only pick ones that contain a hyphen (the cross profiles)
 	if "-"	in rm.getName(roiIndex):
@@ -69,13 +69,12 @@ for roiIndex in range(3, 5):
 		profileValues = roiPlot.getProfile() # a double array
 		profileXVals = roiPlot.getPlot().getXValues()
 		# plotName = baseName + "_" + rm.getName(roiIndex)
-		plotName = "_" + rm.getName(roiIndex)
+		plotName = baseName + "_" + rm.getName(roiIndex)
 		print("now plotting " + plotName)
 		roiPlot.createWindow()
-		myPlot = WindowManager.getWindow("Plot of "+baseName)
+		myPlot = WindowManager.getCurrentWindow()
+		# POSSIBLE BUG -- sometimes misses renaming
 		myPlot.setTitle(plotName)
-
-		# BUG: only one plot window is renamed. The contents are (I think) those of the first ROI profiled, but the name is the last.
 
 		# do the fit
 		# check if fit was successful (R2 or status?)
