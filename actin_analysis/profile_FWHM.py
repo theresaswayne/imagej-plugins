@@ -1,7 +1,6 @@
 #@File(label = "Input image", style = "file") inputImage
 #@File(label = "Input ROIs", style = "file") ROIset
 
-
 # profile_FWHM.py
 # for testing curve fitting and fwhm calculation on actin cable profiles
 
@@ -77,6 +76,7 @@ for roiIndex in range(0, numROIs): # TESTING: limited range
 		myPlot.setTitle(plotName)
 
 		# do the fit
+		
 		# check if fit was successful (R2 or status?)
 		# retrieve the r2, parameters
 		# calculate fwhm (assuming gaussian)
