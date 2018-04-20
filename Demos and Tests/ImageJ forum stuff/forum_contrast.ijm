@@ -1,0 +1,10 @@
+run("Blobs (25K)");
+selectWindow("blobs.gif");
+run("Duplicate...", "title=blobs-enhanced.gif");
+selectWindow("blobs.gif");
+run("Histogram");
+selectWindow("blobs-enhanced.gif");
+run("Enhance Contrast...", "saturated=10 normalize");
+selectWindow("blobs-enhanced.gif");
+run("Histogram");
+run("Tile");
