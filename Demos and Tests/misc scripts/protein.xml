@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE eSummaryResult PUBLIC "-//NLM//DTD eSummaryResult//EN" "https://www.ncbi.nlm.nih.gov/entrez/query/DTD/eSummaryDTD/eSummary_protein.dtd">
+<eSummaryResult>
+    <DocumentSummarySet status="OK">
+        <DocumentSummary uid="15718680">
+            <Caption>NP_005537</Caption>
+            <Title>tyrosine-protein kinase ITK/TSK [Homo sapiens]</Title>
+            <Extra>gi|15718680|ref|NP_005537.3|</Extra>
+            <Gi>15718680</Gi>
+
+            <CreateDate>1999/06/09</CreateDate>
+            <UpdateDate>2011/10/09</UpdateDate>
+            <Flags>512</Flags>
+            <TaxId>9606</TaxId>
+            <Slen>620</Slen>
+
+            <Biomol/>
+
+            <MolType>aa</MolType>
+            <Topology>linear</Topology>
+            <SourceDb>refseq</SourceDb>
+            <SegSetSize>0</SegSetSize>
+            <ProjectId>0</ProjectId>
+            <Genome>genomic</Genome>
+
+            <SubType>chromosome|map</SubType>
+            <SubName>5|5q31-q32</SubName>
+            <AssemblyGi>399658</AssemblyGi>
+            <AssemblyAcc>D13720.1</AssemblyAcc>
+            <Tech/>
+            <Completeness/>
+            <GeneticCode>1</GeneticCode>
+
+            <Strand/>
+            <Organism>Homo sapiens</Organism>
+            <Statistics>
+                <Stat type="all" count="8"/>
+                <Stat type="blob_size" count="16154"/>
+                <Stat type="cdregion" count="1"/>
+                <Stat type="cdregion" subtype="CDS" count="1"/>
+                <Stat type="gene" count="1"/>
+                <Stat type="gene" subtype="Gene" count="1"/>
+                <Stat type="org" count="1"/>
+                <Stat type="prot" count="1"/>
+                <Stat type="prot" subtype="Prot" count="1"/>
+                <Stat type="pub" count="14"/>
+                <Stat type="pub" subtype="PubMed" count="10"/>
+                <Stat type="pub" subtype="PubMed/Gene-rif" count="4"/>
+                <Stat type="site" count="4"/>
+                <Stat type="site" subtype="Site" count="4"/>
+                <Stat source="CDD" type="all" count="15"/>
+                <Stat source="CDD" type="region" count="6"/>
+                <Stat source="CDD" type="region" subtype="Region" count="6"/>
+                <Stat source="CDD" type="site" count="9"/>
+                <Stat source="CDD" type="site" subtype="Site" count="9"/>
+                <Stat source="HPRD" type="all" count="3"/>
+                <Stat source="HPRD" type="site" count="3"/>
+                <Stat source="HPRD" type="site" subtype="Site" count="3"/>
+                <Stat source="SNP" type="all" count="31"/>
+                <Stat source="SNP" type="imp" count="31"/>
+                <Stat source="SNP" type="imp" subtype="variation" count="31"/>
+                <Stat source="all" type="all" count="57"/>
+                <Stat source="all" type="blob_size" count="16154"/>
+                <Stat source="all" type="cdregion" count="1"/>
+                <Stat source="all" type="gene" count="1"/>
+                <Stat source="all" type="imp" count="31"/>
+                <Stat source="all" type="org" count="1"/>
+                <Stat source="all" type="prot" count="1"/>
+                <Stat source="all" type="pub" count="14"/>
+                <Stat source="all" type="region" count="6"/>
+                <Stat source="all" type="site" count="16"/>
+            </Statistics>
+            <AccessionVersion>NP_005537.3</AccessionVersion>
+            <Properties aa="2">2</Properties>
+            <Comment/>
+            <OSLT indexed="yes">NP_005537.3</OSLT>
+            <IdGiClass mol="3" repr="2" gi_state="10" sat="4" sat_key="58760802" owner="20"
+                sat_name="NCBI" owner_name="NCBI-Genomes" defdiv="GNM" length="620" extfeatmask="41"
+            />
+        </DocumentSummary>
+
+    </DocumentSummarySet>
+</eSummaryResult>

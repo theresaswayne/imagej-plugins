@@ -1,0 +1,13 @@
+run("Enhance Contrast...", "saturated=0.4");
+run("Sharpen");
+imageTitle = getTitle() + "_red.tif";
+rename(imageTitle);
+run("Threshold...");
+waitForUser;
+run("Convert to Mask");
+run("Remove Outliers...", "radius=0.8 threshold=50 which=Bright");
+run("Analyze Particles...", "size=40-Infinity display summarize");
+run("Skeletonize (2D/3D)"); 
+run("Analyze Skeleton (2D/3D)", "prune=[lowest intensity voxel]");
+selectImage(imageTitle);
+run("Strahler Analysis", "max.=20 infer ignore method=[lowest intensity voxel] 8- bit=[Tagged skeleton] display_iteration show");

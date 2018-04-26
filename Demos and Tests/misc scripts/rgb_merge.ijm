@@ -1,0 +1,14 @@
+type = "RGB";
+newImage("HyperStack", type + " color-mode label", 400, 300, 1, 9, 1);
+rename("red");
+drawString("red", 10, 100);
+newImage("HyperStack", type + " color-mode label", 400, 300, 1, 9, 1);
+rename("green");
+drawString("green", 60, 100);
+newImage("HyperStack", type + " color-mode label", 400, 300, 1, 9, 1);
+rename("blue");
+drawString("blue", 110, 100);
+//newImage("HyperStack", type + " color-mode label", 400, 300, 1, 9, 1);
+//rename("cyan");
+//drawString("cyan", 160, 100);
+run("Merge Channels...", "c1=red c2=green c3=blue create");

@@ -1,0 +1,2 @@
+Stack.setDisplayMode("composite");
+run("Stack to RGB");

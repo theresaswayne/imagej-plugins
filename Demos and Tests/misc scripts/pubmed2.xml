@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<data>
+<PubmedArticle>
+    <MedlineCitation Status="In-Process" Owner="NLM">
+        <PMID Version="1">28099825</PMID>
+        <DateCreated>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>18</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>18</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Electronic">1533-4406</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>376</Volume>
+                    <Issue>3</Issue>
+                    <PubDate>
+                        <Year>2017</Year>
+                        <Month>01</Month>
+                        <Day>19</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>The New England journal of medicine</Title>
+                <ISOAbbreviation>N. Engl. J. Med.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Transmission of Extensively Drug-Resistant Tuberculosis in South Africa.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>243-253</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1056/NEJMoa1604544</ELocationID>
+            <Abstract>
+                <AbstractText>Background Drug-resistant tuberculosis threatens recent gains in the treatment of tuberculosis and human immunodeficiency virus (HIV) infection worldwide. A widespread epidemic of extensively drug-resistant (XDR) tuberculosis is occurring in South Africa, where cases have increased substantially since 2002. The factors driving this rapid increase have not been fully elucidated, but such knowledge is needed to guide public health interventions. Methods We conducted a prospective study involving 404 participants in KwaZulu-Natal Province, South Africa, with a diagnosis of XDR tuberculosis between 2011 and 2014. Interviews and medical-record reviews were used to elicit information on the participants' history of tuberculosis and HIV infection, hospitalizations, and social networks. Mycobacterium tuberculosis isolates underwent insertion sequence (IS)6110 restriction-fragment-length polymorphism analysis, targeted gene sequencing, and whole-genome sequencing. We used clinical and genotypic case definitions to calculate the proportion of cases of XDR tuberculosis that were due to inadequate treatment of multidrug-resistant (MDR) tuberculosis (i.e., acquired resistance) versus those that were due to transmission (i.e., transmitted resistance). We used social-network analysis to identify community and hospital locations of transmission. Results Of the 404 participants, 311 (77%) had HIV infection; the median CD4+ count was 340 cells per cubic millimeter (interquartile range, 117 to 431). A total of 280 participants (69%) had never received treatment for MDR tuberculosis. Genotypic analysis in 386 participants revealed that 323 (84%) belonged to 1 of 31 clusters. Clusters ranged from 2 to 14 participants, except for 1 large cluster of 212 participants (55%) with a LAM4/KZN strain. Person-to-person or hospital-based epidemiologic links were identified in 123 of 404 participants (30%). Conclusions The majority of cases of XDR tuberculosis in KwaZulu-Natal, South Africa, an area with a high tuberculosis burden, were probably due to transmission rather than to inadequate treatment of MDR tuberculosis. These data suggest that control of the epidemic of drug-resistant tuberculosis requires an increased focus on interrupting transmission. (Funded by the National Institute of Allergy and Infectious Diseases and others.).</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Shah</LastName>
+                    <ForeName>N Sarita</ForeName>
+                    <Initials>NS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Auld</LastName>
+                    <ForeName>Sara C</ForeName>
+                    <Initials>SC</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Brust</LastName>
+                    <ForeName>James C M</ForeName>
+                    <Initials>JC</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Mathema</LastName>
+                    <ForeName>Barun</ForeName>
+                    <Initials>B</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ismail</LastName>
+                    <ForeName>Nazir</ForeName>
+                    <Initials>N</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Moodley</LastName>
+                    <ForeName>Pravi</ForeName>
+                    <Initials>P</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Mlisana</LastName>
+                    <ForeName>Koleka</ForeName>
+                    <Initials>K</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Allana</LastName>
+                    <ForeName>Salim</ForeName>
+                    <Initials>S</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Campbell</LastName>
+                    <ForeName>Angela</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Mthiyane</LastName>
+                    <ForeName>Thuli</ForeName>
+                    <Initials>T</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Morris</LastName>
+                    <ForeName>Natashia</ForeName>
+                    <Initials>N</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Mpangase</LastName>
+                    <ForeName>Primrose</ForeName>
+                    <Initials>P</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>van der Meulen</LastName>
+                    <ForeName>Hermina</ForeName>
+                    <Initials>H</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Omar</LastName>
+                    <ForeName>Shaheed V</ForeName>
+                    <Initials>SV</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Brown</LastName>
+                    <ForeName>Tyler S</ForeName>
+                    <Initials>TS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Narechania</LastName>
+                    <ForeName>Apurva</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Shaskina</LastName>
+                    <ForeName>Elena</ForeName>
+                    <Initials>E</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Kapwata</LastName>
+                    <ForeName>Thandi</ForeName>
+                    <Initials>T</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Kreiswirth</LastName>
+                    <ForeName>Barry</ForeName>
+                    <Initials>B</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Gandhi</LastName>
+                    <ForeName>Neel R</ForeName>
+                    <Initials>NR</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>From the Emory University Rollins School of Public Health and School of Medicine (N.S.S., S.C.A., S.A., A.C., N.R.G.) and the Centers for Disease Control and Prevention (N.S.S.) - both in Atlanta; Albert Einstein College of Medicine and Montefiore Medical Center (N.S.S., J.C.M.B., N.R.G.), Columbia University Mailman School of Public Health (B.M., T.S.B.), and the American Museum of Natural History (A.N.) - all in New York; the National Institute for Communicable Diseases, Johannesburg (N.I., H.M., S.V.O.), University of KwaZulu-Natal and National Health Laboratory Service, Durban (P. Moodley, K.M., T.M., P. Mpangase), and the South African Medical Research Council, Cape Town (N.M., T.K.) - all in South Africa; and the Public Health Research Institute, New Jersey Medical School-Rutgers University, Newark (E.S., B.K.).</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>R01 AI089349</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI087465</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>K24 AI114444</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>K23 AI083088</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>T32 HL116271</GrantID>
+                    <Acronym>HL</Acronym>
+                    <Agency>NHLBI NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P30 AI050409</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P30 AI051519</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>UL1 TR001073</GrantID>
+                    <Acronym>TR</Acronym>
+                    <Agency>NCATS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="">Journal Article</PublicationType>
+                <PublicationType UI="">Research Support, N.I.H., Extramural</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>N Engl J Med</MedlineTA>
+            <NlmUniqueID>0255562</NlmUniqueID>
+            <ISSNLinking>0028-4793</ISSNLinking>
+        </MedlineJournalInfo>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">28099825</ArticleId>
+            <ArticleId IdType="doi">10.1056/NEJMoa1604544</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="In-Data-Review" Owner="NLM">
+        <PMID Version="1">28099857</PMID>
+        <DateCreated>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>18</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>18</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Electronic">2211-1247</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>18</Volume>
+                    <Issue>3</Issue>
+                    <PubDate>
+                        <Year>2017</Year>
+                        <Month>Jan</Month>
+                        <Day>17</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Cell reports</Title>
+                <ISOAbbreviation>Cell Rep</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>A Systems Approach Reveals MAVS Signaling in Myeloid Cells as Critical for Resistance to Ebola Virus in Murine Models of Infection.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>816-829</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="pii" ValidYN="Y">S2211-1247(16)31776-4</ELocationID>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.celrep.2016.12.069</ELocationID>
+            <Abstract>
+                <AbstractText NlmCategory="UNASSIGNED">The unprecedented 2013-2016 outbreak of Ebola virus (EBOV) resulted in over 11,300 human deaths. Host resistance to RNA viruses requires RIG-I-like receptor (RLR) signaling through the adaptor protein, mitochondrial antiviral signaling protein (MAVS), but the role of RLR-MAVS in orchestrating anti-EBOV responses in vivo is not known. Here we apply a systems approach to MAVS(-/-) mice infected with either wild-type or mouse-adapted EBOV. MAVS controlled EBOV replication through the expression of IFNα, regulation of inflammatory responses in the spleen, and prevention of cell death in the liver, with macrophages implicated as a major cell type influencing host resistance. A dominant role for RLR signaling in macrophages was confirmed following conditional MAVS deletion in LysM+ myeloid cells. These findings reveal tissue-specific MAVS-dependent transcriptional pathways associated with resistance to EBOV, and they demonstrate that EBOV adaptation to cause disease in mice involves changes in two distinct events, RLR-MAVS antagonism and suppression of RLR-independent IFN-I responses.</AbstractText>
+                <CopyrightInformation>Published by Elsevier Inc.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Dutta</LastName>
+                    <ForeName>Mukta</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Microbiology, School of Medicine, University of Washington, Seattle, WA 59105, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Robertson</LastName>
+                    <ForeName>Shelly J</ForeName>
+                    <Initials>SJ</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Okumura</LastName>
+                    <ForeName>Atsushi</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Microbiology, School of Medicine, University of Washington, Seattle, WA 59105, USA; Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA; Center for Infection and Immunity, Mailman School of Public Health, Columbia University, New York, NY 10032, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Scott</LastName>
+                    <ForeName>Dana P</ForeName>
+                    <Initials>DP</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Rocky Mountain Veterinary Branch, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chang</LastName>
+                    <ForeName>Jean</ForeName>
+                    <Initials>J</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Microbiology, School of Medicine, University of Washington, Seattle, WA 59105, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Weiss</LastName>
+                    <ForeName>Jeffrey M</ForeName>
+                    <Initials>JM</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Microbiology, School of Medicine, University of Washington, Seattle, WA 59105, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Sturdevant</LastName>
+                    <ForeName>Gail L</ForeName>
+                    <Initials>GL</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Feldmann</LastName>
+                    <ForeName>Friederike</ForeName>
+                    <Initials>F</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Haddock</LastName>
+                    <ForeName>Elaine</ForeName>
+                    <Initials>E</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chiramel</LastName>
+                    <ForeName>Abhilash I</ForeName>
+                    <Initials>AI</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ponia</LastName>
+                    <ForeName>Sanket S</ForeName>
+                    <Initials>SS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Dougherty</LastName>
+                    <ForeName>Jonathan D</ForeName>
+                    <Initials>JD</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Katze</LastName>
+                    <ForeName>Michael G</ForeName>
+                    <Initials>MG</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Microbiology, School of Medicine, University of Washington, Seattle, WA 59105, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Rasmussen</LastName>
+                    <ForeName>Angela L</ForeName>
+                    <Initials>AL</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Microbiology, School of Medicine, University of Washington, Seattle, WA 59105, USA; Center for Infection and Immunity, Mailman School of Public Health, Columbia University, New York, NY 10032, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Best</LastName>
+                    <ForeName>Sonja M</ForeName>
+                    <Initials>SM</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Laboratory of Virology, Rocky Mountain Laboratories, National Institute of Allergy and Infectious Diseases, Hamilton, MT 59840, USA. Electronic address: sbest@niaid.nih.gov.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="">Journal Article</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Cell Rep</MedlineTA>
+            <NlmUniqueID>101573691</NlmUniqueID>
+        </MedlineJournalInfo>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">Ebola virus</Keyword>
+            <Keyword MajorTopicYN="N">MAVS</Keyword>
+            <Keyword MajorTopicYN="N">RLR</Keyword>
+            <Keyword MajorTopicYN="N">conditional</Keyword>
+            <Keyword MajorTopicYN="N">interferon</Keyword>
+            <Keyword MajorTopicYN="N">knockout</Keyword>
+            <Keyword MajorTopicYN="N">macrophages</Keyword>
+            <Keyword MajorTopicYN="N">mouse adapted</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2016</Year>
+                <Month>07</Month>
+                <Day>14</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2016</Year>
+                <Month>11</Month>
+                <Day>11</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2016</Year>
+                <Month>12</Month>
+                <Day>20</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">28099857</ArticleId>
+            <ArticleId IdType="pii">S2211-1247(16)31776-4</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.celrep.2016.12.069</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">28099754</PMID>
+        <DateCreated>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>18</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>18</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1523-4681</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2016</Year>
+                        <Month>Dec</Month>
+                        <Day>29</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Journal of bone and mineral research : the official journal of the American Society for Bone and Mineral Research</Title>
+                <ISOAbbreviation>J. Bone Miner. Res.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Addressing the Crisis in the Treatment of Osteoporosis: A Path Forward.</ArticleTitle>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1002/jbmr.3074</ELocationID>
+            <Abstract>
+                <AbstractText NlmCategory="UNASSIGNED">Considerable data and media attention have highlighted a potential &quot;crisis&quot; in the treatment of osteoporosis. Specifically, despite the availability of several effective drugs to prevent fractures, many patients who need pharmacological therapy are either not being prescribed these medications or if prescribed a medication, are simply not taking it. Although there are many reasons for this &quot;gap&quot; in the treatment of osteoporosis, a major factor is physician and patient concerns over the risk of side effects, especially atypical femur fractures (AFFs) related to bisphosphonate (and perhaps other antiresorptive) drug therapy. In this perspective, we review the current state of undertreatment of patients at increased fracture risk and suggest possible short-, intermediate-, and long-term approaches to address patient concerns, specifically those related to AFF risk. We suggest improved patient and physician education on prodromal symptoms, extended femur scans using dual-energy X-ray absorptiometry (DXA) to monitor patients on antiresorptive treatment, better identification of high-risk patients perhaps using geometrical parameters from DXA and other risk factors, and more research on pharmacogenomics to identify risk markers. Although not the only impediment to appropriate treatment of osteoporosis, concern over AFFs remains a major issue and one that needs to be resolved for effective dissemination of existing treatments to reduce fracture risk. © 2017 American Society for Bone and Mineral Research.</AbstractText>
+                <CopyrightInformation>© 2017 American Society for Bone and Mineral Research.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Khosla</LastName>
+                    <ForeName>Sundeep</ForeName>
+                    <Initials>S</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Robert and Arlene Kogod Center on Aging and Endocrine Research Unit, Mayo Clinic College of Medicine, Rochester, MN, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cauley</LastName>
+                    <ForeName>Jane A</ForeName>
+                    <Initials>JA</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Epidemiology, Graduate School of Public Health, University of Pittsburgh, Pittsburgh, PA, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Compston</LastName>
+                    <ForeName>Juliet</ForeName>
+                    <Initials>J</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Medicine, Cambridge Biomedical Campus, Cambridge, UK.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Kiel</LastName>
+                    <ForeName>Douglas P</ForeName>
+                    <Initials>DP</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Institute for Aging Research, Department of Medicine, Beth Israel Deaconess Medical Center and Harvard Medical School, Boston, MA, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Rosen</LastName>
+                    <ForeName>Clifford</ForeName>
+                    <Initials>C</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Maine Medical Research Institute, Portland, ME, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Saag</LastName>
+                    <ForeName>Kenneth G</ForeName>
+                    <Initials>KG</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>University of Alabama at Birmingham, Birmingham, AL, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Shane</LastName>
+                    <ForeName>Elizabeth</ForeName>
+                    <Initials>E</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Endocrinology, Department of Medicine, Columbia University, New York, NY, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2016</Year>
+                <Month>12</Month>
+                <Day>29</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>J Bone Miner Res</MedlineTA>
+            <NlmUniqueID>8610640</NlmUniqueID>
+            <ISSNLinking>0884-0431</ISSNLinking>
+        </MedlineJournalInfo>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">DXA</Keyword>
+            <Keyword MajorTopicYN="N">FRACTURE PREVENTION</Keyword>
+            <Keyword MajorTopicYN="N">OSTEOPOROSIS</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2016</Year>
+                <Month>11</Month>
+                <Day>16</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2016</Year>
+                <Month>12</Month>
+                <Day>13</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2016</Year>
+                <Month>12</Month>
+                <Day>24</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>19</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">28099754</ArticleId>
+            <ArticleId IdType="doi">10.1002/jbmr.3074</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">28089411</PMID>
+        <DateCreated>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>16</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>16</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Print">1473-0502</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2016</Year>
+                        <Month>Dec</Month>
+                        <Day>29</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Transfusion and apheresis science : official journal of the World Apheresis Association : official journal of the European Society for Haemapheresis</Title>
+                <ISOAbbreviation>Transfus. Apher. Sci.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Apheresis Medicine education in the United States of America: State of the discipline.</ArticleTitle>
+            <ELocationID EIdType="pii" ValidYN="Y">S1473-0502(16)30189-6</ELocationID>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.transci.2016.12.004</ELocationID>
+            <Abstract>
+                <AbstractText NlmCategory="UNASSIGNED">Apheresis Medicine is a medical discipline that involves a variety of procedures (based on the targeted component to be removed or collected), indications (therapeutic vs. donation), and personnel (operators, management, and medical oversight). Apheresis services are accredited and/or regulated by a number of agencies and organizations. Given the complexity and the heterogeneity of apheresis services, it has been particularly challenging to formulate educational goals and define curriculums that easily cover all aspects of Apheresis Medicine. This review summarizes the current state of the discipline in the United States of America, and some of the challenges, strategies, and resources that Apheresis Medicine educators have used to ensure that Apheresis Medicine educational programs meet the health care needs of the relevant population within regulatory and accrediting entity frameworks.</AbstractText>
+                <CopyrightInformation>Copyright © 2016 Elsevier Ltd. All rights reserved.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Pagano</LastName>
+                    <ForeName>Monica B</ForeName>
+                    <Initials>MB</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Laboratory Medicine, University of Washington, Seattle, WA 98195, United States. Electronic address: monibea@uw.edu.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Wehrli</LastName>
+                    <ForeName>Gay</ForeName>
+                    <Initials>G</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, University of Virginia, Charlottesville, VA, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cloutier</LastName>
+                    <ForeName>Darlene</ForeName>
+                    <Initials>D</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Transfusion and Apheresis Medicine Services, Department of Pathology, Baystate Medical Center, Baystate Health, Springfield, MA, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Galvin Karr</LastName>
+                    <ForeName>Eileen</ForeName>
+                    <Initials>E</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Transfusion and Apheresis Medicine Services, Department of Pathology, Baystate Medical Center, Baystate Health, Springfield, MA, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Lopez-Plaza</LastName>
+                    <ForeName>Ileana</ForeName>
+                    <Initials>I</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, Henry Ford Health System, Detroit, MI, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Schwartz</LastName>
+                    <ForeName>Joseph</ForeName>
+                    <Initials>J</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Cell Biology, Columbia University, New York, NY, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Andrzejewski</LastName>
+                    <ForeName>Chester</ForeName>
+                    <Initials>C</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology, University of Massachusetts Medical School-Baystate, Springfield, MA, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Winters</LastName>
+                    <ForeName>Jeffrey L</ForeName>
+                    <Initials>JL</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, Mayo Clinic, Rochester, MN, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Wong</LastName>
+                    <ForeName>Edward C C</ForeName>
+                    <Initials>EC</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Departments of Pediatrics and Pathology, George Washington School of Medicine and Health Sciences, Washington, DC, United States; Department of Coagulation, Quest Diagnostics Nichols Institute, Chantilly, VA, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Wu</LastName>
+                    <ForeName>Yanyun</ForeName>
+                    <Initials>Y</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Bloodworks Northwest, Seattle, WA, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Zantek</LastName>
+                    <ForeName>Nicole D</ForeName>
+                    <Initials>ND</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Laboratory Medicine and Pathology, University of Minnesota, Minneapolis, MN, United States.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="">Review</PublicationType>
+                <PublicationType UI="">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2016</Year>
+                <Month>12</Month>
+                <Day>29</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>England</Country>
+            <MedlineTA>Transfus Apher Sci</MedlineTA>
+            <NlmUniqueID>101095653</NlmUniqueID>
+            <ISSNLinking>1473-0502</ISSNLinking>
+        </MedlineJournalInfo>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">Apheresis medical education</Keyword>
+            <Keyword MajorTopicYN="N">Curriculum</Keyword>
+            <Keyword MajorTopicYN="N">Milestones</Keyword>
+            <Keyword MajorTopicYN="N">Training programs</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>17</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>17</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>17</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">28089411</ArticleId>
+            <ArticleId IdType="pii">S1473-0502(16)30189-6</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.transci.2016.12.004</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">28089461</PMID>
+        <DateCreated>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>16</Day>
+        </DateCreated>
+        <DateRevised>
+            <Year>2017</Year>
+            <Month>01</Month>
+            <Day>16</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">2212-4411</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2016</Year>
+                        <Month>Nov</Month>
+                        <Day>22</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Oral surgery, oral medicine, oral pathology and oral radiology</Title>
+                <ISOAbbreviation>Oral Surg Oral Med Oral Pathol Oral Radiol</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Chronic lymphocytic leukemia in association with a ranula: a report and review of the literature.</ArticleTitle>
+            <ELocationID EIdType="pii" ValidYN="Y">S2212-4403(16)30678-2</ELocationID>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.oooo.2016.11.006</ELocationID>
+            <Abstract>
+                <AbstractText NlmCategory="UNASSIGNED">Chronic lymphocytic leukemia (CLL), an indolent neoplasm of B lymphocytes, is the most common adult leukemia in the Western Hemisphere. Despite this, however, the intraoral presentation of CLL is quite rare. We report the case of an 83-year-old woman with CLL incidentally involving minor salivary glands in association with a ranula (floor-of-mouth mucocele).</AbstractText>
+                <CopyrightInformation>Copyright © 2016. Published by Elsevier Inc.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Peters</LastName>
+                    <ForeName>Scott M</ForeName>
+                    <Initials>SM</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Oral and Maxillofacial Pathology, Columbia University College of Dental Medicine, New York, NY, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Han</LastName>
+                    <ForeName>Chang</ForeName>
+                    <Initials>C</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Private Practice, Hackensack, NJ, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Yoon</LastName>
+                    <ForeName>Angela J</ForeName>
+                    <Initials>AJ</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Oral and Maxillofacial Pathology, Columbia University College of Dental Medicine, New York, NY, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Philipone</LastName>
+                    <ForeName>Elizabeth M</ForeName>
+                    <Initials>EM</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Division of Oral and Maxillofacial Pathology, Columbia University College of Dental Medicine, New York, NY, USA. Electronic address: ep2464@columbia.edu.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2016</Year>
+                <Month>11</Month>
+                <Day>22</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Oral Surg Oral Med Oral Pathol Oral Radiol</MedlineTA>
+            <NlmUniqueID>101576782</NlmUniqueID>
+        </MedlineJournalInfo>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2016</Year>
+                <Month>09</Month>
+                <Day>02</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2016</Year>
+                <Month>11</Month>
+                <Day>03</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2016</Year>
+                <Month>11</Month>
+                <Day>09</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>17</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>17</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2017</Year>
+                <Month>1</Month>
+                <Day>17</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">28089461</ArticleId>
+            <ArticleId IdType="pii">S2212-4403(16)30678-2</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.oooo.2016.11.006</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+</data>
