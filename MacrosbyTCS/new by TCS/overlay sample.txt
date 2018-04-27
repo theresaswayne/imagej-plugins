@@ -1,0 +1,15 @@
+// This macro demonstrates how to use
+// the Overlay.drawString() function.
+
+  newImage("Test", "8-bit Ramp", 600, 300, 1);
+  Overlay.remove;
+  setFont("SanSerif", 45, "antialiased");
+  setColor("red");
+  Overlay.drawString("Red, 45 point, SanSerif", 50,100);
+  setColor(0xff, 0x99, 0x0);
+  setFont("Serif", 28, "antialiased");
+  Overlay.drawString("28 point, orange (ff9900), Serif", 50,150);
+  setColor(150, 100, 255);
+  setLineWidth(5);
+  Overlay.drawRect(25, 40, 550, 130);
+  Overlay.show();

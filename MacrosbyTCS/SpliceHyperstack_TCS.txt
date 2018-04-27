@@ -1,0 +1,9 @@
+// Splice Hyperstack
+// Theresa Swayne, November 2009
+// This macro assembles time series data. Two hyperstacks representing individual timepoints or successive segments of a time series are merged to form a longer time series. 
+// To use: Place in ImageJ/plugins/Macros. Restart ImageJ. Command will appear in the Plugins menu in (the lower) Macros submenu.
+
+
+  macro "Reduce HyperStack" {
+     requires("1.40a");
+     if (!Stack.isHyperStack) exit ("HyperStack required. To merge plain stacks, use Image > Stacks > Concatenate.");

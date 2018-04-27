@@ -1,0 +1,60 @@
+// Reformat_StackIntensity
+//
+// Macro for rearranging results from a stack using ROI Manager or MultiMeasure
+// Puts sum of ID from bud, mother, whole cell on the same line
+// Theresa Swayne, 9/2008
+// last modified 10/08
+//
+// Usage: 
+// Place this file in the ImageJ/plugins/Macros folder.  Start ImageJ. 
+// In ROI Manager create ROIs for each zone in the following order: 1) bud, 2) mother, 3) whole cell. More > Multi Measure > check both boxes.
+// Plugins > Macros > Reformat StackIntensity.
+// Copy new results and paste into spreadsheet.
+
+macro "Reformat Stack Intensity" {
+
+	// insert number of transmitted-light images	
+	transNumber=1;
+		
+	requires("1.38m");
+	n = nResults;
+	label = getTitle();
+
+// read in "Results" table because of weirdness in multimeasure results
+// (the values seem to be private)
+// code from G Landini in IJ List Archives
+// The array "columns[0]" contains the column labels.
+
+	selectWindow("Results");
+	text = getInfo();
+	lines = split(text, "\n");
+	columns = split(lines[0], "\t");
+
+// Sum data from the existing results table assuming bud, mother, whole cell were in consecutive order
+
+	sum=newArray(columns.length);
+
+	for (i=1; i<lines.length-transNumber; i++) {
+    	items=split(lines[i], "\t");
+    	for (j=1; j<items.length; j++) {
+    		if (isNaN(items[j])) {
+    			sum[j]+=0;
+	    	}	else {
+	    		sum[j]=sum[j]+items[j];
+    		}
+		}
+	}
+
+// Re-write the table
+
+    run("Clear Results");
+
+	setResult("Label", 0, label);
+	setResult("Bud IntDen", 0, sum[1]);
+	setResult("Mom IntDen", 0, sum[2]);
+	setResult("Cell IntDen", 0, sum[3]);
+
+	updateResults();
+}
+
+

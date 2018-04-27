@@ -1,0 +1,102 @@
+// Multichannel_Projector
+//
+// Macro for projecting single or multi-channel z-series plus transmitted-light images in a time-lapse experiment
+// Based on my Mega_Projector 7/2008
+// Theresa Swayne 7/2009
+// last updated 7/09
+//
+// How to use: 
+//
+// Place this file in the ImageJ/plugins/Macros folder.
+// Start ImageJ. 
+// Open the data stack 
+// (for LIFF or giant files, virtual stack is best).
+// Plugins > Macros > TCS Mega Projector.
+// Give the number of images per series, and number of channels
+// this will make a composite image, not an RGB. Use Image>Color>Channels Tool to turn trans image on or off. Use Convert to RGB to make a portable, photoshop-compatible image.
+// NOTE the channels must be in XYZCT order: i.e. Channel1 z1...zn then Channel2 z1...zn then 1 transmitted image for each timepoint.
+
+macro "MultichannelProjector" {
+
+imageName = getTitle();
+n=nSlices();
+getDimensions(width, height, channels, slices, frames)
+
+zNumber=6;  // number of slices
+cNumber=2;	// number of channels
+tNumber=60;	// number of timepoints
+slicesPerTime=13;	
+
+// optional: use if your tiffs need inverted, as they say in Pgh
+// run("Invert", "stack");
+// run("Invert LUT");
+
+// get number of images per z series and channels from the user
+
+requires("1.34m");
+Dialog.create("Stack Info");
+Dialog.addNumber("Slices per Z series:", 3);
+Dialog.addNumber("Channels:", 2);
+Dialog.show();
+zNumber = Dialog.getNumber();
+cNumber = Dialog.getNumber();
+ 
+// calculate number of timepoints assuming each consists of 
+// [cNumber] z series plus 1 trans image
+
+slicesPerTime=(cNumber*zNumber)+1;
+tNumber=n/slicesPerTime;
+
+// optional show in log window
+//print("number of timepoints "+tNumber);
+
+// create a hyperstack for the projected images
+
+requires("1.39l");
+
+ run("New HyperStack...", "title="+imageName+"_Hyp type=16-bit width="+width+" height="+height+" channels="+(cNumber+1)+" slices=1 frames="+tNumber+" ");
+
+// loop through timepoints
+
+for (i=1;i<=tNumber; i++) {
+
+	// loop through channels within a timepoint
+
+	for (j=1; j<=cNumber; j++) {	// channel loop
+		startSlice = ((i-1)*slicesPerTime)+((j-1)*zNumber)+1;
+		stopSlice = startSlice+zNumber-1;
+		print("time "+(i)+" channel "+(j)+"\t"+startSlice+"\t"+stopSlice);
+	
+		//	project the fluorescence slices
+
+		selectWindow(imageName);
+		run("Z Project...", "start="+startSlice+" stop="+stopSlice+" projection=[Max Intensity]");
+
+		// copy the projection and paste it into the hyperstack
+		
+		selectWindow("MAX_"+imageName);
+		makeRectangle(0, 0, width, height);
+		run("Copy");	
+		selectWindow(imageName+"_Hyp");
+		Stack.setPosition(j,1,i);
+//		Stack.setFrame(i);
+//		Stack.setChannel(j);
+		run("Paste");
+		selectWindow("MAX_"+imageName);
+		close();
+		}		
+
+
+	// paste the transmitted-light image into the 3rd channel
+
+	selectWindow(imageName);
+	setSlice(stopSlice+1);
+	makeRectangle(0, 0, width, height);
+	run("Copy");
+	selectWindow(imageName+"_Hyp");
+	Stack.setPosition(j+1,1,i);
+	run("Paste");
+	
+    }
+
+}

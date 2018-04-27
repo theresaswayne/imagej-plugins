@@ -1,0 +1,19 @@
+// TCS_NileRedPrep
+// prepares nile red images for processing
+
+rawImageName = getTitle();
+if (endsWith(rawImageName,".tif")) {
+	imageName=substring(rawImageName,0,(lengthOf(rawImageName)-4));
+}
+else {
+	imageName=rawImageName;
+}
+
+run("Make Substack...", "slices=1-15");
+selectWindow("Substack (1-15)");
+run("Z Project...", "start=1 stop=15 projection=[Max Intensity]");
+rename(rawImageName+" p");
+saveAs("Tiff");
+
+// would be nice to make it batch mode
+// even better -- interactively select the start ad end for proection

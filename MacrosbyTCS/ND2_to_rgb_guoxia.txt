@@ -1,0 +1,15 @@
+run("Channels Tool... ");
+Stack.setChannel(1);
+run("Green");
+Stack.setChannel(2);
+run("Red");
+Stack.setDisplayMode("composite");
+//run("Brightness/Contrast...");
+setMinAndMax(0, 4095);
+call("ij.ImagePlus.setDefault16bitRange", 0);
+Stack.setChannel(1);
+setMinAndMax(0, 4095);
+call("ij.ImagePlus.setDefault16bitRange", 0);
+selectWindow("Channels");
+run("Stack to RGB");
+saveAs("Tiff");

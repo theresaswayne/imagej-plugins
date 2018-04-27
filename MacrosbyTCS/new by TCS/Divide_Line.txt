@@ -1,0 +1,16 @@
+// ImageJ macro to mark off a line selection in thirds
+// requires a segmented line selection
+// written by Theresa Swayne (tcs6@columbia.edu), August 2012
+
+run("Fit Spline","straighten");
+getSelectionCoordinates(x,y);
+//    for (i=0; i<x.length; i++)
+//        print(i+" "+x[i]+" "+y[i]);
+oneThird=x.length/3;
+twoThirds=2*x.length/3;
+// Overlay.remove;
+setFont("SanSerif", 24);
+setColor("yellow");
+Overlay.drawString("o",x[oneThird], y[oneThird]);
+Overlay.drawString("o",x[twoThirds], y[twoThirds]);
+Overlay.show;

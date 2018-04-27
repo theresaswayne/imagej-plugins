@@ -1,0 +1,48 @@
+// Reformat_Results
+//
+// Macro for rearranging results from measuring mother and bud lengths
+// Puts mother and bud on the same line
+// Theresa Swayne, 7/2008
+// last modified 8/08
+//
+// Usage: 
+// Place this file in the ImageJ/plugins/Macros folder.
+// Start ImageJ. 
+// Measure lengths of bud and mother for each cell.
+//
+// NOTE: Bud must be measured first!!
+//
+// Plugins > Macros > Reformat Results.
+// Copy new results and paste into Excel spreadsheet.
+
+macro "Reformat Results" {
+  
+	requires("1.38m");
+	n = nResults;
+	label = newArray(n);
+	length = newArray(n);
+
+// Gets labels and lengths from the existing results table
+
+	for (i=0; i<n; i++) {
+		label[i] = getResultLabel(i);
+		length[i] = getResult("Length", i);
+    }
+
+
+    run("Clear Results");
+
+// Re-writes the table, assuming bud and mother were in consecutive order
+// Bud and mother will now be on the same line
+
+	for (i=0; i<n/2; i++) {
+		budIndex=2*i;
+		motherIndex=2*i+1;
+		setResult("Label", i, label[budIndex]);
+		setResult("Bud Length", i, length[budIndex]);
+		setResult("Mother Length", i, length[motherIndex]);
+    }
+     updateResults();
+}
+
+

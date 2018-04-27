@@ -1,0 +1,58 @@
+// Reformat_MitoIntensity
+//
+// Macro for rearranging results from measuring mother and bud mito intensity
+// Puts mother and bud on the same line
+// Theresa Swayne, 9/2008
+// last modified 9/08
+//
+// Usage: 
+// Place this file in the ImageJ/plugins/Macros folder.
+// Start ImageJ. 
+// Measure mitos (area, mean, integrated density) for each zone in the following order: 1) bud, 2) mother, 3) whole cell.
+//
+// Plugins > Macros > Reformat MitoIntensity.
+// Copy new results and paste into spreadsheet.
+
+macro "Reformat MitoIntensity" {
+  
+	requires("1.38m");
+	n = nResults;
+	label = newArray(n);
+	mitoArea = newArray(n);
+	mitoMean = newArray(n);
+	mitoInteg = newArray(n);
+
+// Gets labels and lengths from the existing results table
+
+	for (i=0; i<n; i++) {
+		label[i] = getResultLabel(i);
+		mitoArea[i] = getResult("Area", i);
+		mitoMean[i] = getResult("Mean", i);
+		mitoInteg[i] = getResult("IntDen", i);
+    }
+
+
+    run("Clear Results");
+
+// Re-writes the table, assuming bud, mother, whole cell were in consecutive order
+// All data from one cell will now be on the same line
+
+	for (i=0; i<n/3; i++) {
+		budIndex=3*i;
+		motherIndex=3*i+1;
+		wholecellIndex=3*i+2;
+		setResult("Label", i, label[budIndex]);
+		setResult("Bud Area", i, mitoArea[budIndex]);
+		setResult("Bud Mean", i, mitoMean[budIndex]);
+		setResult("Bud IntDen", i, mitoInteg[budIndex]);
+		setResult("Mom Area", i, mitoArea[motherIndex]);
+		setResult("Mom Mean", i, mitoMean[motherIndex]);
+		setResult("Mom IntDen", i, mitoInteg[motherIndex]);
+		setResult("Cell Area", i, mitoArea[wholecellIndex]);
+		setResult("Cell Mean", i, mitoMean[wholecellIndex]);
+		setResult("Cell IntDen", i, mitoInteg[wholecellIndex]);
+    }
+     updateResults();
+}
+
+
