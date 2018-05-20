@@ -3,13 +3,20 @@
 
 # based on example by C. Rueden at https://gist.github.com/ctrueden/6282856
 
-from loci.plugins import BF
+# WARNING -- with options, fails. Without options, out of memory
 
-# parse metadata
-from loci.formats import ImageReader
-from loci.formats import MetadataTools
+import time
+import os.path
+from loci.plugins import BF
+from loci.common import Region
+from loci.plugins.in import ImporterOptions
+from loci.formats import ImageReader, MetadataTools
+from ij import IJ
+
+startTime = time.clock()
 
 inputFile = str(inputFile)
+outputDir = str(outputDir)
 
 reader = ImageReader()
 omeMeta = MetadataTools.createOMEXMLMetadata()
@@ -23,72 +30,40 @@ reader.close()
 
 print(seriesCount, channels, slices, frames)
 
-# TODO: get ranges from a dialog
-
-# read in and display ImagePlus(es) with arguments
-from loci.common import Region
-from loci.plugins.in import ImporterOptions
 options = ImporterOptions()
 
 options.setId(inputFile)
-options.setAutoscale(true)
+options.setAutoscale(True)
 
 #options.clearSeries()
-options.setSeriesOn(1, True)
+seriesNum = 1 # TESTING -- single series. TODO: add loop
 
-options.setSpecifyRanges(True)
+options.setSeriesOn(seriesNum, True) 
+options.setVirtual(True) # TESTING -- remove when setting range
 
-options.setCBegin(1, channels)
-options.setCEnd(1, channels)
-options.setCStep(1, 1)
+# TODO: get ranges from a dialog
 
-options.setZBegin(1, 1)
-options.setZEnd(1, slices-1)
-options.setZStep(1, 1)
+#options.setSpecifyRanges(True)
 
-options.setTBegin(1, 1)
-options.setTEnd(1, frames-1)
-options.setTStep(1, 4)
+#options.setCBegin(seriesNum, channels)
+#options.setCEnd(seriesNum, channels-1)
+#options.setCStep(seriesNum, 1)
 
-#imps = BF.openImagePlus(options) # a list
-#for imp in imps:
-#    imp.show()
+#options.setZBegin(seriesNum, 1)
+#options.setZEnd(seriesNum, slices)
+#options.setZStep(seriesNum, 1)
 
-# print out series count from two different places (they should always match!)
-from ij import IJ
-imageCount = omeMeta.getImageCount()
-IJ.log("Total # of image series (from BF reader): " + str(seriesCount))
-IJ.log("Total # of image series (from OME metadata): " + str(imageCount))
+#options.setTBegin(seriesNum, 1)
+#options.setTEnd(seriesNum, frames)
+#options.setTStep(seriesNum, 4)
 
+imps = BF.openImagePlus(options) # a list
 
-# from Harri Jäälinoja
- 
-# set up import process
-process = ImportProcess(opts)
-process.execute()
-nseries = process.getSeriesCount()
- 
-# reader belonging to the import process
-reader = process.getReader()
- 
-# reader external to the import process
-impReader = ImagePlusReader(process)
-for i in range(0, nseries):
-    print "%d/%d %s" % (i+1, nseries, process.getSeriesLabel(i))
-     
-    # activate series (same as checkbox in GUI)
-    opts.setSeriesOn(i,True)
- 
-    # point import process reader to this series
-    reader.setSeries(i)
- 
-    # read and process all images in series
-    imps = impReader.openImagePlus()
-    for imp in imps:
-        imp.show()
-        wait = Wait(str(i) + imp.getTitle())
-        wait.show()
-        imp.close()
- 
-    # deactivate series (otherwise next iteration will have +1 active series)
-    opts.setSeriesOn(i, False)
+for imp in imps:
+	seriesName = imp.getTitle()
+	print("Processing series " + seriesName)
+	outputName = seriesName + ".tif"
+	IJ.saveAsTiff(imp, os.path.join(outputDir, outputName))
+
+endTime = time.clock()
+print("Finished in " + str(endTime-startTime) + " s.")
