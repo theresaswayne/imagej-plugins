@@ -7,6 +7,9 @@
 // designed for keeping one channel and every 4th t
 // thanks to Martin Hoehne's lif processing macro
 
+// WARNING -- fails on the last series with Invalid Index. 
+// WORKAROUND: 'Series stop' defaults to penultimate series. 
+// 		Last series must be opened manually using "Specify Range"!
 
 // SETUP
 
@@ -21,15 +24,14 @@ Ext.getSizeC(channels); // get dimensions of the first series (they should be al
 Ext.getSizeZ(slices);
 Ext.getSizeT(frames);
 
-name=File.nameWithoutExtension;
-print("file name =",name);
+
 
 // GET RANGES
 
 Dialog.create("Specify dimensions to save");
 
 Dialog.addNumber("Series start",1);
-Dialog.addNumber("Series stop",seriesCount);
+Dialog.addNumber("Series stop",seriesCount-1);
 
 Dialog.addNumber("Channel start", 1);
 Dialog.addNumber("Channel stop", channels);
@@ -63,18 +65,20 @@ tInc = Dialog.getNumber();
 
 // OPEN IMAGE AND SAVE
 
-for (j=serStart; j<=serStop; j++) {  // BUG?: fails on last series "invalid series" -- runs out of memory with <last
+for (j=serStart; j<=serStop; j++) {  
 
-	seriesName = name + "_" + j + ".tif";
 	Ext.setSeries(j);
-	print("Processing series",j,seriesName);
 
 	run("Bio-Formats", "open="+inputFile+" color_mode=Default rois_import=[ROI manager] specify_range view=Hyperstack stack_order=XYCZT series_"+j+" c_begin_"+j+"="+cStart+" c_end_"+j+"="+cStop+" c_step_"+j+"="+cInc+" z_begin_"+j+"="+zStart+" z_end_"+j+"="+zStop+" z_step_"+j+"="+zInc+" t_begin_"+j+"="+tStart+" t_end_"+j+"="+tStop+" t_step_"+j+"="+tInc);
+	name=File.nameWithoutExtension;
+	seriesName = name + "_" + j + ".tif";
+	print("Processing series",j,seriesName);
 	saveAs("Tiff", outputDir + File.separator + seriesName);
 	}
 
 setBatchMode(false);
 // TODO: close open windows using ID (not window)
+
 endTime = getTime();
 print("Finished in",((endTime-startTime)/1000)," sec");
 
