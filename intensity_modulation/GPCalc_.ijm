@@ -24,6 +24,7 @@ LUTlist = getLUTlist();
 Dialog.create("GP analysis parameters");
 Dialog.addString("Input File Extension:", InputFileExt);
 Dialog.addString("Short Results Descriptor:", "");
+
 Dialog.addMessage("------------------------------------------- Image channels -------------------------------------------");
 Dialog.addNumber("Channel A (Ordered):", 1);
 Dialog.addString("Channel A Label:", "ordered");
