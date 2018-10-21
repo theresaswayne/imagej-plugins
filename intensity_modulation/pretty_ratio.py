@@ -35,35 +35,60 @@
 # Then save the result.
 
 import os
+import ij
 from ij import IJ, ImagePlus
-
-def run(): # from IJ process folder python template
-  srcDir = srcFile.getAbsolutePath()
-  dstDir = dstFile.getAbsolutePath()
-  for root, directories, filenames in os.walk(srcDir):
-    filenames.sort();
-    for filename in filenames:
-      # Check for file extension
-      if not filename.endswith(ext):
-        continue
-      # Check for file name pattern
-      if containString not in filename:
-        continue
-      process(srcDir, dstDir, root, filename)
  
-def process(srcDir, dstDir, currentDir, fileName):
-  print "Processing:"
-   
-  # Opening the image
-  print "Open image file", fileName
-  imp = IJ.openImage(os.path.join(currentDir, fileName)) # TODO: Replace with IJ2 equivalent
-   
-  # Put your processing commands here!  # TODO: Replace with some IJ2 operation
-   
-  # Saving the image
+import io.scif.img.IO
+import io.scif.img.ImgIOException
+ 
+import net.imglib2.Cursor
+import net.imglib2.img.Img
+import net.imglib2.img.display.imagej.ImageJFunctions
+import net.imglib2.type.Type
+import net.imglib2.type.numeric.real.FloatType
 
-  print "Saving to", dstDir
-  IJ.saveAs(imp, "Tiff", os.path.join(dstDir, fileName));  # TODO: Replace with IJ2 equivalent
-  imp.close()
+def run(): # from IJ2 stack directory template
+
+	# Find image files
+	srcDir = str(srcFile)
+	dstDir = str(dstFile)
+	fnames = []
+	for fname in os.listdir(srcDir):
+		if fname.endswith(ext):
+			# Check for file name pattern
+			if containString not in fname:
+				continue
+			fnames.append(os.path.join(srcDir, fname))
+	
+	fnames = sorted(fnames)
+
+	if len(fnames) < 1:
+		raise Exception("No image files found in %s" % srcDir)
+
+	# Open images
+	for fname in fnames:
+		process(srcDir, dstDir, fname)
+ 
+def process(srcDir, dstDir, fileName):
+	print "Processing:"
+   
+	# Opening the image
+	print "Open image file", fileName
+	data = io.open(fileName)
+	# Dataset image = ij.scifio().datasetIO().open(os.path.join(currentDir, fileName));
+	# imp = IJ.openImage(os.path.join(currentDir, fileName)) # TODO: Replace with IJ2 equivalent
+
+	imp = data.getImgPlus()
+   
+	# Put your processing commands here!  # TODO: Replace with some IJ2 operation
+   
+	# Saving the image
+
+	print "Saving to", dstDir
+	output = ds.create(imp)
+	#IJ.saveAs(imp, "Tiff", os.path.join(dstDir, fileName));  # TODO: Replace with IJ2 equivalent
+	io.save(output, os.path.join(dstDir, fileName));
+
+	#imp.close()
  
 run()
