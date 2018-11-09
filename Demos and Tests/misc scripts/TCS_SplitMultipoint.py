@@ -1,3 +1,4 @@
+# attempt to split multipoint ND2 images using python
 # based on https://gist.github.com/ctrueden/6282856
 
 # read in and display ImagePlus object(s)
