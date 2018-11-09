@@ -44,6 +44,7 @@ for (i=0; i<list.length; i++) // loop through all files in the folder
 
 	// what order of magnitude is the # of series? 
 	// find the log10 of the # of series, and pad so that up to 10 images will be padded to 2 digits, 100 to 3, etc.
+	// IJ macro language uses natural log so we convert to log10
     seriesPadding = 2 + floor(log(seriesCount)/log(10));  // because log10(n) = log(n)/log(10)
 
     for (j=1; j<=seriesCount; j++) // open each series 
@@ -52,7 +53,7 @@ for (i=0; i<list.length; i++) // loop through all files in the folder
         name=File.nameWithoutExtension;
 
 		// generate the series number by padding appropriately
-		seriesname = IJ.pad(j, seriesPadding)
+		seriesname = IJ.pad(j, seriesPadding);
 		rename(seriesname);
 		
         saveAs("Tiff", outputDir + File.separator + name + "_XY" + seriesname + ".tif");    
