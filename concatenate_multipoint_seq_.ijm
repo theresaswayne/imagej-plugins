@@ -28,6 +28,7 @@
 //		This is tested on multichannel series, but has not been tested with z series.
 
 run("Bio-Formats Macro Extensions"); // required to open ND2 files
+setBatchMode(true);
 
 list = getFileList(inputDir); // files in the folder
 list = Array.sort(list); // in alphabetical, not numerical order! 
