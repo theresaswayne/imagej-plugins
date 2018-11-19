@@ -77,15 +77,14 @@ def process(srcDir, dstDir, fileName):
 	data = io.open(fileName)
 	# Dataset image = ij.scifio().datasetIO().open(os.path.join(currentDir, fileName));
 	# imp = IJ.openImage(os.path.join(currentDir, fileName)) # TODO: Replace with IJ2 equivalent
-
-	imp = data.getImgPlus()
    
-	# Put your processing commands here!  # TODO: Replace with some IJ2 operation
+	# Put your processing commands here!  
+	# TODO: Replace with some IJ2 operation
    
 	# Saving the image
 
 	print "Saving to", dstDir
-	output = ds.create(imp)
+	output = ds.create(output)
 	#IJ.saveAs(imp, "Tiff", os.path.join(dstDir, fileName));  # TODO: Replace with IJ2 equivalent
 	io.save(output, os.path.join(dstDir, fileName));
 

@@ -1,29 +1,41 @@
+//@ File (label = "Input directory", style = "file") inputDir
+//@ File (label = "Output directory", style = "directory") outputParent
+
 /*
- ImageJ macro for GP image analysis
+ IntensityModulatedRatio_.ijm
+ based on GPcalc.ijm by Dave Williamson, https://github.com/quokka79/GPcalc
 */
 
-// copied by TCS from
-// https://raw.githubusercontent.com/quokka79/GPcalc/master/GPcalc.ijm
-// documentation at https://github.com/quokka79/GPcalc
 
+//TODO: replace dialogs with script parameters
+// input and output folders (file)
+// numerator, denominator channels (int)
+// background for each channel (int)
+// LUT
+
+// ---- SETUP
 
 print("\\Clear");
-
 requires("1.44d");
 closeAllImages();
 
-// Select images folder
-dir = getDirectory("Choose a Directory ");
-GuessFileExtn = PopularFileType(dir);
+
+run("Bio-Formats Macro Extensions"); // enables access to macro commands
+list = getFileList(inputDir);
+setBatchMode(true);
+
 
 // Initialise defaults and selection lists
-InputFileExt = GuessFileExtn;
+InputFileExt = "tif";
 YNquestion = newArray("Yes","No");
 GFapplication = newArray("Image data (pre GP calc)","Histogram data (post GP calc)");
 ThreshList = newArray("Normal","Otsu");
 LUTlist = getLUTlist();
 
 // Choose image channels and threshold value
+
+// TODO: Get background values for each channel
+ 
 Dialog.create("GP analysis parameters");
 Dialog.addString("Input File Extension:", InputFileExt);
 Dialog.addString("Short Results Descriptor:", "");
@@ -89,9 +101,9 @@ var GPminUserSet = -1;
 var GPmaxUserSet = 1;
 
 // Check we have something to process
-listDir = ListFiles(dir, InputFileExt);
+listDir = ListFiles(inputDir, InputFileExt);
 numberOfImages = listDir.length;
-if (numberOfImages == 0) {exit("There are no files with extension \"" + InputFileExt + "\"in folder \n" + dir);}
+if (numberOfImages == 0) {exit("There are no files with extension \"" + InputFileExt + "\"in folder \n" + inputDir);}
 
 
 if (MakeHSBimages == "Yes") {
@@ -144,9 +156,9 @@ MonthNames = newArray("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct
 DayNames = newArray("Sun", "Mon","Tue","Wed","Thu","Fri","Sat");
 
 if (FolderNote == "") {
- results_Dir = dir + "Results " + year + months + dayOfMonths + "(" + hours + "h" + minutes + ")" + File.separator;
+ results_Dir = outputParent + File.separator + "Results " + year + months + dayOfMonths + "(" + hours + "h" + minutes + ")" + File.separator;
 } else {
- results_Dir = dir + FolderNote + " - " + year + months + dayOfMonths + "(" + hours + "h" + minutes + ")" + File.separator;
+ results_Dir = outputParent + File.separator + FolderNote + " - " + year + months + dayOfMonths + "(" + hours + "h" + minutes + ")" + File.separator;
 }
 File.makeDirectory(results_Dir);
 
@@ -229,7 +241,7 @@ for (i = 0; i < numberOfImages; i++) {
 	setBatchMode(true);
 
 	// open the current image
-	run("Bio-Formats Importer", "open=[" + dir + imgName + "] color_mode=Default view=[Standard ImageJ] stack_order=Default virtual split_channels");
+	run("Bio-Formats Importer", "open=[" + inputDir + File.separator + imgName + "] color_mode=Default view=[Standard ImageJ] stack_order=Default virtual split_channels");
 	
 	// set window titles
 	ordWindowTitle = imgName + " - C=" + chOrdered - 1;
@@ -471,6 +483,10 @@ for (i = 0; i < numberOfImages; i++) {
 
 // finished now! Write the log.
 printInfo();
+
+showMessage(" -- finished --");    
+// run("Close All");
+setBatchMode(false);
 
 
 ///////////////// Supporting Functions ////////////////////
@@ -801,64 +817,5 @@ function ListFiles(InputFolder, TargetExtn) {
 		}
 	}
 	return TargetFiles;
-
-}
-
-
-function PopularFileType(InputFolder) {
-
-	AllFilesAndFolders = getFileList(InputFolder);
-	
-	FoundExtns = newArray();
-	for (i = 0; i < AllFilesAndFolders.length; i++) {
-		testName = AllFilesAndFolders[i];
-		dotIndex = lastIndexOf(testName, ".");
-		
-		if (dotIndex > -1) {
-			extn = substring(testName, dotIndex, lengthOf(testName));
-			FoundExtns = Array.concat(FoundExtns, extn);
-		} 
-	}
-
-	UniqueExtns = newArray();
-	for (u = 0; u < FoundExtns.length; u++) {
-		testValue = FoundExtns[u];
-		Uniqueness = 1;
-		
-		for (t = 0; t < UniqueExtns.length; t++) {
-			if (UniqueExtns[t] == testValue) {
-				Uniqueness = 0;
-			}
-		}
-
-		if (Uniqueness == 1) {
-			UniqueExtns = Array.concat(UniqueExtns, testValue);
-		}
-	}
-
-	if (UniqueExtns.length > 1) {
-		PopularityContest = newArray();
-		for (p = 0; p < UniqueExtns.length; p++) {
-			
-			searchValue = UniqueExtns[p];
-			popularity = 0;
-			
-			for (q = 0; q < FoundExtns.length; q++) {
-				if (FoundExtns[q] == searchValue) {
-					popularity++;
-				}
-			}
-	
-			PopularityContest = Array.concat(PopularityContest, popularity);
-		}
-		idxMostPopular = Array.findMaxima(PopularityContest,1);
-		idxMostPopular = idxMostPopular[0];
-		MostPopularExtn = UniqueExtns[idxMostPopular];
-		
-	} else {
-		MostPopularExtn = UniqueExtns[0];
-	}
-	
-	return MostPopularExtn;
 
 }
