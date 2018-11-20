@@ -1,29 +1,54 @@
 //@ File (label = "Input directory", style = "file") inputDir
 //@ File (label = "Output directory", style = "directory") outputParent
 
+//@ Integer (label = "Numerator channel", style = "spinner") numChannel
+//@ Integer (label = "Denominator channel", style = "spinner") denomChannel
+
+//@ Integer (label = "Background for numerator") numBG
+//@ Integer (label = "Background for denominator") denomBG
+
+//@ String (label = "Scaling of intensity modulated image", choices = {"Image min/max", "Image mean +/- 2 SD", "Manual"}, style = "listBox") scalingMethod
+//@ Integer (label = "For manual scaling, minimum displayed ratio:") minDisplay
+//@ Integer (label = "For manual scaling, maximum displayed ratio:") maxDisplay
+  
 /*
  IntensityModulatedRatio_.ijm
  based on GPcalc.ijm by Dave Williamson, https://github.com/quokka79/GPcalc
 */
 
 
+
+
 //TODO: replace dialogs with script parameters
-// input and output folders (file)
 // numerator, denominator channels (int)
 // background for each channel (int)
 // LUT
+
+// Input
+// --folder of 2-channel images
+// -- background values for each channel
+// -- choice of LUT
+// -- scaling for ratio (min/max per image, mean +/- SD per image, or specific numbers)
+
+
+// TODO: Support choosing LUT
+
+// Output for each input image
+// -- 32 bit ratio image for analysis purposes
+// -- RGB intensity modulated ratio image (best scale possible)
+// -- color bar
+// -- log giving the background, filenames, and ratio scaling, date/time
+
 
 // ---- SETUP
 
 print("\\Clear");
 requires("1.44d");
-closeAllImages();
-
+closeAllImages(); // function defined below
 
 run("Bio-Formats Macro Extensions"); // enables access to macro commands
 list = getFileList(inputDir);
 setBatchMode(true);
-
 
 // Initialise defaults and selection lists
 InputFileExt = "tif";
@@ -382,8 +407,8 @@ for (i = 0; i < numberOfImages; i++) {
 	close();
 
 	// histograms
-	HistoFileName=histogramGP_Dir + imgName + "GP Histogram" + "(masked by " + Option_D + ").tsv";
-	HistogramGeneration(maskedGPname, HistoFileName);
+//	HistoFileName=histogramGP_Dir + imgName + "GP Histogram" + "(masked by " + Option_D + ").tsv";
+//	HistogramGeneration(maskedGPname, HistoFileName);
 
 	// if we are given some other intensity channel (the immunofluoresence channel) then...
 	if (ch_IF != 0) {
@@ -433,8 +458,8 @@ for (i = 0; i < numberOfImages; i++) {
 		run(GPLUTname);
 		saveAs("tiff", GP_IF_images_Dir + imgName + " (" + Option_C + ")-masked GP");
 		rename(GPIFName);
-		HistoFileName=histogramIF_Dir + imgName + "GP Histogram" + "(masked by " + Option_C + ").tsv";
-		HistogramGeneration(GPIFName, HistoFileName);
+//		HistoFileName=histogramIF_Dir + imgName + "GP Histogram" + "(masked by " + Option_C + ").tsv";
+//		HistogramGeneration(GPIFName, HistoFileName);
 
 		selectWindow(IFmaskName);
 		close();
@@ -500,50 +525,17 @@ function closeAllImages() {
 }
 
 
-function newFolder() {
+//function newFolder() {
 
-	File.makeDirectory(Folder);
-	listZ = getFileList(Folder);
-	for (f = 0; f < listZ.length; f++) {
-		File.delete(Folder + listZ[f]);
-	}
+//	File.makeDirectory(Folder);
+//	listZ = getFileList(Folder);
+//	for (f = 0; f < listZ.length; f++) {
+//		File.delete(Folder + listZ[f]);
+//	}
 
-}
+//}
 
 
-function HistogramGeneration (WindowName, HistoFileName) {
-
-	Int=newArray(256);
-	Cou=newArray(256);
-	Smo=newArray(256);
-	NAvDist=newArray(256);
-	nBins = 256;
-
-	selectWindow(WindowName);
-	getHistogram(values, counts, nBins);
-
-	for (u = 0; u < nBins; u++) {
-		Int[u] = u;
-		Cou[u] = counts[u];
-		if (u <= 1) {
-			Smo[u] = 0;
-		} else if (u == 255) {
-			Smo[u] = 0;
-		} else {
-			Smo[u] = (counts[u - 1] + counts[u] + counts[u + 1]) / 3;
-		}
-	}
-	Array.getStatistics(Cou,min,max,mean,stdDev);
-	Sa=(mean*256)-counts[0]-counts[255];
-	HistogramOutFile=File.open(HistoFileName);
-	print(HistogramOutFile, "Intensity	Counts	Smooth	Norm Av Dist	GP	GP GF-corrected");
-	for (m = 0; m < 256; m++) {
-		NAvDist[m] = 100 * Smo[m] / Sa;
-		print(HistogramOutFile, Int[m] + "	" + Cou[m] + "	" + Smo[m] + "	" + NAvDist[m] + "	" + GPuncorrected[m] + "	" + GPcorrected[m]);
-	}
-	File.close(HistogramOutFile);
-
-}
 
 
 function HSBgeneration(HSBIntensityChannel, OutfileSuffix) {
@@ -741,8 +733,9 @@ function printInfo () {
 	print("\n");
 	
 	print("------ Input Images ------");
-	print("Ordered channel: " + chOrdered);
-	print("Disordered channel: " + chDisordered);
+	print("Numerator: channel " + numChannel + ", background: " + numBG);
+	print("Denominator: channel " + denomChannel + ", background: " + denomBG);
+
 	if (ch_IF != 0) {
 		print("Immunofluoresence channel: " + ch_IF); 
 	} else { 
@@ -750,30 +743,36 @@ function printInfo () {
 	};
 	print("\n");
 	
-	print("------ Output GP Images ------");
-	print("GP images were calculated using input image bit depth: " + UseNativeBitDepth);
-	print("GP images' lookup table: " + GPLUTname);
-	print("G factor: " + GFactor + " was applied to " + GFactorAppliedTo + ".");
-	print("\n");
+//	print("------ Output GP Images ------");
+//	print("GP images were calculated using input image bit depth: " + UseNativeBitDepth);
+//	print("GP images' lookup table: " + GPLUTname);
+//	print("G factor: " + GFactor + " was applied to " + GFactorAppliedTo + ".");
+//	print("\n");
 	
-	print("------ Output GP-masked GP Images ------");
-	print("GP mask threshold method: " + ThresholdType);
-	if (ThresholdType=="Normal") {
-		print("GP-mask threshold value (lower limit, 32 bit): " + GPmaskThreshold);
-	}
-	print("\n");
+//	print("------ Output GP-masked GP Images ------");
+//	print("GP mask threshold method: " + ThresholdType);
+//	if (ThresholdType=="Normal") {
+//		print("GP-mask threshold value (lower limit, 32 bit): " + GPmaskThreshold);
+//	}
+//	print("\n");
 	
-	if (ch_IF != 0) { 
-		print("------ Output IF-masked GP Images ------");
-		print("IF-mask threshold method: " + ThresholdType);
-		if (ThresholdType=="Normal") {
-			print("IF-mask threshold value (lower limit): "+ IFmaskThreshold);
-		}
-		print("\n");
-	}
+//	if (ch_IF != 0) { 
+//		print("------ Output IF-masked GP Images ------");
+//		print("IF-mask threshold method: " + ThresholdType);
+//		if (ThresholdType=="Normal") {
+//			print("IF-mask threshold value (lower limit): "+ IFmaskThreshold);
+//		}
+//		print("\n");
+//	}
 	
 	if (MakeHSBimages=="Yes") {
 		print("------ Output HSB GP Images ------");
+
+		print("Output image scaling: " + scalingMethod);
+		if (scalingMethod == "Manual") {
+			print("Display range set manually from "+minDisplay+ " to " + maxDisplay);
+		}
+
 		print("Intensity from: " + HSBrightChannel);
 		if (ApplySameBrightness=="Yes") {
 			print("Forced consistent GP intensity range: " + GPminUserSet + " (min) to " + GPmaxUserSet + " (max)");	

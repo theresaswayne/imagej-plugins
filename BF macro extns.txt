@@ -1,0 +1,203 @@
+To gain access to more advanced features of Bio-Formats
+from within a macro, put the following line at the
+beginning of your macro:
+
+run("Bio-Formats Macro Extensions");
+
+This will enable the following macro functions:
+
+-= Usable any time =-
+
+Ext.openImagePlus(path)
+-- Opens the image at the given path with the default options.
+Ext.openThumbImagePlus(path)
+-- Opens the thumbnail image at the given path
+-- with the default options.
+Ext.getFormat(id, format)
+-- Retrieves the file format of the given id (filename).
+Ext.setId(id)
+-- Initializes the given id (filename).
+Ext.isThisType(name, thisType)
+-- True if Bio-Formats recognizes the given file as a
+-- supported image file format; if necessary, will 
+-- examine the file contents to decide for sure.
+Ext.isThisTypeFast(name, thisType)
+-- True if Bio-Formats recognizes the given filename as a
+-- supported image file format; will decide based on file
+-- extension only, without examining file contents.
+Ext.isMetadataComplete(complete)
+-- True if Bio-Formats completely parses the current
+-- dataset's file format. If this function returns false,
+-- there are known limitations or missing features in how
+-- Bio-Formats handles this file format.
+Ext.fileGroupOption(id, fileGroupOption)
+-- Returns a code indicating the file grouping policy for
+-- for the current dataset. Possible values are:
+--   must, can, cannot, unknown
+Ext.getVersionNumber(version)
+-- Returns the version number of the currently installed
+-- version of Bio-Formats.
+Ext.getRevision(revision)
+-- Returns the revision number of the currently
+-- installed version of Bio-Formats.
+Ext.getBuildDate(date)
+-- Returns the build date of the currently installed
+-- version of Bio-Formats.
+
+-= Usable before initializing a file =-
+
+Ext.setNormalized(normalize)
+-- Sets whether to normalize floating point data to [0-1].
+Ext.isNormalized(normalize)
+-- Gets whether float data is being normalized to [0-1].
+Ext.setOriginalMetadataPopulated(populate)
+-- Sets whether Bio-Formats should save proprietary metadata
+-- to the OME metadata store as custom attributes.
+Ext.isOriginalMetadataPopulated(populate)
+-- Sets whether Bio-Formats is saving proprietary metadata
+-- to the OME metadata store as custom attributes.
+Ext.setGroupFiles(group)
+-- For multi-file formats, sets whether to force grouping.
+Ext.isGroupFiles(group)
+-- Gets whether grouping is forced for multi-file formats..
+Ext.setMetadataFiltered(filter)
+-- Sets whether to filter out ugly metadata from the table
+-- (i.e., entries with unprintable characters, and extremely
+-- long values).
+Ext.isMetadataFiltered(filter)
+-- Gets whether ugly metadata is being filtered out.
+
+-== Usable after initializing a file ==-
+
+Ext.getSeriesCount(seriesCount)
+-- Gets the number of image series in the active dataset.
+Ext.setSeries(seriesNum)
+-- Sets the current series within the active dataset.
+Ext.getSeries(seriesNum)
+-- Gets the current series within the active dataset.
+Ext.getUsedFileCount(count)
+-- Gets the number of files that are part of this dataset.
+Ext.getUsedFile(i, used)
+-- Gets the i'th filename part of this dataset.
+Ext.getCurrentFile(file)
+-- Gets the base filename used to initialize this dataset.
+Ext.openImage(title, no)
+-- Opens the no'th plane in a new window named 'title'.
+Ext.openSubImage(title, no, x, y, width, height)
+-- Opens a subset of the no'th plane in a new window
+-- named 'title'.
+Ext.openThumbImage(title, no)
+-- Opens the no'th thumbnail in a new window named 'title'.
+Ext.close()
+-- Closes the active dataset.
+Ext.closeFileOnly()
+-- Closes open files, leaving the current dataset active.
+
+-== Applying to the current series ==-
+
+Ext.getImageCount(imageCount)
+-- Gets the total number of planes in the current dataset.
+Ext.getSizeX(sizeX)
+-- Gets the width of each image plane in pixels.
+Ext.getSizeY(sizeY)
+-- Gets the height of each image plane in pixels.
+Ext.getSizeZ(sizeZ)
+-- Gets the number of focal planes in the dataset.
+Ext.getSizeC(sizeC)
+-- Gets the number of channels in the dataset.
+Ext.getSizeT(sizeT)
+-- Gets the number of time points in the dataset.
+Ext.getPixelType(pixelType)
+-- Gets a code representing the pixel type of the image.
+-- Possible values include:
+--   int8, uint8, int16, uint16, int32, uint32, float, double
+Ext.getEffectiveSizeC(effectiveSizeC)
+-- Gets the 'effective' number of channels, such that:
+-- effectiveSizeC * sizeZ * sizeT == imageCount
+Ext.getRGBChannelCount(rgbChannelCount)
+-- Gets the number of channels per composite image plane:
+-- sizeC / rgbChannelCount == effectiveSizeC
+Ext.isIndexed(indexed)
+-- Gets whether the image planes are stored as indexed color
+-- (i.e., whether they have embedded LUTs).
+Ext.getChannelDimCount(channelDimCount)
+-- For highly multidimensional image data, the C dimension
+-- may consist of multiple embedded 'sub' dimensions.
+-- This function returns the number of such dimensions.
+Ext.getChannelDimLength(i, channelDimLength)
+-- Gets the length of the i'th embedded 'sub' dimension.
+Ext.getChannelDimType(i, channelDimType)
+-- Gets a string label for the i'th embedded 'sub' channel.
+Ext.isLittleEndian(littleEndian)
+-- For multi-byte pixel types, get the data's endianness.
+Ext.getDimensionOrder(dimOrder)
+-- Gets a five-character string representing the dimensional
+-- rasterization order within the dataset. Valid orders are:
+--   XYCTZ, XYCZT, XYTCZ, XYTZC, XYZCT, XYZTC
+-- In cases where the channels are interleaved (e.g., CXYTZ),
+-- C will be the first dimension after X and Y (e.g., XYCTZ)
+-- and the isInterleaved function will return true.
+Ext.isOrderCertain(orderCertain)
+-- Gets whether the dimension order and sizes are known,
+-- or merely guesses.
+Ext.isInterleaved(interleaved)
+-- Gets whether or not the channels are interleaved.
+-- This function exists because X and Y must appear first
+-- in the dimension order. For interleaved data, XYCTZ or
+-- XYCZT is used, and this method returns true.
+Ext.isInterleavedSubC(subC, interleaved)
+-- Gets whether the given 'sub' channel is interleaved.
+-- This method exists because some data with multiple
+-- rasterized sub-dimensions within C have one sub-dimension
+-- interleaved, and the other not -- e.g., the SDT reader
+-- handles spectral-lifetime data with interleaved lifetime
+-- bins and non-interleaved spectral channels.
+Ext.getIndex(z, c, t, index)
+-- Gets the rasterized index corresponding to the given
+-- Z, C and T coordinates, according to the dataset's
+-- dimension order.
+Ext.getZCTCoords(index, z, c, t)
+-- Gets the Z, C and T coordinates corresponding to the given
+-- rasterized index value, according to the dataset's
+-- dimension order.
+Ext.getMetadataValue(field, value)
+-- Obtains the specified metadata field's value.
+Ext.getSeriesMetadataValue(field, value)
+-- Obtains the specified series metadata field's value.
+Ext.getSeriesName(seriesName)
+-- Obtains the name of the current series.
+Ext.getImageCreationDate(creationDate)
+-- Obtains the creation date of the dataset
+-- in ISO 8601 format.
+Ext.getPlaneTimingDeltaT(deltaT, no)
+-- Obtains the time offset (seconds since the beginning 
+-- of the experiment) for the no'th plane, or NaN if none.
+Ext.getPlaneTimingExposureTime(exposureTime, no)
+-- Obtains the exposure time (in seconds) for the no'th
+-- plane, or NaN if none.
+Ext.getPlanePositionX(positionX, no)
+-- Obtains the X coordinate of the stage for the no'th plane
+-- or NaN if none.
+Ext.getPlanePositionY(positionY, no)
+-- Obtains the Y coordinate of the stage for the no'th plane
+-- or NaN if none.
+Ext.getPlanePositionZ(positionZ, no)
+-- Obtains the Z coordinate of the stage for the no'th plane
+-- or NaN if none.
+Ext.getPixelsPhysicalSizeX(sizeX)
+-- Obtains the width of a pixel in microns, or NaN if the
+-- the width is not stored in the original file.
+Ext.getPixelsPhysicalSizeY(sizeY)
+-- Obtains the height of a pixel in microns, or NaN if the
+-- the height is not stored in the original file.
+Ext.getPixelsPhysicalSizeZ(sizeZ)
+-- Obtains the spacing between Z sections in microns, or NaN
+-- if the spacing is not stored in the original file.
+Ext.getPixelsTimeIncrement(sizeT)
+-- Obtains the spacing between time points in seconds, or
+-- NaN if the spacing is not stored in the original file.
+
+For more information, see the online Javadocs
+for the loci.formats.IFormatReader and 
+loci.formats.meta.MetadataRetrieve interfaces:
+https://downloads.openmicroscopy.org/bio-formats/5.9.3-SNAPSHOT/api/
