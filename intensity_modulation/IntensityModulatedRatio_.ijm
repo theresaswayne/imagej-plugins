@@ -3,6 +3,7 @@
 
 //@ Integer (label = "Numerator channel", style = "spinner") numChannel
 //@ Integer (label = "Denominator channel", style = "spinner") denomChannel
+//@ Integer (label = "(Optional) Additional channel for intensity modulation (0 for none):", style = "spinner", default = 0) intensChannel
 
 //@ Integer (label = "Background for numerator") numBG
 //@ Integer (label = "Background for denominator") denomBG
@@ -265,15 +266,23 @@ for (i = 0; i < numberOfImages; i++) {
 
 	setBatchMode(true);
 
+// NB split channels and identify which is which
+
 	// open the current image
 	run("Bio-Formats Importer", "open=[" + inputDir + File.separator + imgName + "] color_mode=Default view=[Standard ImageJ] stack_order=Default virtual split_channels");
 	
 	// set window titles
+	numWindowTitle = imgName + " - C=" + numChannel - 1; // IJ channel numbers start with 0
+	denomWindowTitle = imgName + " - C=" + denomChannel - 1;
 	ordWindowTitle = imgName + " - C=" + chOrdered - 1;
 	disWindowTitle = imgName + " - C=" + chDisordered - 1;
+
 	if (ch_IF != 0) {
 		imfWindowTitle = imgName + " - C=" + ch_IF - 1;
+		intensWindowTitle = imgName + " - C=" + intensChannel - 1;
 	}
+
+// NB save original images as 32 bit -- not necessary
 
 	//select ordered
 	selectWindow(ordWindowTitle);
@@ -327,6 +336,10 @@ for (i = 0; i < numberOfImages; i++) {
 
 		rename(imfWindowTitle);
 	}
+
+// ---- Apply background corrections
+
+selectWindow(numWindowTitle);
 
 
 	//GP Analysis
