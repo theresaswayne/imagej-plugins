@@ -1,4 +1,4 @@
-//@ File (label = "Input directory", style = "file") inputDir
+//@ File (label = "Input directory", style = "directory") inputDir
 //@ File (label = "Output directory", style = "directory") outputParent
 
 
