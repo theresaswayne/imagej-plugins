@@ -4,6 +4,8 @@
 //@Integer(label = "Z slices (Choose 0 if variable)", value = 1) z
 //@Integer(label = "Channels (Choose 0 if variable)", value = 1) c
 //@Integer(label = "Timepoints (Choose 0 if variable)", value = 1) t
+//@Double(label = "Pixel size in xy (um)", value = 0.0645) xyScale
+//@Double(label = "Z step (um)", value = 0.2) zStep 
 
 
 
@@ -12,13 +14,18 @@
 
 // OME_to_Hyperstack_.ijm
 // ImageJ macro by Theresa Swayne, Columbia University, 2019
-// converts batch of OME tiffs from Volocity into hyperstacks
+// converts batch of OME tiffs from Volocity into hyperstacks and sets scale
+// processes folders recursively
+
 // assumes zct order
 // for n dimensions, if n-1 dimensions are constant, one can be variable (e.g. variable time or z)
 
 
 
+// ---- Setup ----
 // Check if enough numbers are supplied -- if not, throw an error
+
+startTime = getTime();
 
 calc_dim = "";
 
@@ -33,22 +40,32 @@ if (z*c*t == 0) { // if any is 0
 	else print("We are guessing the",calc_dim," dimension");
 }
 
-processFolder(inputDir, z, c, t, calc_dim);
+// run the processing
 
+setBatchMode(true);
+processFolder(inputDir, outputDir, z, c, t, calc_dim, xyScale, zStep);
+setBatchMode(false);
 
-function processFolder(input, z, c, t, calc_dim) {
+// report time taken
+endTime = getTime();
+elapsedTime = (endTime - startTime)/1000;
+print("Finished in", elapsedTime, "s.");
+
+// ----- function definitions -----
+
+function processFolder(input, output, z, c, t, calc_dim, xyScale, zStep) {
 	// scan folders/subfolders/files to find files with correct suffix
 	list = getFileList(input);
 	list = Array.sort(list);
 	for (i = 0; i < list.length; i++) {
 		if(File.isDirectory(input + File.separator + list[i]))
-			processFolder(input + File.separator + list[i]);
+			processFolder(input + File.separator + list[i], outputDir, z, c, t, calc_dim, xyScale, zStep);
 		if(endsWith(list[i], suffix))
-			processFile(inputDir, outputDir, list[i], z, c, t, calc_dim);
+			processFile(inputDir, outputDir, list[i], z, c, t, calc_dim, xyScale, zStep);
 	}
 }
 
-function processFile(input, output, file, z, c, t, calc_dim) {
+function processFile(input, output, file, z, c, t, calc_dim, xyScale, zStep) {
 	// carry out processing tasks
 
 	print("Processing: " + input + File.separator + file);
@@ -90,11 +107,12 @@ function processFile(input, output, file, z, c, t, calc_dim) {
 	}
 	print(basename,"has",c,"channels,",z,"slices, and",t,"frames.");
 	run("Stack to Hyperstack...", "order=xyzct channels="+c+" slices="+z+" frames="+t+" display=Grayscale");
+	run("Properties...", "channels="+c+" slices="+z+" frames="+t+" unit=um pixel_width="+xyScale+" pixel_height="+xyScale+
+	" voxel_depth="+zStep);
 	saveAs("tiff", output + File.separator + basename + "_hs.tif");	
 	
 	while (nImages > 0) { // works on any number of channels
 		close();
 	}
 }
-
 
