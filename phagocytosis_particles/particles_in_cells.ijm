@@ -9,8 +9,7 @@
 
 // Input: 3-channel single-z, single-time image
 // Channels must be in order: nuclei, particles, other (any channels beyond 2 are not used)
-// Outputs measurements to a table and CSV in the following format:
-// Filename,CellCount,ParticleCount,ParticlesInside,ParticlesOutside,FractionInside,ParticlesPerCell
+// Outputs measurements to a table and CSV 
 
 // written by Theresa Swayne for Irina Sosunova/Serge Przedborski, 2019
 
@@ -62,7 +61,7 @@ for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 	// determine cell area by enlarging nuclei
 	rename(procName + "-Nuclei"); // avoid confusion later
 	run("Create Selection");
-	run("Enlarge...", "enlarge="+enlargeRadius);
+	run("Enlarge...", "enlarge="+enlargeRadius+" pixel");
 	roiManager("Add");
 	run("Create Mask");
 	selectWindow("Mask");

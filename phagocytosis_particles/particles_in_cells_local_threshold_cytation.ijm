@@ -3,7 +3,7 @@
 
 // Note: DO NOT DELETE OR MOVE THE FIRST FEW LINES -- they supply essential parameter
 
-// particles_in_cells_local_threshold.ijm
+// particles_in_cells_local_threshold_cytation.ijm
 // Counts cells and phagocytosed particles within and outside cells
 // Cell area is defined by an enlarged nuclear mask
 
@@ -51,18 +51,18 @@ for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 	
 	// identify cells using smoothed nuclei
 	selectWindow("C1-"+procName); // the -1 is appended to name when making the substack
-	run("Gaussian Blur...", "sigma=10");
-	setAutoThreshold("Huang dark");
-	setOption("BlackBackground", true);
-	run("Convert to Mask");
+	run("Gaussian Blur...", "sigma=5");
+	run("8-bit");
+	run("Auto Local Threshold", "method=Niblack radius=100 parameter_1=0 parameter_2=0 white");
+	//setOption("BlackBackground", true);
+	//run("Convert to Mask");
 	run("Watershed");
 	run("Analyze Particles...", "size="+NUCSIZE+"-Infinity exclude summarize");
 	
 	// determine cell area by enlarging nuclei
 	rename(procName + "-Nuclei"); // avoid confusion later
-	setThreshold(255,255); // to ensure that the nuclei and not background are selected
 	run("Create Selection");
-	run("Enlarge...", "enlarge="+enlargeRadius+" pixel"); // ensure pixel units
+	run("Enlarge...", "enlarge="+enlargeRadius+" pixel");
 	roiManager("Add");
 	run("Create Mask");
 	selectWindow("Mask");
@@ -71,7 +71,7 @@ for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 	
 	// identify particles
 	selectWindow("C2-"+procName);
-	run("Gaussian Blur...", "sigma=2");
+	//run("Gaussian Blur...", "sigma=2");
 	run("8-bit");
 	run("Auto Local Threshold", "method=Bernsen radius=15 parameter_1=0 parameter_2=0 white");
 	run("Watershed");
