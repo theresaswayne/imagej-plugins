@@ -73,8 +73,9 @@ for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 
 	// retrieve individual channels for the timepoint
 	run("Make Substack...", "channels=1-2 frames="+timeIndex);
-	procName = title + "-t" + timeIndex;
+	procName = title + "_" + wellNumber + "-t" + timeIndex;
 	rename(procName);
+	print("Image Title is now",getTitle());
 	run("Split Channels");
 	
 	// identify cells using smoothed nuclei
@@ -132,10 +133,12 @@ for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 	close();
 	selectWindow(procName + "-Nuclei");
 	close();
-	selectWindow("Merged");
-	close();
-
+	
 }
+
+// clean up
+selectWindow("Merged");
+close();
 
 // save results
 Table.save(outputdir+File.separator+title+"_"+wellNumber+"_Summary.csv","Summary");

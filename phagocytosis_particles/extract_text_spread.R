@@ -5,6 +5,7 @@
 
 require(stringr)
 require(tidyverse)
+require(tools) # for file extension identification
 
 # load file
 mydatafile <- file.choose()
@@ -51,4 +52,12 @@ df$label <- gsub("C1-", "", df$label)
 # Reshape the table so that each timepoint is a row and the types become variables
 # Not sure what determines the order of the columns 
 df_spread <- spread(df, merged_types, count)
+
+# save the table in the same directory
+parentDir <- dirname(mydatafile)
+
+fileName <- file_path_sans_ext(basename(mydatafile))
+
+outputFile = paste(fileName, "reformatted.csv") # spaces will be inserted
+write_csv(df_spread,file.path(parentDir, outputFile))
 
