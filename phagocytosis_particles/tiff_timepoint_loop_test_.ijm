@@ -1,79 +1,46 @@
 // @File(label = "Input directory", style = "directory") inputdir
 // @String(label = "Well to process", value = "A1") wellNumber
 // @Integer(label = "Amount to enlarge nuclei (pixels)", value = 15) enlargeRadius
+// @Integer(label = "Number of timepoints", value = 2) frames
 // @File(label = "Output directory", style = "directory") outputdir
 
-// Note: DO NOT DELETE OR MOVE THE FIRST FEW LINES -- they supply essential parameter
-
-// particles_in_cells_local_threshold_cytation.ijm
-// Counts cells and phagocytosed particles within and outside cells
-// Cell area is defined by an enlarged nuclear mask
-
-// Input: 3-channel single-z, time-lapse image
-// Channels must be in order: nuclei, particles, other (any channels beyond 2 are not used)
-// Outputs measurements to a table and CSV
 
 // Naming style: C6_-3_1_1_ZProj[Stitched[Deconvolved[Texas Red 586,647]]]_001.tif
 // {well}_{-3}_{1}_{chnum}_{proc}[{chname}]_{t}.tif
 
-// written by Theresa Swayne for Irina Sosunova/Serge Przedborski, 2019
-
-
-// adjustable parameters ==============
-
-NUCMIN = 3500; // min. area of nuclei in pixels. For 60x Cytation images, 1 pixel = 0.19 um. 
-PARTICLEMIN = 10; // min. area of a phagocytosed particle in pixels.
-PARTICLEMAX = 1500; // min. area of a phagocytosed particle in pixels.
- 
-// setup ===================
-
-run("Input/Output...", "file=.csv copy_row save_column"); // saves data as csv, preserves headers, preserves row number for copy/paste 
-run("Set Measurements...", "area mean stack display redirect=None decimal=2"); 
-run("Clear Results");
-roiManager("reset");
-
-// Load images ====================
-// open one well, one channel, all timepoints 
-// in Cytation, ch2 = green particles, ch 3 = dapi
-// in the macro, ch1 is nuclei, ch2 is particles
-
-// Cannot open all timepoints and channels in a single stack because of naming conventions:
-//	(virtual stack must be in XYCZT order, but images are in XYZTC order)
-
-for (channelNumber = 2; channelNumber <= 3; channelNumber ++) {
-
-	print("Loading channel",channelNumber);
-	run("Image Sequence...", "open=["+inputdir+"] file=(^"+wellNumber+".{0,8}"+channelNumber+"_ZProj) sort use"); // regex in parentheses
-	
-	id = getImageID();
-	title = getTitle();
-	print("Image Title is",title);
-
-	// swap frames and slices because virtual stack loads them incorrectly
-	run("Re-order Hyperstack ...", "channels=[Channels (c)] slices=[Frames (t)] frames=[Slices (z)]");
-	getDimensions(width, height, channels, slices, frames);
-	print("we now have",channels, "channels and",frames,"frames");
-
-	// name the image after its channel
-	rename("C"+channelNumber+"-"+title);
-	print("Image Title is now",getTitle());
-
-	}
-
-// merge the channels to make a single time series that will be the basis for the next steps
-// in the macro, ch1 is nuclei, ch2 is particles
-
-run("Merge Channels...", "c1=C3-"+title+" c2=C2-"+title+" create");
-
-//setBatchMode(true);
 
 for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 
-	roiManager("reset");
+	// how the time index will look in the filename
+	timeString = IJ.pad(timeIndex, 3);
 
+	// open one well, one channel, one timepoint 
+	// in Cytation, ch2 = gfp, ch 3 = dapi
+	for (channelNumber = 2; channelNumber <= 3; channelNumber ++) {
+	
+		print("Loading channel",channelNumber);
+		run("Image Sequence...", "open=["+inputdir+"] file=(^"+wellNumber+".{0,8}"+channelNumber+"_ZProj.*]_"+timeString+"\\.tif") sort use"); // regex in parentheses
+		
+		id = getImageID();
+		title = getTitle();
+		print("Image Title is",title);
+	
+		
+		getDimensions(width, height, channels, slices, frames);
+		print("we have",channels, "channels and",frames,"frames");
+	
+		run("Re-order Hyperstack ...", "channels=[Channels (c)] slices=[Frames (t)] frames=[Slices (z)]");
+		getDimensions(width, height, channels, slices, frames);
+		print("we now have",channels, "channels and",frames,"frames");
+		
+	
+		rename("C"+channelNumber+"-"+title);
+		print("Image Title is now",getTitle());
+	
+		}
 	// retrieve individual channels for the timepoint
-	run("Make Substack...", "channels=1-2 frames="+timeIndex);
-	procName = title + "-t" + timeIndex;
+	run("Make Substack...", "channels=1-3 frames="+timeIndex);
+	procName = basename + "-t" + timeIndex;
 	rename(procName);
 	run("Split Channels");
 	
@@ -95,7 +62,7 @@ for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 	roiManager("Add");
 	run("Create Mask");
 	selectWindow("Mask");
-	saveAs("Tiff", outputdir + File.separator + procName + "-Cells");
+	saveAs("Tiff", outputdir + File.separator + procName + "-Nuclei");
 	close();
 	
 	// identify particles
@@ -127,18 +94,30 @@ for (timeIndex=1; timeIndex <= frames; timeIndex++) {
 	saveAs("Tiff", outputdir + File.separator + procName + "-Total");
 	close();
 
+	
 	// clean up
 	selectWindow(procName + "-Total particles");
 	close();
 	selectWindow(procName + "-Nuclei");
 	close();
-	selectWindow("Merged");
+	selectWindow("C3-"+procName);
 	close();
 
 }
 
 // save results
-Table.save(outputdir+File.separator+title+"_"+wellNumber+"_Summary.csv","Summary");
+Table.save(outputdir+File.separator+basename+"_"+wellNumber+"_Summary.csv","Summary");
 
 //setBatchMode(false);
 //print("Done.")
+
+
+
+// TODO: renumber channels in main macro so nuclei detected in C3
+
+// ^C6.{0,8}2_ZProj
+// TODO: merge channels using updated names
+// run("Merge Channels...", "c2=#1971632616_ZProj c3=#1971632616_ZProj create");
+
+
+
