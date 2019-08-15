@@ -1,0 +1,16 @@
+
+zNumber=nSlices/6;
+run("Stack to Hyperstack...", "order=xyzct channels=6 slices="+zNumber+" frames=1 display=Composite");
+Stack.setDisplayMode("color");
+Stack.setChannel(1);
+run("Blue");
+Stack.setChannel(2);
+run("Green");
+Stack.setChannel(3);
+run("Red");
+Stack.setChannel(4);
+run("Blue");
+Stack.setChannel(5);
+run("Green");
+Stack.setChannel(6);
+run("Red");

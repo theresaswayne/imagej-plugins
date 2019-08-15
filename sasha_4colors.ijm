@@ -7,9 +7,9 @@ dotIndex = indexOf(title, ".");
 extension = substring(title, dotIndex);
 basename = substring(title, 0, dotIndex);
 
-print("The name of the image is",title);
-print("The folder is",path);
-print("The basename is",basename);
+//print("The name of the image is",title);
+//print("The folder is",path);
+//print("The basename is",basename);
 
 run("Split Channels");
 
