@@ -1,14 +1,22 @@
-#@ int(label="Size of tiles:") boxSize
-
+#@ int(label="Size of tiles in pixels:") boxSize
+ 
 // Divide_into_Tiles_bySize.ijm
 // Theresa Swayne, 2021
 // Grid based on BIOP_VSI_reader By Olivier Burri & Romain Guiet, EPFL BIOP 2014-2018
+// Usage: Open an image and run the macro. Output saved in same folder as image
 
 id = getImageID();
 title = getTitle();
 dotIndex = indexOf(title, ".");
 basename = substring(title, 0, dotIndex);
 path = getDirectory("image");
+
+
+// TODO: SOLVE DUPLICATION (11, 22, 33, 44,...)
+// TODO: Save ROI set for reference
+// TODO: Add leading zeroes in filename
+// ? TODO: Get mean and stdev and use to skip saving
+// ? TODO: Set measurements, measure, save table
 
 
 makeGrid(boxSize);
@@ -76,6 +84,28 @@ function makeGrid(selectedSize) {
 }
 
 function cropAndSave(id, basename, path) {
+	// make sure nothing selected to begin with
+	
+	roiManager("Deselect");
+	run("Select None");
+	
+	numROIs = roiManager("count");
+	for(roiIndex=0; roiIndex < numROIs; roiIndex++) // loop through ROIs
+		{ 
+		selectImage(id);
+		roiNum = roiIndex + 1; // image names starts with 1 like the ROI labels
+		cropName = basename+"_tile_"+roiNum;
+		roiManager("Select", roiIndex);  // ROI indices start with 0
+		run("Duplicate...", "title=&cropName duplicate"); // creates the cropped stack
+		selectWindow(cropName);
+		saveAs("tiff", path+getTitle);
+		close();
+		}	
+	run("Select None");
+}
+
+
+function cropMeasureSave(id, basename, path) {
 	// make sure nothing selected to begin with
 	
 	roiManager("Deselect");
