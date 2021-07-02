@@ -11,23 +11,21 @@ dotIndex = indexOf(title, ".");
 basename = substring(title, 0, dotIndex);
 path = getDirectory("image");
 
-
-// TODO: SOLVE DUPLICATION (11, 22, 33, 44,...)
 // TODO: Save ROI set for reference
 // TODO: Add leading zeroes in filename
-// ? TODO: Get mean and stdev and use to skip saving
 // ? TODO: Set measurements, measure, save table
-
 
 makeGrid(boxSize);
 
-cropAndSave(id, basename, path);
+//cropAndSave(id, basename, path);
+
+cropMeasureSave(id, basename, path);
 
 /*
  * Helper function, find ceiling value of float
  */
 function ceiling(value) {
-	tol = 0.4;
+	tol = 0.2; // this becomes the fraction of box size below which an edge tile is not created  
 	if (value - round(value) > tol) {
 		return round(value)+1;
 	} else {
@@ -53,7 +51,6 @@ function addRoi(isSave) {
 function makeGrid(selectedSize) {
 	//Make grid based on selection or whole image
 	getSelectionBounds(x, y, width, height);
-	print(width, height)
 	
 	// Set Color
 	color = "red";
@@ -63,17 +60,16 @@ function makeGrid(selectedSize) {
 	// Then we need the calibration, which gives us the REAL pixel size
 	getVoxelSize(px,py,pz,unit);
 
-
+		
 	// Thus we will need
 	nBoxesX = ceiling(width/selectedSize);
 	nBoxesY = ceiling(height/selectedSize);
-	print(nBoxesX, nBoxesY);
-
+	
 	run("Remove Overlay");
 	roiManager("Reset");
 
-	for(j=0; j<=nBoxesY; j++) {
-		for(i=0; i<=nBoxesX; i++) {
+	for(j=0; j< nBoxesY; j++) {
+		for(i=0; i< nBoxesX; i++) {
 			makeRectangle(x+i*selectedSize, y+j*selectedSize, selectedSize,selectedSize);
 
 			addRoi(false);
@@ -110,6 +106,8 @@ function cropMeasureSave(id, basename, path) {
 	
 	roiManager("Deselect");
 	run("Select None");
+
+	cutoffMean = 2; // minimum mean value to be considered
 	
 	numROIs = roiManager("count");
 	for(roiIndex=0; roiIndex < numROIs; roiIndex++) // loop through ROIs
@@ -120,8 +118,11 @@ function cropMeasureSave(id, basename, path) {
 		roiManager("Select", roiIndex);  // ROI indices start with 0
 		run("Duplicate...", "title=&cropName duplicate"); // creates the cropped stack
 		selectWindow(cropName);
-		saveAs("tiff", path+getTitle);
+		// measure
+		getStatistics(area, mean, min, max, std);
+		if(mean > cutoffMean) {
+			saveAs("tiff", path+getTitle); }
 		close();
-		}	
+		}
 	run("Select None");
 }
