@@ -6,6 +6,7 @@
 // Grid based on BIOP_VSI_reader By Olivier Burri & Romain Guiet, EPFL BIOP 2014-2018
 // Usage: Open an image and run the macro. Output and ROI set are saved in user-designated folder.
 
+// Caveat: TIFs with the default LIF name are not correctly named since the title is truncated
 id = getImageID();
 title = getTitle();
 dotIndex = indexOf(title, ".");
