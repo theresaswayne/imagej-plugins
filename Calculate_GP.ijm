@@ -1,7 +1,7 @@
 //@ int(label="Channel for gel phase (short wavelength)", style = "spinner") Chan_Gel
 //@ int(label="Channel for liquid crystalline phase (long wavelength)", style = "spinner") Chan_LC
 
-// Calculates Generalized Polarization (GP) from a multichannel image with interative background selection 
+// Calculates Generalized Polarization (GP) from a multichannel image with interactive background selection 
 // Output is a 32-bit image with the GP values
 // GP Formula from Learmonth and Gratton, 2002, doi: 10.1007/978-3-642-56067-5_14
 // GP = (Igel - Ilc)/(Igel + Ilc)
