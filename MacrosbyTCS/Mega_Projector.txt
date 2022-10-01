@@ -1,0 +1,74 @@
+// Mega_Projector
+//
+// Macro for handling giant stacks composed of many fields of z-series with corresponding transmitted-light images
+// Theresa Swayne 7/2008
+// last updated 7/08
+//
+// Usage: 
+//
+// Place this file in the ImageJ/plugins/Macros folder.
+// Start ImageJ. 
+// Open the data stack 
+// (for LIFF or giant files, virtual stack is best).
+// Plugins > Macros > Mega Projector.
+// Give the number of images per series
+
+macro "MegaProjector" {
+
+imageName = getTitle();
+n=nSlices();
+
+// optional: report to log window
+// print("slices="+n);
+// print("name="+imageName);
+// print("width="+width);
+// print("height="+height);
+
+// optional default setting
+
+zNumber=11;
+
+// get number of images per z series
+
+requires("1.34m");
+Dialog.create("Stack Info");
+Dialog.addNumber("Slices per Z series:", 11);
+Dialog.show();
+zNumber = Dialog.getNumber();
+ 
+// calculate number of fields assuming each consists of 
+// a z series plus 1 trans image
+
+fieldNumber=n/(zNumber+1);
+print("number of fields "+fieldNumber);
+
+// loop to process fields
+
+for (i=1;i<=fieldNumber; i++) {
+
+// figure out which slices belong to this field
+
+	startSlice = (i-1)*(zNumber + 1)+1;
+	stopSlice = startSlice+zNumber-1;
+	transSlice=stopSlice+1;
+	print(i+"\t"+startSlice+"\t"+stopSlice+"\t"+transSlice);
+
+//	project the fluorescence slices
+
+	run("Z Project...", "start="+startSlice+" stop="+stopSlice+" projection=[Max Intensity]");
+
+//  make ministack with trans, and save it.
+
+	selectWindow("MAX_"+imageName);
+	run("Add Slice");
+	selectWindow(imageName);
+	setSlice(transSlice);
+	makeRectangle(0, 0, width, height);
+	run("Copy");
+	selectWindow("MAX_"+imageName);
+	setSlice(2);
+	run("Paste");
+	saveAs("tiff","/Users/tcs/Desktop/"+imageName+" f "+i+".tif");
+	close();
+    }
+}
