@@ -164,18 +164,18 @@ function measureMito(imageName, time, multiplier) {
 	run("Measure");
 	
 	//add time and background to results
-	lastRow = nResults-1;
-	setResult("Time", lastRow, time);
-	updateResults();
-	setResult("Background",lastRow, channelBackground);
-	updateResults();
+	//lastRow = nResults-1;
+	//setResult("Time", lastRow, time);
+	//updateResults();
+	//setResult("Background",lastRow, channelBackground);
+	//updateResults();
 	
 	// save results
 	// TODO: avoid this awful kludge of one line at a time
-	resultsName = frameName + "_results.csv";
-	saveAs("Results", outputDir + File.separator+resultsName);
+	//resultsName = frameName + "_results.csv";
+	//saveAs("Results", outputDir + File.separator+resultsName);
 	
-	//appendResults(resultsFile);
+	appendResults(resultsFile);
 	
 	
 	// clean up windows and results
@@ -203,10 +203,10 @@ function appendResults(resultsFile) {
 		headings = split(String.getResultsHeadings);
 		
 		for (i = 0; i < nResults; i++) {
-			resultLine = ","; // to allow for the row number which you cannot access
+			resultLine = ""; 
 			for (col=0; col<lengthOf(headings); col++){
 				print("getting result from column",headings[col],"row",i);
-				resultLine = resultLine + getResultString(headings[col],i) + ",";
+				resultLine = resultLine + "," + getResultString(headings[col],i);
 			}
 			print("The result line from row",i,"is", resultLine);
 			File.append(resultLine,resultsFile);
