@@ -147,37 +147,53 @@ function measureMito(imageName, time, multiplier) {
 	waitForUser("Mark background for image "+n+", frame "+time , "Draw a cytoplasmic background area, then click OK");
 
 	// measure background
-	run("Set Measurements...", "area mean min integrated display redirect=None decimal=3");
+	run("Set Measurements...", "area mean integrated limit display redirect=&frameName decimal=3");
+	setThreshold(0, 65535); 
 	run("Measure");
 	channelBackground = getResult("Mean",nResults-1); // from the last row of the table
 	print("Background in image",frameName,"=",channelBackground);
-	run("Select None"); 
 	run("Clear Results");
 
-	// set threshold and measure
+	// set threshold and measure mito
+	run("Set Measurements...", "area mean integrated limit display redirect=&frameName decimal=3");
 	selectWindow(frameName);
-	thresh = multiplier * channelBackground; // 150% of the background if multiplier = 1.5
-	print("Global threshold for image",frameName,"=",thresh);
 	run("Select None");
+	thresh = multiplier * channelBackground; // 150% of the background if multiplier = 1.5
+	//print("Global threshold for image",frameName,"=",thresh);
 	setThreshold(thresh, 65535); 
-	run("Set Measurements...", "area mean min integrated limit display redirect=None decimal=3");
 	run("Measure");
 	
-	//add time and background to results
-	//lastRow = nResults-1;
-	//setResult("Time", lastRow, time);
-	//updateResults();
-	//setResult("Background",lastRow, channelBackground);
-	//updateResults();
+	// add time and background to results
+//	selectWindow("Results");
+	resultsRows = Table.size; // number of rows
+//	lastRow = resultsRows - 1;
+//	setResult("Time", lastRow, time);
+//	updateResults();
+//	setResult("Background",lastRow, channelBackground);
+//	updateResults();
 	
 	// save results
 	// TODO: avoid this awful kludge of one line at a time
 	//resultsName = frameName + "_results.csv";
 	//saveAs("Results", outputDir + File.separator+resultsName);
 	
-	appendResults(resultsFile);
+	//appendResults(resultsFile);
+	headings = split(Table.headings);
 	
-	
+	for (i=0; i<resultsRows; i++){
+//		resultLine = "";
+//		for (col = 0; col<lengthOf(headings); col++){
+//			//print("getting result from row",i,"column",headings[col]);
+//			colName = headings[col];
+//			data = Table.getString(colName, i);
+//			resultLine = resultLine + "," + data;
+//			} // column loop
+//	//print("The result line from row",i,"is", resultLine);
+	print("The Mean of row",i,"is",Table.getString("Mean", i));
+	print("The IntDen of row",i,"is",Table.getString("IntDen", i));
+
+	//File.append(resultLine,resultsFile);
+	}
 	// clean up windows and results
 	selectWindow(frameName);
 	close();
