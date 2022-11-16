@@ -1,7 +1,7 @@
 // @File(label = "Input folder:", style = "directory") inputDir
 // @String(label = "File suffix", value = ".tif") suffix
 // @Integer(label = "Mito channel", value = 1) fluoChannel
-// @Float(label = "Threshold multiplier", style="slider", min=0.5, max=3.0, stepSize=0.5, value = 1.5) threshMultiplier
+// @Float(label = "Threshold multiplier", style="slider", min=0.5, max=3.0, stepSize=0.1, value = 1.5) threshMultiplier
 // @File(label = "Output folder:", style = "directory") outputDir
 
 // Note: DO NOT DELETE OR MOVE THE FIRST FEW LINES -- they supply essential parameters.
