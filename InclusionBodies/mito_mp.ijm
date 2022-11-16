@@ -16,8 +16,9 @@
 // Output: ROIs as ZIP file, Results table containing background measurement and integrated density of all pixels exceeding a defined factor above background.
 // Usage: Run the macro. (Image should not be open before running)
 
-// setup -- clear results
+// setup -- clear results and set background to black
 run("Clear Results");
+setBackgroundColor(0, 0, 0);
 
 
 // set up parameters for saving data from whole folder:
@@ -131,14 +132,16 @@ function measureMito(imageName, time, multiplier) {
 	zoomPct = 300; // set this as desired
 	run("Set... ", "zoom=&zoomPct"); // zoom up for easier viewing -- center is center of image
 	setLocation(x, y, width*zoomPct/100, height*zoomPct/100); // expand window
-	setTool("rectangle");
-	waitForUser("Crop cell for image "+n+", frame "+time, "Draw a box around the cell in this frame, then click OK");
+	setTool("polygon"); // allows for cutting out nearby cells
+	waitForUser("Crop cell for image "+n+", frame "+time, "Outline the cell in this frame, then click OK");
 	selType = selectionType();
 	if (selType == -1) { // no selection
 		waitForUser("Crop cell for image "+n+", frame "+time, "Draw a box around the cell in this frame, then click OK");		
 	}
 
-	run("Crop"); // frameName window retains the same name
+	run("Clear Outside", "stack"); // allows for cutting out nearby cells
+	run("Crop"); // to bounding box of polygon. frameName window retains the same name
+	run("Select None"); // to get rid of polygon
 
 	// user marks background
 	run("Set... ", "zoom=&zoomPct"); // zoom up for easier viewing -- center is center of image
