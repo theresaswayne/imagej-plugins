@@ -163,14 +163,14 @@ function measureMito(imageName, time, multiplier) {
 	setThreshold(thresh, 65535); 
 	run("Measure");
 	
-	// add time and background to results
-//	selectWindow("Results");
+// add time and background to results
+	selectWindow("Results");
 	resultsRows = Table.size; // number of rows
-//	lastRow = resultsRows - 1;
-//	setResult("Time", lastRow, time);
-//	updateResults();
-//	setResult("Background",lastRow, channelBackground);
-//	updateResults();
+	lastRow = resultsRows - 1;
+	setResult("Time", lastRow, time);
+	updateResults();
+	setResult("Background",lastRow, channelBackground);
+	updateResults();
 	
 	// save results
 	// TODO: avoid this awful kludge of one line at a time
@@ -180,19 +180,29 @@ function measureMito(imageName, time, multiplier) {
 	//appendResults(resultsFile);
 	headings = split(Table.headings);
 	
+	// the first time, add headers to results file 
+		if (File.exists(resultsFile)==false) 
+		{
+			MTheaders = String.getResultsHeadings();
+			//print("original results file headers are",MTheaders);
+			MTheaders = replace(MTheaders, "\t",","); // replace tabs with commas
+			File.append(MTheaders,resultsFile);
+			//print("headings are ",MTheaders);
+		} // write headings
+	
 	for (i=0; i<resultsRows; i++){
-//		resultLine = "";
-//		for (col = 0; col<lengthOf(headings); col++){
-//			//print("getting result from row",i,"column",headings[col]);
-//			colName = headings[col];
-//			data = Table.getString(colName, i);
-//			resultLine = resultLine + "," + data;
-//			} // column loop
-//	//print("The result line from row",i,"is", resultLine);
+		resultLine = "";
+		for (col = 0; col<lengthOf(headings); col++){
+			//print("getting result from row",i,"column",headings[col]);
+			colName = headings[col];
+			data = Table.getString(colName, i);
+			resultLine = resultLine + "," + data;
+			} // column loop
+	//print("The result line from row",i,"is", resultLine);
 	print("The Mean of row",i,"is",Table.getString("Mean", i));
 	print("The IntDen of row",i,"is",Table.getString("IntDen", i));
 
-	//File.append(resultLine,resultsFile);
+	File.append(resultLine,resultsFile);
 	}
 	// clean up windows and results
 	selectWindow(frameName);
