@@ -1,17 +1,19 @@
-//@ int(label="Channel for numerator", style = "spinner") Chan_Num
-//@ int(label="Channel for denominator", style = "spinner") Chan_Denom
+//@ int(label="Channel for numerator", style = "spinner") Channel_Num
+//@ int(label="Channel for denominator", style = "spinner") Channel_Denom
+//@ int(label="Channel for transmitted light -- select 0 if none", style = "spinner") Channel_Trans
 
+// biosensor.ijm
+// ImageJ macro to generate a ratio image from a multichannel Z stack with interactive background selection 
+// Features are thresholded and 
+// Output is a 32-bit ratio image which can be saved or measured
+// Theresa Swayne, Columbia University, 2022-2023
 
-//
+// TO USE: Open a multi-channel Z stack image. Run the macro. 
+// Save the resulting 32-bit image.
 
-// Measures ratio image from a multichannel Z stack with interactive background selection 
-// Output is a 32-bit image with the GP values
-// GP Formula from Learmonth and Gratton, 2002, doi: 10.1007/978-3-642-56067-5_14
-// GP = (Igel - Ilc)/(Igel + Ilc)
-// GP is higher in less fluid membranes
-// Theresa Swayne, Columbia University, 2022 for Erika Shor and Yasmine Hassoun
-
-// TO USE: Open a multi-channel image. Run the macro. Save the resulting images -- both the GP image and the HSB.
+// --- Setup ----
+//roiManager("reset");
+run("Clear Results");
 
 // ---- Get image information ----
 id = getImageID();
@@ -22,70 +24,75 @@ getDimensions(width, height, channels, slices, frames);
 
 // ---- Subtract background from a user-specified ROI ----
 
+
+run("Split Channels");
+numImage = "C"+Channel_Num+"-"+title;
+denomImage = "C"+Channel_Denom+"-"+title;
+if (Channel_Trans != 0) {
+	transImage = "C"+Channel_Trans+"-"+title;
+	selectWindow(transImage);
+}
+else {
+	selectWindow(numImage);
+}
+
+
 // get the ROI
-setTool("freehand");
+setTool("rectangle");
 waitForUser("Mark background", "Draw a background area that works for both channels, then click OK");
-run("Set Measurements...", "mean redirect=None decimal=3");
+run("Set Measurements...", "mean redirect=None decimal=2");
 
-// measure background in Gel channel
-Stack.setChannel(Chan_Gel);
-run("Measure");
-gelMeasBackground = getResult("Mean",nResults-1); // from the last row of the table
-
-// measure background in LC channel
-Stack.setChannel(Chan_LC);
-run("Measure");
-lcMeasBackground = getResult("Mean",nResults-1); // from the last row of the table
-
-// subtract background from each channel
-
-run("Split Channels");
-open("/Users/tcs6/Downloads/2022-11-10 HyPer7 H2O2 titration/JYY343 no tr001.nd2");
-selectWindow("JYY343 no tr001.nd2");
-run("Duplicate...", "title=stack");
-close();
-selectWindow("JYY343 no tr001.nd2");
-run("Duplicate...", "title=stack duplicate");
-selectWindow("JYY343 no tr001.nd2");
-close();
-selectWindow("stack");
-run("Split Channels");
-makeRectangle(379, 266, 133, 125);
-Roi.setPosition(1);
-roiManager("Add");
-selectWindow("C1-stack");
-roiManager("Select", 0);
-roiManager("Multi Measure");
-run("Summarize");
-saveAs("Results", "/Users/tcs6/Downloads/test analysis/C1 bg.csv");
-selectWindow("C2-stack");
-roiManager("Select", 0);
-roiManager("Multi Measure");
-run("Summarize");
-saveAs("Results", "/Users/tcs6/Downloads/test analysis/C2 bg.csv");
-selectWindow("C1-stack");
+// measure and subtract background in numerator channel
+selectWindow(numImage);
+run("Measure Stack...");
+numBGs = Results.getColumn("Mean");
+Array.getStatistics(numBGs, min, max, mean, stdDev);
+numMeasBackground = mean;
+print("Numerator channel",Channel_Num, "background = ",numMeasBackground);
+//numMeasBackground = getResult("Mean",nResults-1); // from the last row of the table
+selectWindow(numImage);
 run("Select None");
-run("Subtract...", "value=118 stack");
-selectWindow("C2-stack");
+run("Subtract...", "value="+numMeasBackground);
+
+// measure and subtract background in denominator channel
+run("Clear Results");
+selectWindow(denomImage);
+run("Restore Selection"); // TODO: save this in the ROI manager
+run("Measure Stack...");
+denomBGs = Results.getColumn("Mean");
+Array.getStatistics(denomBGs, min, max, mean, stdDev);
+denomMeasBackground = mean;
+print("Denominator channel",Channel_Denom, "background = ",denomMeasBackground);
+selectWindow(denomImage);
 run("Select None");
-run("Subtract...", "value=116 stack");
-imageCalculator("Add create 32-bit stack", "C1-stack","C2-stack");
-selectWindow("Result of C1-stack");
-close();
-imageCalculator("Add create 32-bit stack", "C1-stack","C2-stack");
-selectWindow("Result of C1-stack");
-rename("sum");
-setAutoThreshold("Default dark");
-//run("Threshold...");
-setAutoThreshold("Default dark stack");
+run("Subtract...", "value="+denomMeasBackground);
+
+// TODO: save background results
+
+// ---- Threshold on the sum of the 2 images ----
+imageCalculator("Add create 32-bit stack", numImage,denomImage);
+selectWindow("Result of "+numImage);
+rename("Sum");
 setAutoThreshold("MaxEntropy dark stack");
 setOption("BlackBackground", false);
 run("Convert to Mask", "method=MaxEntropy background=Dark black");
+
+// divide the 8-bit mask to generate a 0,1 mask
+selectWindow("Sum");
 run("Divide...", "value=255 stack");
-run("Image Calculator...");
-rename("mask");
-imageCalculator("Multiply create 32-bit stack", "C1-stack","mask");
-selectWindow("Result of C1-stack");
+rename("Mask"); // TODO: save mask
+
+// apply the mask to each channel
+imageCalculator("Multiply create 32-bit stack", numImage, "Mask");
+selectWindow("Result of "+numImage);
+rename("Masked Num");
+
+imageCalculator("Multiply create 32-bit stack", denomImage, "Mask");
+selectWindow("Result of "+denomImage);
+rename("Masked Denom");
+
+// ---- Calculate the ratio image ----
+
 saveAs("Tiff", "/Users/tcs6/Downloads/test analysis/masked C1.tif");
 imageCalculator("Multiply create 32-bit stack", "C2-stack","mask");
 selectWindow("Result of C2-stack");
