@@ -1,17 +1,18 @@
 //@ int(label="Channel for numerator", style = "spinner") Channel_Num
 //@ int(label="Channel for denominator", style = "spinner") Channel_Denom
 //@ int(label="Channel for transmitted light -- select 0 if none", style = "spinner") Channel_Trans
-//@File(label = "Output folder:", style = "directory") outputDir
+//@ File(label = "Output folder:", style = "directory") outputDir
 
 // biosensor.ijm
 // ImageJ macro to generate a ratio image from a multichannel Z stack with interactive background selection
-// Features are thresholded and measured
-// Output is a 32-bit ratio image which can be saved
+// Input:
+// Output:
 // Theresa Swayne, Columbia University, 2022-2023
 
 // TO USE: Open a multi-channel Z stack image. Run the macro. 
 
 // TODO: Allow user to set threshold type, column format for measurement
+// TODO: adapt for single images
 
 // --- Setup ----
 //roiManager("reset");
@@ -35,7 +36,6 @@ if (Channel_Trans != 0) {
 else {
 	selectWindow(numImage);
 }
-
 
 // get the ROI
 setTool("rectangle");
@@ -66,12 +66,15 @@ selectWindow(denomImage);
 run("Select None");
 run("Subtract...", "value="+denomMeasBackground);
 
-// TODO: save background results
+// TODO: save background results, clear results
+
+// TODO: Get ROIs for cells
 
 // ---- Create a mask based on the sum of the 2 images ----
 imageCalculator("Add create 32-bit stack", numImage,denomImage);
 selectWindow("Result of "+numImage);
 rename("Sum");
+// TODO: save sum
 setAutoThreshold("MaxEntropy dark stack");
 setOption("BlackBackground", false);
 run("Convert to Mask", "method=MaxEntropy background=Dark black");
@@ -79,7 +82,8 @@ run("Convert to Mask", "method=MaxEntropy background=Dark black");
 // divide the 8-bit mask to generate a 0,1 mask
 selectWindow("Sum");
 run("Divide...", "value=255 stack");
-rename("Mask"); // TODO: save mask
+rename("Mask"); 
+// TODO: save mask
 
 // apply the mask to each channel
 imageCalculator("Multiply create 32-bit stack", numImage, "Mask");
@@ -94,21 +98,15 @@ rename("Masked Denom");
 imageCalculator("Divide create 32-bit stack", "Masked Num","Masked Denom");
 selectWindow("Result of Masked Num");
 rename("Ratio");
+// TODO: save ratio
 
 // set background pixels to NaN
 setThreshold(1.0000, 1000000000000000000000000000000.0000);
 run("NaN Background", "stack");
 
-// TODO: Ask the user to mark cells on the trans or ratio image (maybe do it first?)
-//setTool("polygon");
-//makePolygon(526,175,546,236,618,246,636,227,637,179,571,159);
-//Roi.setPosition(10);
-//roiManager("Add");
-//roiManager("Show All");
-
 // TODO: --- Measure the cells, save results and ROIs ---
 // run("Set Measurements...", "area mean integrated display redirect=None decimal=2");
-// roiManager("Multi Measure");
+// roiManager("Multi Measure"); // options?
 // selectWindow("Results");
 // saveAs("Results", "/Users/tcs6/Downloads/test analysis/ratio Results.csv");
 // run("Brightness/Contrast...");
