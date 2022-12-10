@@ -15,12 +15,12 @@
 // TODO MAYBE: 
 //	user sets threshold type
 //	user sets column format for measurement
-// 	adapt for single images
-
-
+// 	adapt for single plane images
+//  more graceful way to set background to NaN
 
 // --- Setup ----
-//roiManager("reset");
+print("\\Clear"); // clears Log window
+roiManager("reset");
 run("Clear Results");
 
 // ---- Get image information ----
@@ -29,6 +29,7 @@ title = getTitle();
 dotIndex = indexOf(title, ".");
 basename = substring(title, 0, dotIndex);
 getDimensions(width, height, channels, slices, frames);
+print("Processing",title);
 
 // ---- Prepare images ----
 run("Split Channels");
@@ -72,7 +73,7 @@ selectWindow(denomImage);
 run("Select None");
 run("Subtract...", "value="+denomBG+" stack");
 
-// ---- Segmentation and Ratioing ----
+// ---- Segmentation and ratioing ----
 
 // threshold on the sum of the 2 images
 imageCalculator("Add create 32-bit stack", numImage,denomImage);
@@ -88,7 +89,7 @@ run("Divide...", "value=255 stack");
 rename("Mask");
 
 // apply the mask to each channel by multiplication
-// (a 32-bit result is required so we can change the backgrund to NaN later)
+// (a 32-bit result is required so we can change the background to NaN later)
 imageCalculator("Multiply create 32-bit stack", numImage, "Mask");
 selectWindow("Result of "+numImage);
 rename("Masked Num");
@@ -104,38 +105,54 @@ rename("Ratio");
 
 // set background pixels to NaN
 selectWindow("Ratio");
-setThreshold(1.0000, 1000000000000000000000000000000.0000);
+setThreshold(1.0000, 1000000000000000000000000000000.0000); // this should ensure all mask pixels are selected 
 run("NaN Background", "stack");
 
 // ---- Select cells and measure ----
 
 run("Set Measurements...", "area mean integrated display redirect=None decimal=2");
-setTool("polygon");
-waitForUser("Mark cells", "Draw ROIs and add to the ROI manager (press T after each) \n Then click OK");
-run("Set Measurements...", "mean redirect=None decimal=2");
+if (Channel_Trans != 0) {
+	transImage = "C"+Channel_Trans+"-"+title;
+	selectWindow(transImage);
+	}
+else {
+	selectWindow(Sum);
+	}
+setTool("freehand");
+middleSlice = round(slices/2);
+Stack.setPosition(1,middleSlice,1);
+waitForUser("Mark cells", "Draw ROIs and add to the ROI manager (press T after each).\nThen click OK");
+
 
 selectWindow("Ratio");
 rename(basename + "_ratio"); // so the results will have the original filename attached
 
 roiManager("deselect");
-roiManager("Multi Measure");
+roiManager("Multi Measure"); // user sees dialog to choose rows/columns for output
+
 
 // ---- Save output files ----
 
 selectWindow("Mask");
-saveAs("Tiff", outputDir  + File.separator + basename + "_mask.tif";);
+saveAs("Tiff", outputDir  + File.separator + basename + "_mask.tif");
 selectWindow(basename + "_ratio");
-saveAs("Tiff", outputDir  + File.separator + basename + "_ratio.tif";);
+saveAs("Tiff", outputDir  + File.separator + basename + "_ratio.tif");
 roiManager("deselect");
-roiManager("save", outputDir  + File.separator + basename + "_ROIs.zip";);
+roiManager("save", outputDir  + File.separator + basename + "_ROIs.zip");
 selectWindow("Results");
 saveAs("Results", outputDir  + File.separator + basename + "_Results.csv");
 selectWindow("Log");
 saveAs("text",outputDir  + File.separator + basename + "_Log.txt");
 
+// ---- Clean up ----
 
-// ---- Helper Function ----
+close("*"); // image windows
+selectWindow("Log");
+run("Close");
+roiManager("reset");
+run("Clear Results");
 
+// ---- Helper function ----
 
 function measureBackground(Num, Denom, Trans) { 
 	// Measures background from a user-specified ROI
