@@ -6,15 +6,14 @@
 
 // biosensor.ijm
 // ImageJ macro to generate a ratio image from a multichannel Z stack with interactive background selection
-// Input:
-// Output:
+// Input: multi-channel Z stack image
+// Output: mask and ratio images, results, ROI set, log of background levels
 // Theresa Swayne, Columbia University, 2022-2023
 
 // TO USE: Open a multi-channel Z stack image. Run the macro. 
 
 // TODO MAYBE: 
 //	user sets threshold type
-//	user sets column format for measurement
 // 	adapt for single plane images
 //  more graceful way to set background to NaN
 
