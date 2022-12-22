@@ -1,4 +1,0 @@
-Processing sample input.nd2
-Subtracting user-selected background
-Measured numerator channel 2 background 121
-Measured denominator channel 1 background 117
