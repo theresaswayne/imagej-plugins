@@ -15,5 +15,5 @@ Property.set("CompositeProjection", "Sum");
 Stack.setDisplayMode("composite");
 run("RGB Color");
 
-// set the standard histology gamma value
+// optional: set the standard histology gamma value of 0.45. (Gamma of the initial RGB image is 1.0)
 run("Gamma...", "value=0.45");
