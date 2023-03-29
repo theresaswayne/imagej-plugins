@@ -11,7 +11,7 @@
  *  Update October 2015: works for Multichannel images as well
  *  Update October 2016 by azim58: works for lif which contain images that are not stacks.  The script will also not overwrite images if they have the same name.
  *  Update March 2017 by Theresa Swayne: bit depth is preserved, Z projection is optional 
- *  
+ *  Update 2023, Theresa Swayne: use script parameters, use standard batch functions to process folder and image
  */
 
 // ---- Setup ----
