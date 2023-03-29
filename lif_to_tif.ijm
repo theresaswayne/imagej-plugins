@@ -80,6 +80,7 @@ function processImage(inputdir, name, outputdir)
         		{
         		run("Z Project...", "projection=[Max Intensity]");
         		selectWindow("MAX_"+seriesname);
+        		seriesname = "MAX_"+seriesname;
         		}
 	        saveAs("Tiff", outputdir+File.separator+name+"_"+seriesname+"_"+j+".tif");    
     		}
