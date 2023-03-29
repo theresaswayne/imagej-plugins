@@ -22,7 +22,7 @@ n = 0;
 
 // ---- Commands to run the processing functions ---
 
-processFolder(inputdir, suffix); // actually do the processing
+processFolder(inputdir, outputdir); // actually do the processing
 showMessage("Finished.");
 setBatchMode(false);
 // clean up
@@ -81,11 +81,11 @@ function processImage(inputdir, name, outputdir)
         		run("Z Project...", "projection=[Max Intensity]");
         		selectWindow("MAX_"+seriesname);
         		}
-	        saveAs("Tiff", outputdir+File.separator+name+"_"+seriesname+"_MIP_"+j+".tif");    
+	        saveAs("Tiff", outputdir+File.separator+name+"_"+seriesname+"_"+j+".tif");    
     		}
         else
         	{
-	        saveAs("Tiff", outputdir+File.separator+name+"_"+seriesname+"_MIP_"+j+".tif");
+	        saveAs("Tiff", outputdir+File.separator+name+"_"+seriesname+"_"+j+".tif");
         	}    
         run("Close All");
         run("Collect Garbage"); // free up memory
