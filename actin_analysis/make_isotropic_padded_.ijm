@@ -12,10 +12,12 @@
 // get stack info
 
 title = getTitle();
+dotIndex = indexOf(title, ".");
+basename = substring(title, 0, dotIndex);
 getVoxelSize(voxwidth, voxheight, depth, unit);
 getDimensions(stackwidth, stackheight, channels, slices, frames);
 origBitDepth = bitDepth(); 
-processedName = title+"_isotropic_padded.tif";
+processedName = basename+"_isotropic_padded.tif";
 
 print("initial voxel depth =",depth);
 print("initial bit depth =",origBitDepth);
