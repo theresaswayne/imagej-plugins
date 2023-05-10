@@ -1,7 +1,7 @@
 // @Byte(label = "Condensate channel", style = "spinner", value = 1) fluoChannel
-// @Byte(label = "Threshold value", value = 100) fixedThreshold
-// @Byte(label = "Minimum particle size", value = 3) minSize
-// @Byte(label = "Maximum particle size", value = 10000) maxSize
+// @Integer(label = "Threshold value", value = 3000) fixedThreshold
+// @Float(label = "Minimum particle size", value = 3.0) minSize
+// @Float(label = "Maximum particle size", value = 100.0) maxSize
 // @File(label = "Output folder:", style = "directory") outputDir
 
 // Analyze_Small_Condensates.ijm
@@ -14,7 +14,8 @@
 //Summary counts 
 // TO USE: Open an image. Run the script.
 
-// TODO: For empty line, remove a comma before the label, add ROI number to the label
+
+// TODO: Summary shows all 0s and does not clear
 
 // --- Setup ----
 
@@ -68,26 +69,27 @@ targetMask = basename+"_mask";
 
 // ---- Apply threshold and clean up stray pixels ----
 
-// make initial mask
+// make initial mask	
 selectWindow(targetImage);
 run("Duplicate...", "title=&targetMask duplicate");
 selectWindow(targetMask);
 setThreshold(fixedThreshold, 4095); // supplied by user at the beginning
 print("Threshold: ",fixedThreshold);
-setOption("BlackBackground", false);
+setOption("BlackBackground", true);
 run("Convert to Mask", "background=Dark black");
 
 // remove stray pixels
 selectWindow(targetMask);
 run("Options...", "iterations=1 count=1 black edm=16-bit do=Open");
 
-// set measurement options
-run("Set Measurements...", "area mean integrated centroid display redirect=&targetImage decimal=2");
 
 // ---- Loop through ROIs and analyze particles ----
 
 //For each ROI (cell) in manager, Analyze Particles on the binary image, 
 // redirecting measurements to the original image
+
+// set measurement options
+run("Set Measurements...", "area mean integrated centroid display redirect=&targetImage decimal=2");
 
 n = roiManager("count");
 for (i = 0; i < n; i++) {
@@ -134,7 +136,7 @@ function measureParticles(original, target, mask, cellNum, min, max, output) {
 	print("Measuring particles.");
 	
 	selectWindow(mask);
-	run("Analyze Particles...", "size=&min-&max display clear exclude summarize");
+	run("Analyze Particles...", "size=&min-&max display exclude clear summarize");
 
 	if (nResults == 0){ // for the case when there are positive pixels but no particles -- presumably on the edges.
 		resultsForNoParticles(original, cellNum, output);
@@ -185,8 +187,10 @@ function measureParticles(original, target, mask, cellNum, min, max, output) {
  		File.append(summaryLine,summary); // add one line of data
 		print("added data");
 		
-		selectWindow("Summary");
-		run("Close");
+		if (isOpen("Summary")) {
+			selectWindow("Summary");
+			run("Close");
+			}
 		} // end writing particle data
 	
 	run("Select None");
@@ -204,7 +208,7 @@ function resultsForNoParticles(original, lineNum, output) {
 		File.append(SummaryHeaders,summary);
 		print("added headings: ",SummaryHeaders);
 		}
-	summaryLine = original+"_"+lineNum+",,,,,"; // 5 commas
+	summaryLine = original+"_"+lineNum+",0,NA,NA,NA,NA,NA";
 	File.append(summaryLine,summary);
 	print("added line");
 	}
