@@ -1,6 +1,6 @@
 
-path = "/Users/theresaswayne/Desktop/Aditi Trehan spot counting";
-results = "/Users/theresaswayne/Desktop/Aditi Trehan spot counting/Summary.csv";
+path = "/Users/theresaswayne/Desktop/";
+results = "/Users/theresaswayne/Desktop/Summary.csv";
 run("Set Measurements...", "area mean integrated centroid display redirect=None decimal=2");
 
 run("Blobs (25K)");
@@ -15,7 +15,7 @@ saveAs("Text", path + File.separator + "OriginalSummary.tsv");  // this changes 
 selectWindow("OriginalSummary.tsv");
 // gather info, tab separated
 lines = split(getInfo(), "\n"); 
-headings = lines[0]);
+headings = lines[0];
 // label count totalarea averagesize pctarea mean intden 
 values = split(lines[1], "\t"); 
 

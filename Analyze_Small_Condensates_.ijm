@@ -1,7 +1,8 @@
 // @Byte(label = "Condensate channel", style = "spinner", value = 1) fluoChannel
 // @Byte(label = "Threshold value", value = 100) fixedThreshold
+// @Byte(label = "Minimum particle size", value = 3) minSize
+// @Byte(label = "Maximum particle size", value = 10000) maxSize
 // @File(label = "Output folder:", style = "directory") outputDir
-
 
 // Analyze_Small_Condensates.ijm
 // ImageJ macro language script by Theresa Swayne, Columbia University, 2023
@@ -13,14 +14,16 @@
 //Summary counts 
 // TO USE: Open an image. Run the script.
 
+// TODO: For empty line, remove a comma before the label, add ROI number to the label
 
 // --- Setup ----
+
 print("\\Clear"); // clears Log window
 roiManager("reset");
 run("Clear Results");
 
-
 // ---- Get image information ----
+
 id = getImageID();
 title = getTitle();
 dotIndex = indexOf(title, ".");
@@ -29,7 +32,7 @@ getDimensions(width, height, channels, slices, frames);
 print("Processing",title, "with basename",basename);
 // save data as csv, preserve headers for saving, preserve row number for copy/paste 
 run("Input/Output...", "file=.csv copy_row save_column save_row"); 
-resultsFile = outputDir  + File.separator + basename + "_Summary.csv";
+
 
 // ---- Get cell ROIs ----
 
@@ -38,7 +41,6 @@ setTool("freehand");
 waitForUser("Mark cells", "Draw ROIs and add to the ROI manager (press T after each),\nor open an ROI set.\nThen click OK");
 
 // rename ROIs for easier interpretation of results
-
 n = roiManager("count");
 if (n == 0) {
 	print("Analyzing entire image");
@@ -76,13 +78,16 @@ setOption("BlackBackground", false);
 run("Convert to Mask", "background=Dark black");
 
 // remove stray pixels
+selectWindow(targetMask);
 run("Options...", "iterations=1 count=1 black edm=16-bit do=Open");
+
+// set measurement options
+run("Set Measurements...", "area mean integrated centroid display redirect=&targetImage decimal=2");
 
 // ---- Loop through ROIs and analyze particles ----
 
 //For each ROI (cell) in manager, Analyze Particles on the binary image, 
-// redirecting measurements, with min. size = 3 pixels, [borrow code from inclusion analysis],  
-// do not append results but write lines to summary file 
+// redirecting measurements to the original image
 
 n = roiManager("count");
 for (i = 0; i < n; i++) {
@@ -91,57 +96,49 @@ for (i = 0; i < n; i++) {
 	// check if there are any pixels to measure
 	selectWindow(targetMask);
 	roiManager("Select", i);
-	getStatistics(area, mean, min, max, stdDev, histogram);
-	print("The max value in the ROI is",max);
+	getStatistics(area, mean, minimum, maximum, stdDev, histogram);
+	print("The max value in the ROI is",maximum);
 	
-	if (max==0){ // no pixels above threshold, therefore don't measure particles
-		resultsForNoParticles();
+	if (maximum==0){ // no pixels above threshold, therefore don't measure particles
+		resultsForNoParticles(basename, roiNum, outputDir);
 		}
 	else { 
 		// find particles, and measure intensity of each in the original image
-		measureParticles(basename, targetImage, targetMask, roiNum, outputDir);
+		measureParticles(basename, targetImage, targetMask, roiNum, minSize, maxSize, outputDir);
 		}
-	
-	// clean up results
-	
-	run("Clear Results");
-
-	
 	}
 
+// ---- Save output files ----
 
+selectWindow(targetMask);
+saveAs("Tiff", outputDir  + File.separator + basename + "_mask.tif");
+roiManager("deselect");
+roiManager("save", outputDir  + File.separator + basename + "_ROIs.zip");
+selectWindow("Log");
+saveAs("text",outputDir  + File.separator + basename + "_Log.txt");
 
+// ---- Clean up ----
 
+close("*"); // image windows
+selectWindow("Log");
+run("Close");
+//selectWindow("Summary");
+//run("Close");
+roiManager("reset");
+run("Clear Results");
 
-// find particles, and measure intensity of each in the original image
+// ---- Functions ----
 
-
-
-//Set measurements: Area, Mean, IntDen, Centroid, Display Label, redirect to original image  
-run("Set Measurements...", "area mean integrated centroid display redirect=&title decimal=2");
-
-
-//
-//Save for each cell: 
-//Individual particle results 
-//
-//Save for entire image:  
-//Cell ROIs 
-//thresholded image 
-//Summary counts 
-
-
-
-function measureParticles(original, target, mask, cellNum, output) {
+function measureParticles(original, target, mask, cellNum, min, max, output) {
 	// carry out particle analysis and write results
 	print("Measuring particles.");
-	run("Set Measurements...", "area mean integrated centroid display redirect=&target decimal=2");
+	
 	selectWindow(mask);
-	run("Analyze Particles...", "display clear exclude summarize");
+	run("Analyze Particles...", "size=&min-&max display clear exclude summarize");
 
 	if (nResults == 0){ // for the case when there are positive pixels but no particles -- presumably on the edges.
-		resultsForNoParticles();
-	}
+		resultsForNoParticles(original, cellNum, output);
+		}
 	else { // we have particles and results
 
 		// note that internally the rows of the results table start at 0 
@@ -150,60 +147,64 @@ function measureParticles(original, target, mask, cellNum, output) {
 		
 		// update the results with the name of the original image
 		for (r = 0; r < nResults; r++) {
-			setResult("Label", r, original); 
+			newLabel = original + "_" + cellNum;
+			setResult("Label", r, newLabel); 
 			}
 		updateResults();
-				
+
 		// save individual particle measurements for this cell
+		selectWindow("Results");
 		saveAs("Results", output + File.separator + original + "_" + cellNum + ".csv");
 	
 		// save collected results (counts)
 		
-		// the first time, add headers to collected results file 
-		results = output  + File.separator + original + "_Summary.csv";
+		summary = output  + File.separator + original + "_Summary.csv";
 		 
-		if (cellNum==1) {
-			if (File.exists(results)==false) {
-				SummaryHeaders = String.getResultsHeadings();
-				SummaryHeaders = replace(SummaryHeaders, "\t",","); // replace tabs with commas
-				File.append(SummaryHeaders,results);
-				print("added headings: ",SummaryHeaders);
-		    	}
-		}
-	
-		// Get summary info
+		selectWindow("Summary");
+		// gather info, tab separated
+		lines = split(getInfo(), "\n"); 
+		headings = lines[0]; // label count totalarea averagesize pctarea mean intden 
+		values = split(lines[1], "\t"); // make an array from the values
 		
-		headings = split(String.getResultsHeadings);
-		resultLine = ",";
-		for (col=0; col<lengthOf(headings); col++){
-		    resultLine = resultLine + getResultString(headings[col],brightestRow) + ",";
-		}
-		resultLine = resultLine + channelBackground;
-		File.append(resultLine,resultsFile);
-	} // end writing particle ROIs and brightest result
+		// replace the mask file name with the original file name
+		origLabel = values[0];
+		print("Original label",origLabel);
+		newLabel = original + "_" + cellNum;
+		values[0] = newLabel;
+		print("Renamed to",newLabel);
+		
+		// construct the data line with values separated by commas
+		summaryLine = String.join(values, ",");
+		
+		// begin the new comma-separated file if needed, then add the summary data
+		if (File.exists(summary)==false) {
+			SummaryHeaders = replace(headings, "\t",","); // replace tabs with commas
+			File.append(SummaryHeaders,summary);
+			print("added headings: ",SummaryHeaders);
+	    	}
+ 		File.append(summaryLine,summary); // add one line of data
+		print("added data");
+		
+		selectWindow("Summary");
+		run("Close");
+		} // end writing particle data
 	
 	run("Select None");
-}
-
-function resultsForNoParticles() {
-	// write a line to IB results if there are no particles
-	print("Writing background value to IB results file."); 
-		
-	// if this is the first time, add headers to collected results file 
-	if (n==1) {
-		if (File.exists(outputDir  + File.separator+ "IB_results.csv")==false) 
-		{
-			IBheaders = ",Label,Area,Mean,Min,Max,X,Y,IntDen,RawIntDen,Slice"; // need to change this if we do different measurements!
-			// IBheaders = replace(IBheaders, "\t",","); // replace tabs with commas
-			IBheaders = IBheaders + ",Background";
-			File.append(IBheaders,resultsFile);
-			print("since we have no results, headings are ",IBheaders);
-	    }
 	}
 
-	// add a row to the merged results file giving the label and background value
-	headings = split(String.getResultsHeadings);
-	resultLine = ","+channelName+",,,,,,,,,,"; // 10 commas
-	resultLine = resultLine + channelBackground;
-	File.append(resultLine,resultsFile);
-}
+function resultsForNoParticles(original, lineNum, output) {
+	// write a line to summary results if there are no particles
+	print("Writing zeroes to summary file."); 
+	
+	summary = output  + File.separator + original + "_Summary.csv";
+	
+	// if this is the first time, add headers to collected results file 
+	if (File.exists(summary)==false) {
+		SummaryHeaders = "Slice,Count,Total Area,Average Size,% Area,Mean,IntDen";
+		File.append(SummaryHeaders,summary);
+		print("added headings: ",SummaryHeaders);
+		}
+	summaryLine = original+"_"+lineNum+",,,,,"; // 5 commas
+	File.append(summaryLine,summary);
+	print("added line");
+	}
