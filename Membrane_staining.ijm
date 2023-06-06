@@ -23,6 +23,7 @@
 roiManager("reset");
 run("Select None");
 run("Clear Results");
+run("Input/Output...", "file=.csv copy_row save_column save_row"); 
 // get image info
 id = getImageID();
 title = getTitle();
@@ -114,6 +115,8 @@ duplicateName = basename+"_copy";
 run("Duplicate...", "title=&duplicateName");
 selectWindow(duplicateName); // image with only one channel
 
+resultFile = outputDir + File.separator + basename+"_results.csv";
+
 for (cell = 0; cell < numCells; cell++) {
 	// select all the ROIs belonging to that cell
 	cellExp = ".*_"+cell; // regex finding all with that number appended
@@ -121,69 +124,25 @@ for (cell = 0; cell < numCells; cell++) {
 	roiManager("select", cellIndices);
 	roiManager("multi-measure one"); // one row per slice, does not append results
 	
-	// TODO: Since the results table headings are different for each ROI, collect measurements and write line by line. 
-	// they appear in order cell, cyto, membrane
 	selectWindow("Results");
-	
+	lines = split(getInfo(), "\n"); 
+	values = split(lines[1], "\t"); // results table is tab-separated
+	values[0] = cell; // include the cell number
+
+	//		construct the data line with values separated by commas
+	resultLine = String.join(values, ",");
+
+	// begin the new comma-separated file if needed, then add the data
+	if (File.exists(resultFile)==false) {
+		ResultHeaders = "CellNumber,Label,Area_Cell,Mean_Cell,IntDen_Cell,RawIntDen_Cell,Area_Cytoplasm,Mean_Cytoplasm,IntDen_Cytoplasm,RawIntDen_Cytoplasm,Area_Membrane,Mean_Membrane,IntDen_Membrane,RawIntDen_Membrane"; // comma-separated
+		File.append(ResultHeaders,resultFile);
+		print("added headings: ",ResultHeaders);
+    	}
+	File.append(resultLine,resultFile);
+	print("Added results for cell",cell);
 }
 
-//		 
-//		selectWindow("Summary");
-//		// gather info, tab separated
-//		lines = split(getInfo(), "\n"); 
-//		headings = lines[0]; // label count totalarea averagesize pctarea mean intden 
-//		values = split(lines[1], "\t"); // make an array from the values
-//		
-//		// replace the mask file name with the original file name
-//		origLabel = values[0];
-//		print("Original label",origLabel);
-//		newLabel = original + "_" + cellNum;
-//		values[0] = newLabel;
-//		print("Renamed to",newLabel);
-//		
-//		// construct the data line with values separated by commas
-//		summaryLine = String.join(values, ",");
-//		
-//		// begin the new comma-separated file if needed, then add the summary data
-//		if (File.exists(summary)==false) {
-//			SummaryHeaders = replace(headings, "\t",","); // replace tabs with commas
-//			File.append(SummaryHeaders,summary);
-//			print("added headings: ",SummaryHeaders);
-//	    	}
-// 		File.append(summaryLine,summary); // add one line of data
-//		print("added data");
-//		
-//		if (isOpen("Summary")) {
-//			selectWindow("Summary");
-//			run("Close");
-//			}
-//		} // end writing particle data
-//	
-//	run("Select None");
-//	}
-//
-//function resultsForNoParticles(original, lineNum, output) {
-//	// write a line to summary results if there are no particles
-//	print("Writing zeroes to summary file."); 
-//	
-//	summary = output  + File.separator + original + "_Summary.csv";
-//	
-//	// if this is the first time, add headers to collected results file 
-//	if (File.exists(summary)==false) {
-//		SummaryHeaders = "Slice,Count,Total Area,Average Size,% Area,Mean,IntDen";
-//		File.append(SummaryHeaders,summary);
-//		print("added headings: ",SummaryHeaders);
-//		}
-//	summaryLine = original+"_"+lineNum+",0,NA,NA,NA,NA,NA";
-//	File.append(summaryLine,summary);
-//	print("added line");
-//	}
 
-// ---- Save results ----
-
-// Save the results table or copy/paste results into your preferred analysis software. 
-// TODO: write line by line
-// saveAs("results",outputDir+ File.separator+basename+"_Results.csv");
 
 // ---- Clean up ----
 selectWindow(maskName);
@@ -191,7 +150,7 @@ close();
 selectWindow(duplicateName);
 close();
 roiManager("reset");
-
+showMessage("Finished.");
 
 // ---- Functions ----
 
