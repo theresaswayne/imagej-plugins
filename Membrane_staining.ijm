@@ -7,19 +7,24 @@
 // Membrane_staining.ijm
 // ImageJ/Fiji macro by Theresa Swayne for Sarah Cardoso, 2023
 // Measures membrane staining in 2D multichannel images
-// Input:
+// Input: Single- or multi-channel single-plane image
 // Output: 
-// How to use this script: Open an image. Run the script. Enter the parameters.
-// The cells are first detected using one channel, and then the membrane is defined as a band folowing the cell contour.
-// The size and position of the band are defined by 2 parameters, inner margin and width.
-// *Inner margin* defines the inner boundary of the band. The cell outline is shrunk (moved inward) by this many um.
-// *Width* is the thickness of the band in um. 
-// The cells are thresholded and the mean pixel intensity above threshold is measured in the whole cell, the shrunken (cytoplasmic) area, and the membrane band
-
+// -- Mean and Integrated Intensity measurements for each cell, "cytoplasm", and "membrane" area
+// -- ROIs for each of these compartments 
+// How to use this script: Open an image. Run the script. 
+// Enter the parameters (see below for details).
+// After the cells are thresholded, you will be able to manually separate contiguous cells  
+// The cells are first detected using a channel chosen by the user.
+// The cytoplasm and membrane are defined using 2 user-chosen parameters: inner margin and width.
+// *Inner margin* defines the inner boundary of the band. 
+//		The cell outline is shrunk (moved inward) by this amount. 
+// 		This smaller area is defined as the cytoplasm.
+// *Width* is the thickness of the membrane band in um. 
+// TIP: Choose the initial threshold, inner margin and width to minimize inclusion of background in the measurements.
 
 
 // ---- Setup ----
-
+requires("1.48h");
 roiManager("reset");
 run("Select None");
 run("Clear Results");
@@ -29,120 +34,121 @@ id = getImageID();
 title = getTitle();
 dotIndex = indexOf(title, ".");
 basename = substring(title, 0, dotIndex);
+resultFile = outputDir + File.separator + basename+"_results.csv";
+roiFile = outputDir+File.separator+basename+"_ROIs.zip";
 
 // ---- Pre-process images ---- 
-//
-//Make a copy of the image for processing
+
+// make a copy of the relevant channel
 Stack.setChannel(Channel);
 maskName = basename+"_mask";
 run("Duplicate...", "title=&maskName");
 selectWindow(maskName);
 
-//Enhance local contrast: Process > Enhance Local Contrast CLAHE, use default settings 
+// enhance dim areas to improve recognition of cell boundaries
+// reduce blocksize to enhance smaller areas of intensity
 run("Enhance Local Contrast (CLAHE)", "blocksize=127 histogram=256 maximum=3 mask=*None* fast_(less_accurate)");
 
-//Smooth the contrast-enhanced image: Process > Filters > Gaussian Blur, sigma = 4 pixels 
-run("Gaussian Blur...", "sigma=4");
+// smooth the image to remove noise in cell boundaries
+run("Gaussian Blur...", "sigma=3");
 
 // ---- Define cells ----
 
-//Auto threshold the smoothed, enhanced image: Image > Adjust > Threshold, select Minimum, or experiment to find the best option, Apply 
+// threshold the pre-processed image
 setAutoThreshold(threshMethod +" dark");
 setOption("BlackBackground", true);
 run("Convert to Mask");
 
-// If cells are merged together after thresholding, draw a line to separate them: 
-// Also, if small processes of cells go to the image boundary, you can draw a line to separate them from the edge
+// close up gaps
+run("Options...", "iterations=3 count=1 black do=Close slice");
 
+// allow user to manually separate cells from each other and the image border 
 run("Select None");
 setTool("line");
-setLineWidth(4); // line is wide to fully separate cells
+run("Line Width...", "line=4"); // line is wide to fully separate cells
 setForegroundColor(0, 0, 0);
 waitForUser("Use the line ROI tool to draw a line between merged cells, \nthen press F to finalize the line. \nAfter finalizing all lines, click OK.");
-run("Fill Holes");
 
-// Define cells
-// Edit the Size parameters as needed to exclude artifacts
+// make the cell areas solid
+run("Fill Holes");
+// erode slightly to avoid missing the membrane edge
+run("Options...", "iterations=2 count=1 black do=Erode slice");
+
+// identify cells as distinct regions of the desired size
+// (edit the size parameters as needed to exclude artifacts)
+// and add the identified cells to the ROI manager
 
 run("Analyze Particles...", "size=500-100000 exclude clear add");
 
-// ---- Define cell membrane ----
+// ---- Define cytoplasm and membrane ----
 
-//For each cell ROI in the ROI Manager: 
-
-// rename the Cell ROIs
-
+// rename the cell ROIs with numbers
 renameROIs("Cell");
 
-// go through the list of cells and create the cytoplasm and membrane ROIs
-numCells = roiManager("count"); // count at the beginnning before adding all the extra ROIs 
-innerMargin = 0-innerMargin;
-for (i = 0; i < numCells; i++) {
+// create the cytoplasm and membrane ROIs for each cell
+numCells = roiManager("count"); // initial cell count
+innerMargin = 0-innerMargin; // make the value negative
+
+for (i = 0; i < numCells; i++) { // loop through all cells
 	cellName = "Cell_"+i;
-	//print("Searching for",cellName);
-	index = findRoiWithName(cellName);
-	if (index != -1) {
-		//print("ROI",index,"is a cell");
+	index = findRoiWithName(cellName); // find the original cell ROI
+	if (index != -1) { // -1 means the name was not found
 		roiManager("Select", index);
-		run("Enlarge...", "enlarge=&innerMargin");
-		Roi.setName("Cytoplasm_"+index); // must rename before adding
-		roiManager("add"); // will be added at the end of the list
-		run("Make Band...", "band=&bandWidth");
-		Roi.setName("Membrane_"+index); // must rename before adding
-		roiManager("add"); // will be added just after the cytoplasm ROI
+		run("Enlarge...", "enlarge=&innerMargin"); // shrink the cell to define the cytoplasm
+		Roi.setName("Cytoplasm_"+index);
+		roiManager("add"); // this ROI will be added at the end of the list
+		run("Make Band...", "band=&bandWidth"); // create the membrane ROI based on the cytoplasm + the width
+		Roi.setName("Membrane_"+index); 
+		roiManager("add"); // this ROI will be added just after the cytoplasm ROI
 	}
 }
 
-
-// save the full set of ROIs 
-run("Select None");
-roiManager("Deselect");
-roiManager("save", outputDir+File.separator+basename+"_ROIs.zip");
-
-// ---- Measure intensity ----
+// ---- Measure intensity and save results ----
 
 // set which measurements to make
 run("Set Measurements...", "area mean integrated display redirect=None decimal=2");
 
-// collect measurements for each type of ROI
-// 1. select all ROIs of a type (or of a cell then multimeasure?)
-// 2. measure these ROIs
-// 3. Split the results into arrays 
-
-selectWindow(title); // original image
-Stack.setChannel(Channel); // channel for analysis
+// duplicate the channel of interest
+selectWindow(title);
+Stack.setChannel(Channel);
 duplicateName = basename+"_copy";
 run("Duplicate...", "title=&duplicateName");
-selectWindow(duplicateName); // image with only one channel
+selectWindow(duplicateName);
 
-resultFile = outputDir + File.separator + basename+"_results.csv";
-
-for (cell = 0; cell < numCells; cell++) {
-	// select all the ROIs belonging to that cell
-	cellExp = ".*_"+cell; // regex finding all with that number appended
+// measure cell compartments and add results to the output file 
+for (cell = 0; cell < numCells; cell++) { // loop through cells
+	
+	// select all 3 ROIs belonging to this cell 
+	cellExp = ".*_"+cell; // regular expression to find all ROIs with this cell number
 	cellIndices = findRoisWithName(cellExp);
-	roiManager("select", cellIndices);
+	roiManager("select", cellIndices); 
+	
+	// measure ROIs belonging to this cell
 	roiManager("multi-measure one"); // one row per slice, does not append results
 	
+	// read results data
 	selectWindow("Results");
-	lines = split(getInfo(), "\n"); 
-	values = split(lines[1], "\t"); // results table is tab-separated
-	values[0] = cell; // include the cell number
+	lines = split(getInfo(), "\n"); // array containing each row of the table (there's only 1 row plus the headers)
+	values = split(lines[1], "\t"); // array containing each value in the data row (results table is tab-separated)
+	values[0] = cell; // replace the row number with the cell number
 
-	//		construct the data line with values separated by commas
+	// separate result values with commas for CSV output
 	resultLine = String.join(values, ",");
 
-	// begin the new comma-separated file if needed, then add the data
-	if (File.exists(resultFile)==false) {
+	// write the data to a file
+	if (File.exists(resultFile)==false) { // start the file with headers
 		ResultHeaders = "CellNumber,Label,Area_Cell,Mean_Cell,IntDen_Cell,RawIntDen_Cell,Area_Cytoplasm,Mean_Cytoplasm,IntDen_Cytoplasm,RawIntDen_Cytoplasm,Area_Membrane,Mean_Membrane,IntDen_Membrane,RawIntDen_Membrane"; // comma-separated
 		File.append(ResultHeaders,resultFile);
-		print("added headings: ",ResultHeaders);
+		print("Added headings: ",ResultHeaders);
     	}
-	File.append(resultLine,resultFile);
+	File.append(resultLine,resultFile); // add the data
 	print("Added results for cell",cell);
 }
 
-
+// --- Save ROIs ---- 
+run("Select None");
+roiManager("Deselect");
+roiManager("save", roiFile);
 
 // ---- Clean up ----
 selectWindow(maskName);
@@ -155,7 +161,6 @@ showMessage("Finished.");
 // ---- Functions ----
 
 // Function to rename ROIs in order
-
 function renameROIs(newName) {
 	numRois = roiManager("count");
 	for (index = 0; index < numRois; index++) {
@@ -165,13 +170,13 @@ function renameROIs(newName) {
 	}
 }
 
+// Functions to find ROIs by name
+// thanks to Olivier Burri on forum.image.sc
 
-// Function to find ROIs by name
 /* 
  * Returns index of first ROI that matches  
  * the given regular expression 
- */ 
- // thanks to Olivier Burri on forum.image.sc
+ */  
 function findRoiWithName(roiName) { 
 	nR = roiManager("count"); 
  
@@ -189,7 +194,6 @@ function findRoiWithName(roiName) {
  * Returns an array of indexes of ROIs that match  
  * the given regular expression 
  */ 
- // thanks to Olivier Burri on forum.image.sc
 function findRoisWithName(roiName) { 
 	nR = roiManager("Count"); 
 	roiIdx = newArray(nR); 
