@@ -1,5 +1,5 @@
-#@ Double (label="How far inside cell outline to create membrane band? (microns)", style="format:#.#") innerMargin
-#@ Double (label="Width of membrane band (microns)", style="format:#.#") bandWidth
+#@ Double (label="How far inside cell outline to create membrane band? (microns)", style="format:#.##") innerMargin
+#@ Double (label="Width of membrane band (microns)", style="format:#.##") bandWidth
 #@ int (label="Channel for analysis") Channel
 #@ string (label="Thresholding method", choices={"None","Default","Huang","Intermodes","IsoData","IJ_IsoData","Li","MaxEntropy","Mean","MinError","Minimum","Moments","Otsu","Percentile","RenyiEntropy","Shanbhag","Triangle","Yen"}, style="listBox") threshMethod
 #@ File (label = "Output directory", style = "directory") outputDir
@@ -11,16 +11,19 @@
 // Output: 
 // -- Mean and Integrated Intensity measurements for each cell, "cytoplasm", and "membrane" area
 // -- ROIs for each of these compartments 
-// How to use this script: Open an image. Run the script. 
-// Enter the parameters (see below for details).
-// After the cells are thresholded, you will be able to manually separate contiguous cells  
-// The cells are first detected using a channel chosen by the user.
-// The cytoplasm and membrane are defined using 2 user-chosen parameters: inner margin and width.
-// *Inner margin* defines the inner boundary of the band. 
+// How to use this script: 
+//	Open an image. 
+//	Run the script. 
+// 	Enter the parameters (see below for details).
+// 	After the cells are thresholded, you will be able to manually separate contiguous cells.
+// 	The cells are first detected using a channel chosen by the user.
+// 	The cytoplasm and membrane are defined using 2 user-chosen parameters: inner margin and width.
+// 	*Inner margin* defines the inner boundary of the band. 
 //		The cell outline is shrunk (moved inward) by this amount. 
 // 		This smaller area is defined as the cytoplasm.
-// *Width* is the thickness of the membrane band in um. 
-// TIP: Choose the initial threshold, inner margin and width to minimize inclusion of background in the measurements.
+// 	*Width* is the thickness of the membrane band in um. 
+// TIP: Choose the threshold method, inner margin, and width to minimize inclusion of background in the measurements.
+// Suggested values: Huang threshold, 0.75 µm inner margin, 0.75 µm width
 
 
 // ---- Setup ----
