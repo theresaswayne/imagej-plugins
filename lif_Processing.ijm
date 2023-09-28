@@ -42,6 +42,7 @@ for (i=0; i<list.length; i++)
     //how many series in this lif file?
     Ext.setId(path);//-- Initializes the given path (filename).
     Ext.getSeriesCount(seriesCount); //-- Gets the number of image series in the active dataset.
+
     
     for (j=1; j<=seriesCount; j++) 
     	{
@@ -60,6 +61,7 @@ for (i=0; i<list.length; i++)
 		
 	    // project and save
     	getDimensions(width, height, channels, slices, frames); // check if is a stack of any kind
+
     	if (slices>1) // it is a z stack
     		{
         	if (Z_PROJECT == "True")
