@@ -1,0 +1,5 @@
+Workflow.txt
+
+1. Start with a folder of 2-channel z-stack ND2 images
+2. Crop out cells using cropToRoi_ClearOutside_LE.ijm. Output will be individual cells in 2-channel z-stack tif images.
+3. Create cell masks using
