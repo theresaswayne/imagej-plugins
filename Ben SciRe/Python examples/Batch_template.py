@@ -15,8 +15,6 @@ from ij import IJ, ImagePlus, ImageStack
 from ij.plugin import ChannelSplitter
 import os
 
-
-
 # --- FUNCTION DEFINITIONS
 # --- Why functions?: https://medium.com/@nicolaisafai/re-factor-to-make-your-code-more-understandable-2697af65789c
 
@@ -32,7 +30,7 @@ def run():
 	IJ.run("Close All", "") # close all open windows
 	IJ.log("\\Clear") # clear the ImageJ log
 	
-	IJ.log("Processing batch masking")
+	IJ.log("Beginning batch processing")
 	
 	# Convert user-selected directories into Python paths
 	srcDir = inputDir.getAbsolutePath()
