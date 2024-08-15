@@ -7,7 +7,19 @@ from net.imglib2.view import Views
 from jarray import zeros
 from ij.measure import ResultsTable
 
+# TODO:
+# 1. Determine parameters (sigmaSmaller, sigmaLarger, minPeakValue) that work well on a couple of images 
+# 2. Use code in this script and find_close_peaks_batch.py to create a table called Counts 
+#    that will contain the image name and the total number of peaks found 
+# 3. Create a function to incorporate all of this within the main script, 
+#    and save the point ROIs (every image) and the Counts table (at the end of the batch)
+#    (be sure to use the original image for peak detection... if you use the masked image, 
+#    you may detect erroneous peaks at the edge of the mask where intensity changes rapidly)
+
 # Heres the link: https://javadoc.scijava.org/ImgLib2/index.html?net/imglib2/algorithm/dog/DogDetection
+# More info: https://en.wikipedia.org/wiki/Difference_of_Gaussians
+# https://javadoc.scijava.org/ImgLib2/net/imglib2/algorithm/dog/DifferenceOfGaussian.html
+# https://syn.mrc-lmb.cam.ac.uk/acardona/fiji-tutorial/#find-cells-with-DoG
 
 IJ.run("Close All", "") # close all open windows
 IJ.run("Clear Results", "") # clear the Results window
@@ -20,9 +32,13 @@ imp.show()
 #-----------------
 
 # Preparation of images
-ipReal = IL.wrapReal(imp)
-ipMirror = Views.extendMirrorSingle(ipReal)
-#imp.show()
+
+# Access its pixel data from an ImgLib2 data structure: a RandomAccessibleInterval  
+ipRAI = IL.wrapReal(imp)
+
+# View as an infinite image, mirrored at the edges which is ideal for Gaussians  
+ipExtended = Views.extendMirrorSingle(ipRAI)
+
 
 # sigmaSmaller ==> Size of the smaller dots (in calibrated units)
 # sigmaLarger ==> Size of the bigger dots (in calibrated units)
@@ -36,7 +52,7 @@ sigmaLarger = 5
 minPeakValue = 10
 normalizedMinPeakValue = False
 
-detection = DogDetection(ipMirror, ipReal, calibration, sigmaSmaller, sigmaLarger,
+detection = DogDetection(ipExtended, ipRAI, calibration, sigmaSmaller, sigmaLarger,
   				   extremaType, minPeakValue, normalizedMinPeakValue)
 
 
@@ -44,11 +60,12 @@ peaks = detection.getPeaks()
 IJ.log(str(len(peaks)) + " peaks were found.")
 
 # A temporary array of integers, one per dimension the image has
-peakCoords = zeros(ipReal.numDimensions(), 'i')
+peakCoords = zeros(ipRAI.numDimensions(), 'i')
 
 #roiPeaks = new PointRoi()   
 
-peaksTable = ResultsTable()
+# optional -- table of peak positions
+#peaksTable = ResultsTable()
 
 # Add points to ROI manager
 rm = RoiManager.getInstance()
@@ -58,29 +75,21 @@ rm.reset()
 
 for peak in peaks:
 	# Read peak coordinates into an array of integers
-	peak.localize(peakCoords)
-	#roiPeaks.addPoint(imp1, peakCoords[0], peakCoords[1], peakCoords[2])
-	#proi = PointRoi(peak.getDoublePosition(0) / cal.pixelWidth, peak.getDoublePosition(1) / cal.pixelHeight)
-	#proi.setPosition(int(peak.getDoublePosition(2) / cal.pixelDepth))
+	peak.localize(peakCoords) # in pixels
 	proi = PointRoi(peak.getDoublePosition(0), peak.getDoublePosition(1))
 	proi.setPosition(int(peak.getDoublePosition(2)))
 	rm.addRoi(proi)
-	peaksTable.incrementCounter()
-	peaksTable.addValue("File",imp.getTitle())
-	peaksTable.addValue("X",peakCoords[0])
-	peaksTable.addValue("Y",peakCoords[1])
-	peaksTable.addValue("Z",peakCoords[2])
+	
+	# optional -- table of peak positions
+	#peaksTable.incrementCounter()
+	#peaksTable.addValue("File",imp.getTitle())
+	#peaksTable.addValue("X",peakCoords[0])
+	#peaksTable.addValue("Y",peakCoords[1])
+	#peaksTable.addValue("Z",peakCoords[2])
 
-peaksTable.show("Peaks")
+# optional -- table of peak positions
+#peaksTable.show("Peaks")
 
-# Loop through all the peak that were found
-#for peak in peaks:
-#    # Print the current coordinates
-#    print peak.getDoublePosition(0), peak.getDoublePosition(1), peak.getDoublePosition(2)
-#    # Add the current peak to the Roi manager
-#    proi = PointRoi(peak.getDoublePosition(0) / cal.pixelWidth, peak.getDoublePosition(1) / cal.pixelHeight)
-#    proi.setPosition(int(peak.getDoublePosition(2) / cal.pixelDepth))
-#    rm.addRoi(proi)
 
 # Show all ROIs on the image
 rm.runCommand(imp, "Show All")
