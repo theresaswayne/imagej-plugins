@@ -79,7 +79,7 @@ function processFile(input, output, file, channel) {
 	}	
 	
 	run("8-bit"); // enables local threshold to work
-	run("Duplicate...", "orig"); // make a copy for overlaying later
+	run("Duplicate...", "title=orig"); // make a copy for overlaying later
 	
 	// ---- Segmentation ----
 	
@@ -90,7 +90,7 @@ function processFile(input, output, file, channel) {
 	run("Frangi Vesselness", "input=[&img] dogauss=true spacingstring=[1, 1] scalestring=1");
 	
 	selectImage("result");
-	rename(basename + "_vesselness");
+	// rename(basename + "_vesselness");
 	
 	// apply a global threshold to preserve the most tube-like structures
 	setAutoThreshold("Percentile dark");
@@ -101,16 +101,26 @@ function processFile(input, output, file, channel) {
 	run("Analyze Particles...", "size=150-Infinity circularity=0.00-0.50 show=[Masks] clear");
 	
 	// generate a skeleton from the remaining objects
-	selectImage("Mask of " + basename + "_vesselness");
+	selectImage("result");
 	run("Fill Holes"); // make cell bodies into solid objects that don't contribute much to the skeleton
 	run("Skeletonize (2D/3D)");
 	// measure the segments of the skeleton
 	run("Analyze Skeleton (2D/3D)", "prune=none show");
+	selectImage("Mask of result");
+	rename("Skeleton");
 
-	// TODO: Overlay skeleton . and orig image
-	run("Merge Channels...", "c1=Mask of " + basename + "_vesselness c2=orig create keep");
+	// Overlay skeleton and orig image
+	run("Merge Channels...", "c1=Skeleton c2=orig create keep");
 	selectImage("Composite");
 	rename(basename + "_overlay");
+	// Property.set("CompositeProjection", "null");
+	Stack.setDisplayMode("color");
+	Stack.setChannel(1);
+	run("Red");
+	Property.set("CompositeProjection", "Sum");
+	Stack.setDisplayMode("composite");
+	Property.set("CompositeProjection", "null");
+
 	
 	// ---- Save results ---- 
 	
@@ -125,7 +135,7 @@ function processFile(input, output, file, channel) {
 	saveAs("tiff", output + File.separator + overlayName);
 	
 	skelName = basename+"_skeleton.tif";
-	selectImage(basename + "_vesselness");
+	selectImage("Skeleton");
 	saveAs("tiff", output + File.separator + skelName);
 	
 	skelDataName = basename + "_skel_info.csv";
