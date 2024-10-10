@@ -12,7 +12,7 @@
 // TO USE: Run the macro and specify folders for input and output.
 // If images are multichannel, select the channel to use for analysis.
 
-
+// TODO: workflow to overlay skel on image
 // ---- Setup ----
 
 while (nImages>0) { // clean up open images
@@ -79,6 +79,7 @@ function processFile(input, output, file, channel) {
 	}	
 	
 	run("8-bit"); // enables local threshold to work
+	run("Duplicate...", "orig"); // make a copy for overlaying later
 	
 	// ---- Segmentation ----
 	
@@ -104,18 +105,27 @@ function processFile(input, output, file, channel) {
 	run("Fill Holes"); // make cell bodies into solid objects that don't contribute much to the skeleton
 	run("Skeletonize (2D/3D)");
 	// measure the segments of the skeleton
-	run("Analyze Skeleton (2D/3D)", "prune=none show display");
+	run("Analyze Skeleton (2D/3D)", "prune=none show");
 
+	// TODO: Overlay skeleton . and orig image
+	run("Merge Channels...", "c1=Mask of " + basename + "_vesselness + c2=orig create keep");
+	selectImage("Composite");
+	rename(basename + "_overlay");
+	
 	// ---- Save results ---- 
 	
 	print("Saving to " + output);
 
-	vesselName = basename+"_vesselness.tif";
-	selectImage(basename + "_vesselness");
-	saveAs("tiff", output + File.separator + vesselName);
+	//vesselName = basename+"_vesselness.tif";
+	//selectImage(basename + "_vesselness");
+	//saveAs("tiff", output + File.separator + vesselName);
 	
-	skelName = basename+"_tagged_skeleton.tif";
-	selectImage("Tagged skeleton");
+	overlayName = basename+"_overlay.tif";
+	selectImage(basename + "_overlay");
+	saveAs("tiff", output + File.separator + overlayName);
+	
+	skelName = basename+"_skeleton.tif";
+	selectImage(basename + "_vesselness");
 	saveAs("tiff", output + File.separator + skelName);
 	
 	skelDataName = basename + "_skel_info.csv";
