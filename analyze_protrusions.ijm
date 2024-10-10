@@ -4,7 +4,7 @@
 // @int(label= "Channel to analyze", style = "spinner", val = 1) channelNum
 
 
-//analyze_protrusions.ijm
+// analyze_protrusions.ijm
 // Theresa Swayne for Xu Zhang, 2024
 // identifies processes in 2d fluorescence images and determines length and other parameters
 
@@ -14,13 +14,19 @@
 
 
 // ---- Setup ----
-print("\\Clear"); // clears Log window
-roiManager("reset");
-run("Clear Results");
-setOption("ScaleConversions", true); // ensures good pixel value?
-run("Set Measurements...", "area centroid shape feret's display redirect=None decimal=3");
 
-setBatchMode(true);
+while (nImages>0) { // clean up open images
+	selectImage(nImages);
+	close();
+}
+
+print("\\Clear"); // clear Log window
+roiManager("reset"); // clear ROI Mgr
+run("Clear Results"); // clear results window
+setOption("ScaleConversions", true); // ensures good pixel value?
+run("Set Measurements...", "area centroid shape feret's display redirect=None decimal=3"); // get shape measurements
+
+setBatchMode(true); // faster performance
 run("Bio-Formats Macro Extensions"); // support native microscope files
 
 // ---- Run ----
@@ -45,7 +51,7 @@ function processFile(input, output, file, channel) {
 
 	// function to process a single image
 	
-	print("Processing channel " +  channel + " of " + input + File.separator + file);
+	print("Processing channel",  channel, "of" , input + File.separator + file);
 	
 	path = input + File.separator + file;
 
@@ -72,65 +78,64 @@ function processFile(input, output, file, channel) {
 		img = title;
 	}	
 	
-//	run("8-bit"); // enables local threshold works?
-//	
-//	// ---- Segmentation ----
-//	
-//	// apply a local threshold to identify cells and processes
-//	run("Auto Local Threshold", "method=Phansalkar radius=15 parameter_1=0 parameter_2=0 white");
-//	
-//	// apply a filter to enhance tube-like structures
-//	run("Frangi Vesselness", "input=[1.nd2 - C=1] dogauss=true spacingstring=[1, 1] scalestring=1,2");
-//	
-//	// apply a global threshold to preserve the most tube-like structures
-//	setAutoThreshold("Percentile dark");
-//	setOption("BlackBackground", false);
-//	run("Convert to Mask");
-//	
-//	// identify particles for purposes of filtering
-//		
-//	run("Analyze Particles...", "size=150-Infinity circularity=0.00-0.50 show=[Count Masks] display clear summarize add");
-//	
-//	selectImage("Count Masks of 1 2 percentile.tif");
-//	run("Skeletonize (2D/3D)");
-//	
-//	
-//	run("Analyze Particles...", "size=150-Infinity circularity=0.00-0.50 show=Masks display clear summarize add");
-//	
-//	run("Skeletonize (2D/3D)");
-//	
-//	run("Analyze Skeleton (2D/3D)", "prune=none show display");
-//	
-//	saveAs("Results", "/Users/theresaswayne/Desktop/Xu Zhang protrusions/Branch information.csv");
-//	
-//	selectWindow("Results");
-//	selectWindow("Summary");
-//	selectWindow("Branch information.csv");
-//	
-//	selectImage("Tagged skeleton");
-//	setAutoThreshold("Percentile dark");
-//	
-//	selectImage("Mask of 1 2 percentile.tif");
-//	run("Fill Holes");
-//	
-//	run("Skeletonize (2D/3D)");
-//	run("Analyze Skeleton (2D/3D)", "prune=none show display");
-//	selectImage("Maskof12percentilefhskel2d3d-labeled-skeletons");
-//	saveAs("Results", "/Users/theresaswayne/Desktop/Xu Zhang protrusions/Branch information fh.csv");
-//	selectImage("Tagged skeleton");
-//	
+	run("8-bit"); // enables local threshold to work
+	
+	// ---- Segmentation ----
+	
+	// apply a local threshold to identify cell area including processes	
+	run("Auto Local Threshold", "method=Phansalkar radius=15 parameter_1=0 parameter_2=0 white");
+	
+	// apply a filter to enhance tube-like structures
+	run("Frangi Vesselness", "input=[&img] dogauss=true spacingstring=[1, 1] scalestring=1");
+	
+	selectImage("result");
+	rename(basename + "_vesselness");
+	
+	// apply a global threshold to preserve the most tube-like structures
+	setAutoThreshold("Percentile dark");
+	setOption("BlackBackground", false);
+	run("Convert to Mask");
+	
+	// identify objects, removing small and more circular objects
+	run("Analyze Particles...", "size=150-Infinity circularity=0.00-0.50 show=[Masks] clear");
+	
+	// generate a skeleton from the remaining objects
+	selectImage("Mask of " + basename + "_vesselness");
+	run("Fill Holes"); // make cell bodies into solid objects that don't contribute much to the skeleton
+	run("Skeletonize (2D/3D)");
+	// measure the segments of the skeleton
+	run("Analyze Skeleton (2D/3D)", "prune=none show display");
+
 	// ---- Save results ---- 
 	
+	print("Saving to " + output);
 
-	saveName = basename+"_output.tif";
-	selectImage(img);
-	saveAs("tiff", output + File.separator + saveName);
-	print("Saving "+saveName+"to: " + output);
+	vesselName = basename+"_vesselness.tif";
+	selectImage(basename + "_vesselness");
+	saveAs("tiff", output + File.separator + vesselName);
+	
+	skelName = basename+"_tagged_skeleton.tif";
+	selectImage("Tagged skeleton");
+	saveAs("tiff", output + File.separator + skelName);
+	
+	skelDataName = basename + "_skel_info.csv";
+	selectWindow("Results");
+	saveAs("Results", output + File.separator + skelDataName);
+	
+	branchDataName = basename + "_branch_info.csv";
+	selectWindow("Branch information");
+	saveAs("Results", output + File.separator + branchDataName);
 
-	// clean up open images
+	// clean up open images and tables
 	while (nImages>0) {
 	selectImage(nImages);
 	close();
 	}
+	
+	// selectWindow("Results");
+	// close();
+	selectWindow(branchDataName); // close branch results
+	run("Close");
+	run("Clear Results"); // clear skeleton results
 }
 
