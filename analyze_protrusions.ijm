@@ -21,7 +21,7 @@ while (nImages>0) { // clean up open images
 }
 
 print("\\Clear"); // clear Log window
-roiManager("reset"); // clear ROI Mgr
+//roiManager("reset"); // clear ROI Mgr
 run("Clear Results"); // clear results window
 setOption("ScaleConversions", true); // ensures good pixel value?
 run("Set Measurements...", "area centroid shape feret's display redirect=None decimal=3"); // get shape measurements
@@ -108,7 +108,7 @@ function processFile(input, output, file, channel) {
 	run("Analyze Skeleton (2D/3D)", "prune=none show");
 
 	// TODO: Overlay skeleton . and orig image
-	run("Merge Channels...", "c1=Mask of " + basename + "_vesselness + c2=orig create keep");
+	run("Merge Channels...", "c1=Mask of " + basename + "_vesselness c2=orig create keep");
 	selectImage("Composite");
 	rename(basename + "_overlay");
 	
