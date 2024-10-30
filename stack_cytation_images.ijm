@@ -4,7 +4,7 @@
 
 
 // stack_cytation_images.ijm
-// Theresa Swayne for Gina Finan, 2024
+// Theresa Swayne, 2024
 // Generates stacks from individual positions and channels within a Cytation experiment where all images are in the same folder 
 
 
