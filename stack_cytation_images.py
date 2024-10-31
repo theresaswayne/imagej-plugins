@@ -17,8 +17,6 @@
 # The macro loads files in groups of n where n is the number of timepoints. 
 # So all files in the experiment must be in the folder. There can be no partial groups.
 
-# thanks to https://forum.image.sc/t/solved-merge-files-from-incucyte-96-well-plate-with-specific-name/71352
-
 
 # ---- Setup ----
 
@@ -26,7 +24,8 @@ import os
 import math
 import io
 from net.imglib2.view import Views
-from ij import IJ
+from ij import IJ, ImagePlus, ImageStack
+from ij.process import ImageProcessor, FloatProcessor, StackProcessor
 import string
 
 # Find image files
@@ -44,7 +43,7 @@ if len(fnames) < 1: # no files
 # Calculate number of datasets and check for errors
 
 numStacks = len(fnames)/numTimepoints
-if numStacks != math.floor(numStacks): # not an even multiple
+if len(fnames) % numTimepoints != 0: # not an even multiple
 	raise Exception("Wrong number of image files found in %s" % inputdir)
 
 print "Processing",len(fnames), "images into",numStacks,"stacks with",numTimepoints,"timepoints"
@@ -53,25 +52,40 @@ print "Processing",len(fnames), "images into",numStacks,"stacks with",numTimepoi
 
 for stackIndex in range(0,numStacks):
 
-	stack = [] # array to hold the image stack
 	imageStartIndex = stackIndex * numTimepoints # 0 for the first one
-	imageEndIndex = imageStartIndex + numTimepoints - 1 # 0 through 24 if there are 25 timepoints
+	imageEndIndex = imageStartIndex + numTimepoints # 0 through 25 if there are 25 timepoints
 	print "Creating stack", stackIndex, "from images",imageStartIndex,"to",imageEndIndex
-	print "First filename:",fnames[imageStartIndex]
 	
-	for fnameIndex in range(imageStartIndex, imageEndIndex): # subset of the original array
-		data = io.open(fnames[fnameIndex])
-		print "Adding image",fnames[fnameIndex]
-		#imp = IJ.openImage(os.path.join(inputDir, fname[fnameIndex])
+	currentFile = fnames[imageStartIndex]
+	print "First filename:",currentFile
+	
+	imp = IJ.openImage(os.path.join(inputdir, fnames[imageStartIndex])) # open first image
+	ip = imp.getProcessor()
+	new_stack = ImageStack(imp.width, imp.height) # new stack with size based on the image
+	new_stack.addSlice(currentFile, ip) # add the 1st image tothe stack
+
+	for fnameIndex in range(imageStartIndex + 1, imageEndIndex): # subset of the original array
+		#data = io.open(fnames[fnameIndex])
+		currentFile = fnames[fnameIndex]
+		print "Adding image",currentFile
+		imp = IJ.openImage(os.path.join(inputdir, currentFile)) # open next image
+		ip = imp.getProcessor()
+		new_stack.addSlice(currentFile, ip) # slice label is orig file name
 		#IJ.run("Image Sequence...", "open=inDir number=11 starting=i sort"); 
-		stack.append(data)
+		# --- end stack creation loop
 
-	output = Views.stack(stack)
-	output = ds.create(output)
+		#stack.append(data)
 
+	#output = Views.stack(stack)
+	#output = ds.create(output)
+
+	# TODO: make this based on the basename of the 1st fname
 	fileName = string.join(("Stack",str(stackIndex), image_extension), "_")
-	print "Saving stack",stackIndex,"with name", fileName	#output.setName(os.path.basename(inputdir) + image_extension) # TODO: make this based on the basename of the 1st fname
-	IJ.save(stack, os.path.join(outputdir, fileName));
+	print "Saving stack",stackIndex,"with name", fileName	
+	# output.setName(os.path.basename(inputdir) + image_extension) 
+	stackImp = ImagePlus(fileName, new_stack) # generate an ImagePlus from the stack
+	IJ.save(stackImp, os.path.join(outputdir, fileName))  #... so we can save it
+	# --- end folder loop 
 	
 	# output.setName(os.path.basename(inputdir) + image_extension)
 
