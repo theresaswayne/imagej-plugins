@@ -5,11 +5,14 @@
 
 # stack_cytation_images.py
 # Theresa Swayne, 2024
-# Generates stacks from individual positions and channels within a Cytation experiment where all images are in the same folder 
+# Generates stacks from images in a folder
+# Useful for Cytation experiments where images from individual positions and channels 
+#   are all stored in the same folder 
 
 # TO USE: Run the macro and specify folders for input and output, and select the # timepoints.
-# The macro loads files in groups of n where n is the number of timepoints. 
-# So all files in the experiment must be in the folder. There can be no partial groups.
+# The macro loads files in groups of n where n is the number of timepoints 
+#   (this value need not represent time; it's just a count of the images per stack). 
+# All files in the experiment must be in the folder. There can be no partial groups.
 
 # ---- Setup ----
 
