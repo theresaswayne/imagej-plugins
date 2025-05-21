@@ -74,7 +74,6 @@ function processFile(inputFolder, outputFolder, fileName, fileNumber) {
 	
 	// reduce size by converting to 8 bit
 	
-	//run("Brightness/Contrast...");
 	resetMinAndMax;
 	setOption("ScaleConversions", true);
 	run("8-bit");
@@ -91,13 +90,17 @@ function processFile(inputFolder, outputFolder, fileName, fileNumber) {
 	blurName = basename + "_gaussian.tif";
 	selectImage(image2);
 	saveAs("Tiff", outputFolder + File.separator + blurName);
+	Ext.CLIJ2_release(image2);
+	Ext.CLIJ2_release(image1);
 	
-	// threshold using otsu method with GPU
+	// threshold using GPU
 	image3 = blurName;
 	Ext.CLIJ2_push(image3);
-	image4 = "otsu_"+title;
-	Ext.CLIJ2_thresholdOtsu(image3, image4);
+	image4 = "thresh_"+title;
+	//Ext.CLIJ2_thresholdOtsu(image3, image4);
+	Ext.CLIJ2_automaticThreshold(image3, image4, "Otsu");
 	Ext.CLIJ2_pull(image4);
+	Ext.CLIJ2_release(image3);
 	
 	// convert the binary image into 0,255 and then into a label image
 	selectImage(image4);
@@ -112,7 +115,7 @@ function processFile(inputFolder, outputFolder, fileName, fileNumber) {
 	run("3D Filter Objects", "descriptor=Volume(pix) min=10 max=1000 keep");
 	
 	// represent the objects as 3D ROIs
-	filterName = "otsu_"+basename+"_filtered";
+	filterName = "thresh_"+basename+"_filtered";
 	selectImage(filterName);
 	// selectWindow("RoiManager3D 4.1.7");
 	Ext.Manager3D_AddImage;
@@ -134,12 +137,13 @@ function processFile(inputFolder, outputFolder, fileName, fileNumber) {
 	// clear 3D ROIs
 	Ext.Manager3D_Reset();
 	
-	// clean up images
+	// clean up images and memory
+	
 	while (nImages>0) { // clean up open images
 		selectImage(nImages);
 		close();
 	}
-	
+	// Ext.CLIJ2_clear(); 
 	print("Elapsed time " + (getTime() - startTime) + " msec");
 	
 } // end of process file function
