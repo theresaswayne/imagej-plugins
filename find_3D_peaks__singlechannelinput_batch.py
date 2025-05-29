@@ -9,8 +9,9 @@
 # Saves results, log, and ROI manager point selections
 
 # uses https://imagej.net/plugins/trackmate/detectors/difference-of-gaussian 
-# KNOWN ISSUES: An erroneous point may be added to the ROI and counts at (0,0) due to the initialization of the PointROI
+# KNOWN ISSUES: There is no ROIset saved if there is only 1 peak
 # TODO: Option for background subtraction, subpixel localization, merge results files
+
 
 from fiji.plugin.trackmate.detection import DogDetector
 from ij.gui import PointRoi
@@ -27,7 +28,6 @@ from loci.plugins import BF
 from loci.plugins.in import ImporterOptions
 from ij.measure import ResultsTable
 from ij.plugin import Duplicator
-
 
 def getOptions():
 	gd = GenericDialog("Peak Options")
@@ -47,8 +47,8 @@ def find_peaks(imp, radius, qualityThresh):
 	interval = img
 	cal = imp.getCalibration()
 	calibration = [cal.pixelWidth, cal.pixelHeight, cal.pixelDepth]
-	IJ.log("Calibration:" + str(calibration))
-	print(calibration)
+	#IJ.log("Calibration:" + str(calibration))
+	#print(calibration)
 	#radius = 6
 	threshold = qualityThresh
 	doSubpixel = False
@@ -65,7 +65,6 @@ def find_peaks(imp, radius, qualityThresh):
 	if detector.process():
 		# Get the list of peaks found
 		peaks = detector.getResult()
-		#IJ.log(str(len(peaks)) + " peaks were found.")
 		
 		# Add points to ROI manager
 		rm = RoiManager.getInstance()
@@ -124,25 +123,27 @@ def process(srcDir, dstDir, currentDir, fileName, keepDirectories, radius, quali
 	IJ.run("Close All", "")
 	
 	# Opening the image
-	IJ.log("Opening image file: " + currentDir + "/" + fileName)
+	#IJ.log("Opening image file: " + currentDir + "/" + fileName)
 	imp = IJ.openImage(os.path.join(currentDir, fileName))
 
 	saveDir = currentDir.replace(srcDir, dstDir) if keepDirectories else dstDir
 	if not os.path.exists(saveDir):
 		os.makedirs(saveDir)
-	IJ.log("Saving to" + saveDir)
+	#IJ.log("Saving to" + saveDir)
 	
-	IJ.log("Finding peaks")
+	#IJ.log("Finding peaks")
 	peaks, rm, peaksTable = find_peaks(imp, radius, qualityThresh)
 
-	#rm = RoiManager.getInstance()
-	rm.runCommand("Deselect")
-	roiName = fileName + "_ROIs.zip"
-	rm.save(os.path.join(saveDir, roiName))
-	rm.reset()
-	
+	if rm.getCount() != 0:
+		rm.runCommand("Deselect")
+		roiName = fileName + "_ROIs.zip"
+		rm.save(os.path.join(saveDir, roiName))
+		rm.reset()
+
 	tableName = fileName + "_coordinates.txt"
 	peaksTable.save(os.path.join(saveDir, tableName))
+	
+	IJ.log(fileName + "\t" + str(len(peaks)))
 
 
 def run():
@@ -152,9 +153,10 @@ def run():
 
 	IJ.log("\\Clear")
 	IJ.log("Processing batch in" + srcDir)
-	IJ.log("options used:" \
+	IJ.log("Options used:" \
 		+ "\n" + "Radius in um:"+ str(radius) \
 		+ "\n" + "Quality threshold:"+str(qualityThresh))
+	IJ.log("Peak totals:")
 		
 	for root, directories, filenames in os.walk(srcDir):
 		filenames.sort()
@@ -165,13 +167,19 @@ def run():
 		# Check for file name pattern
 		if containString not in filename:
 			continue
+		# Check for dotfile on Mac
+		if filename.startswith("."):
+			continue
 		process(srcDir, dstDir, root, filename, keepDirectories, radius, qualityThresh)
 		
 	IJ.log("Finished.")
 	
+	# save log
 	IJ.selectWindow("Log")
-	#logName = fileName + "_Log.txt"
 	IJ.saveAs("Text", os.path.join(dstDir, "Log.txt"))
+	
+	# clean up
+	IJ.run("Close All", "")
 
 run()
 
