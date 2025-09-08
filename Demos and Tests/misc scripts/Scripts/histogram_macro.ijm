@@ -1,3 +1,4 @@
+run("Blobs");
 imageName=getTitle;
 run("8-bit");
 makeRectangle(62,69,380,288);
@@ -16,7 +17,11 @@ for (i=0; i<nBins; i++) {
     row++;
     }
 updateResults();
-saveAs("Results","/Users/confocal/Desktop/output/"+getTitle+".xls");
+//saveAs("Results","/Users/confocal/Desktop/output/"+getTitle+".xls");
 
 // close all windows
 close("*");
+
+selectWindow("Counts_blobs.gif");
+
+run("Close");
