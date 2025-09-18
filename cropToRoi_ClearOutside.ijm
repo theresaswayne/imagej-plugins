@@ -1,5 +1,5 @@
 //@File(label = "Output folder:", style = "directory") outputdir
-//@String(label = "What is your favorite color?") foo
+//@ String  (label = "File name contains", value = "") containString
 
 // DO NOT MOVE OR DELETE THE FIRST FEW LINES! They supply essential parameters.
 //
