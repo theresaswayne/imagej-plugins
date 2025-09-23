@@ -1,5 +1,6 @@
 # pointsInRoi.py
 # demonstration of finding points in a multi-point ROI that are inside an area ROI
+# Fixed error: If there are no points inside the freehand ROI the script will crash (insidePoints has no attribute "getCount")
 
 from ij import IJ, ImagePlus, ImageStack
 import net.imagej.ops
@@ -34,9 +35,8 @@ proi = PointRoi()
 proi.addPoint(imp, 50, 50)
 proi.addPoint(imp, 100, 100)
 proi.addPoint(imp, 120, 120)
+
 rm.addRoi(proi)
-rm.runCommand(imp, "Show All")
-imp.show()
 
 # prompt to get a freehand ROI
 
@@ -51,6 +51,7 @@ imp.show()
 totalPoints = proi.getCount(0)
 insideCounts = zeros(rm.getCount(), "i")
 
+
 for i in range(0, rm.getCount()):
 	thisRoi = rm.getRoi(i)
 	
@@ -60,13 +61,14 @@ for i in range(0, rm.getCount()):
 		IJ.log("Skipping ROI #" + str(i))
 		continue
 	else:
-		insidePoints = proi.containedPoints(thisRoi)
-		pointsInRoi = insidePoints.getCount(0)
-		IJ.log("There are " + str(pointsInRoi) + " points inside ROI #" + str(i)+ ", out of a total of " + str(totalPoints))
-		insideCounts[i] = pointsInRoi
+		try:
+			insidePoints = proi.containedPoints(thisRoi)
+			pointsInRoi = insidePoints.getCount(0)
+		except AttributeError, e1:
+		    IJ.log("There are no points inside ROI #" + str(i))
+		    continue
+		else:
+			IJ.log("There are " + str(pointsInRoi) + " points inside ROI #" + str(i)+ ", out of a total of " + str(totalPoints))
+			insideCounts[i] = pointsInRoi
 
-# show results
-for j in range(0, len(insideCounts)):
-	print(str(j) + "\t" + str(insideCounts[j]))
-	
 IJ.log("Done")
