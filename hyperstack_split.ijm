@@ -22,7 +22,8 @@
 // ---- Setup ----
 
 // TODO: fix failure to open each series
-// TODO: fix failure to merge channels
+// TODO: fix failure to merge channels (low priority)
+
 
 
 while (nImages>0) { // clean up open images

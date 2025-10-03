@@ -73,7 +73,7 @@ function processImage(inputdir, name, outputdir)
 			text=getMetadata("Info");
 			// TODO: Adapt for tile images. Line looks like  Series 0 Name = 129Sv_EGFP_NC/Region 1 and they are all the same for each tile. AND sizeC comes AFTER Name.
 			// Possible: If the text contains "/Region" near the beginning of the file (1st 100 chars eg) then look for Name as everything up to the newline
-			// Also these series (in the event you need the infivitual tiles) should be exported with the tile name probably detected by some other means -- or, more easily, add a numerical suffix to the name to force uniqueness
+			// Also these series (in the event you need the individual tiles) should be exported with the tile name probably detected by some other means -- or, more easily, add a numerical suffix to the name to force uniqueness
 			tileTest = indexOf(text, "/Region"); // -1 if "Region" is not found
 			n1=indexOf(text," Name = ")+8;// the Line in the Metadata reads "Series 0 Name = ". Complete line cannot be taken, because
 										  // The number changes of course. But at least in the current version of Metadata this line is the 
