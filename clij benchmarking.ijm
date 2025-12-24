@@ -56,7 +56,7 @@ we consider the taken time for `push()` and `pull()` commands.
 
 Let's start with the initialization of the GPU:
 */
-run("CLIJ2 Macro Extensions", "cl_device=");
+run("CLIJ2 Macro Extensions", "cl_device=AMD"); // IMPORTANT for Intel Mac laptop the AMD GPU is a lot faster than the intel. If you use "device=" it defaults to intel
 Ext.CLIJ2_clear();
 
 /*

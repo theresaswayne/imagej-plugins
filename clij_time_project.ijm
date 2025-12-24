@@ -3,8 +3,8 @@ run("Close All");
 run("Clear Results");
 setBatchMode(true);
 // open a the Mitosis example image
-//run("Mitosis (5D stack)");
-open("/Users/theresaswayne/Desktop/mitosis.tif");
+run("Mitosis (5D stack)");
+//open("/Users/theresaswayne/Desktop/mitosis.tif"); // save time by saving locally
 
 run("CLIJ2 Macro Extensions", "cl_device=");
 Ext.CLIJ2_clear();
