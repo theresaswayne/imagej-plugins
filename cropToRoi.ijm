@@ -21,14 +21,56 @@ roiManager("Deselect");
 run("Select None");
 
 numROIs = roiManager("count");
+// how much to pad?
+digits = Math.ceil((log(numROIs)/log(10)));
+
+
+// ---------- DOCUMENT ROI LOCATIONS
+
+// save a snapshot
+Stack.getPosition(channel, slice, frame); // how does the user currently have the stack set up
+if (is("composite")) {
+	Stack.setDisplayMode("composite"); // this command raises error if image is not composite
+	run("Stack to RGB", "keep");
+}
+else {
+	run("Select None");
+//	run("Duplicate...", "title=copy duplicate"); // for single-channel non-RGB images; Flatten doesn't create new window
+	run("Duplicate...", "title=copy"); // for single-channel non-RGB images; Flatten doesn't create new window
+}
+rgbID = getImageID();
+selectImage(rgbID);
+
+roiManager("Show All with labels");
+Stack.setPosition(channel, slice, frame); // restore the previous setup
+run("Flatten");
+flatID = getImageID();
+selectImage(flatID);
+saveAs("tiff", path+File.separator+basename+"_ROIlocs.tif");
+
+print("Saved snapshot");
+
+// close images
+if (isOpen(flatID)) {
+	selectImage(flatID);
+	close();
+}
+if (isOpen(rgbID)) {
+	selectImage(rgbID);
+	close();
+}
+	
 for(i=0; i<numROIs;i++) // loop through ROIs
 	{ 
 	selectImage(id);
-	cropName = basename+i;
+	roiNum = i + 1; // so that image names start with 1 like the ROI labels
+	roiNumPad = IJ.pad(roiNum, digits);
+	cropName = basename+"_roi_"+roiNumPad + ".tif";
 	roiManager("Select", i); 
 	run("Duplicate...", "title=&cropName duplicate"); // creates the cropped stack
 	selectWindow(cropName);
-	saveAs("tiff", path+getTitle);
+	saveAs("tiff", path + File.separator + cropName);
+	print("Saved",cropName);
 	close();
 	}	
 run("Select None");
