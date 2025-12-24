@@ -3,7 +3,7 @@
 //@File(label = "Output directory", style = "directory") outputDir
 //@String (label = "Image file suffix", value = ".nd2") fileSuffix
 
-// crop_clear_batch.ijm
+// cropToSavedRois_batch.ijm
 // ImageJ/Fiji script to process a batch of images and corresponding ROIsets to generate one image for each ROI, with the area outside cleared
 
 // Required input: ROIset must be a Zip file with the same base name
@@ -104,7 +104,7 @@ function processFile(inputFolder, roiFolder, outputFolder, fileName, fileNumber)
 	
 	numROIs = roiManager("count");	
 	// how much to pad?
-	digits = Math.ceil((log(numROIs)/log(10)));
+	digits = Math.ceil((log(numROIs + 1)/log(10)));
 	
 	
 	// ---------- DOCUMENT ROI LOCATIONS
