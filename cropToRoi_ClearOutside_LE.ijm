@@ -1,10 +1,10 @@
-// @File(label = "Output folder:", style = "directory") outputdir
-// @String(label = "What is your favorite color?") foo
+//@File(label = "Output folder:", style = "directory") outputdir
+//@ String  (label = "File name contains", value = "") containString
 
 // DO NOT MOVE OR DELETE THE FIRST FEW LINES! They supply essential parameters.
 //
-// crop_To_Roi_clear_outside.ijm
-// ImageJ/Fiji macro by Theresa Swayne, Columbia University, 2017
+// cropToRoi_ClearOutside.ijm
+// ImageJ/Fiji macro by Theresa Swayne, Columbia University, 2017-2018
 //
 // Input: A multichannel image or stack, and a set of ROIs in the ROI manager 
 // Output: The following items are saved in the same folder as the input image: 
@@ -18,7 +18,6 @@
 //		For each area you want to crop out, draw an ROI and press T to add to the ROI Manager.
 //		Then run the macro.
 
-// TODO: incorporate selectionType and nice flatten into main mitograph macro
 
 // ---------- SETUP
 

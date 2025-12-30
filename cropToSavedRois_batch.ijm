@@ -160,6 +160,11 @@ function processFile(inputFolder, roiFolder, outputFolder, fileName, fileNumber)
 		cropName = basename+"_roi_"+roiNumPad + ".tif";
 		run("Duplicate...", "title=&cropName duplicate"); // creates the cropped stack
 		selectWindow(cropName);
+		
+		if ((selectionType() != 0) && (selectionType() != -1)) {
+			run("Clear Outside","stack"); // this works because non-rectangular rois are still active on the cropped image
+			run("Select None");// clears the selection that is otherwise saved with the image (although it can be recovered with "restore selection")
+		}
 		saveAs("tiff", outputFolder+File.separator+cropName);
 		print("Saving ROI",roiNumPad,"as",cropName);
 		close();

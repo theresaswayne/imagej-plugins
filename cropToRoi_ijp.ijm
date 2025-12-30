@@ -1,24 +1,22 @@
 //@File(label = "Output folder:", style = "directory") path
 //
-// cropToRoi_ClearOutside.ijm
-// ImageJ/Fiji macro by Theresa Swayne, Columbia University, 2017-2018
-//
-// Input: A multichannel image or stack, and a set of ROIs in the ROI manager 
-// Output: The following items are saved in the same folder as the input image: 
-// -- A cropped image or stack for each ROI 
-// 		Output images are numbered from 1 to the number of ROIs.
-//		Non-rectangular ROIs are cropped to their bounding box, but the area outside the ROI is cleared to black.
-// -- An ROI set (.zip file) containing the ROIs.
-// -- A snapshot of the ROI locations on the composite image, using the current display settings.
-//
-// Usage: Open an image. 
-//		For each area you want to crop out, draw an ROI and press T to add to the ROI Manager. (Or open a saved ROIset.)
+// crop_To_Roi.ijm
+// ImageJ/Fiji macro by Theresa Swayne, tcs6@cumc.columbia.edu, 2017
+// Input: A stack (or single plane) and a set of ROIs in the ROI manager 
+// Output: A stack (or single plane) corresponding to each ROI, 
+//		plus a snapshot of the ROI locations.
+// 		Output images are numbered from 0 to the number of ROIs, 
+//		and are saved in a folder of the user's choice.
+//		Non-rectangular ROIs are cropped to their bounding box and the area outside the ROI is cleared to black.
+//		The ROIs are also saved with their numbers, using the same base name as the image.
+// Usage: Open an image. For each area you want to crop out, 
+// 		draw an ROI and press T to add to the ROI Manager. (Or open a saved ROIset.)
 //		Then run the macro.
 
-
-// ---------- SETUP
+// ---- Setup ----
 
 IJ.log("\\Clear");
+//path = getDirectory("image");
 id = getImageID();
 title = getTitle();
 dotIndex = indexOf(title, ".");
@@ -29,7 +27,6 @@ selectImage(id);
 roiManager("Deselect");
 run("Select None");
 
-// check for ROIs
 numROIs = roiManager("count");
 if (numROIs == 0) {
 	showMessage("There are no ROIs saved. Draw ROIs around cells and press T to add each one to the Manager. Then run the macro.");
@@ -37,9 +34,6 @@ if (numROIs == 0) {
 }
 // how much to pad ROI numbers?
 digits = Math.ceil((log(numROIs+1)/log(10))); // the +1 is to handle 10 ROIs
-
-
-setBackgroundColor(0, 0, 0); // set background to black for proper clearing outside 
 
 // ---------- DOCUMENT ROI LOCATIONS
 
@@ -64,7 +58,7 @@ flatID = getImageID();
 selectImage(flatID);
 saveAs("tiff", path+File.separator+basename+"_ROIlocs.tif");
 
-print("Saved snapshot.");
+print("Saved snapshot");
 
 // clean up snapshot images
 if (isOpen(flatID)) {
@@ -75,25 +69,26 @@ if (isOpen(rgbID)) {
 	selectImage(rgbID);
 	close();
 }
-
-// ---------- CROP AND SAVE
+	
+// Number and save ROIs
 
 // make sure nothing is selected to begin with
 selectImage(id);
 roiManager("Deselect");
 run("Select None");
 
-for(roiIndex=0; roiIndex < numROIs; roiIndex++) // loop through ROIs
+for(roiIndex=0; roiIndex<numROIs;roiIndex++) // loop through ROIs
 	{ 
 	selectImage(id);
-	roiNum = roiIndex + 1; // image names starts with 1 like the ROI labels
+	roiNum = roiIndex + 1; // so that image names start with 1 like the ROI labels
 	roiNumPad = IJ.pad(roiNum, digits);
 	cropName = basename + "_roi_"+ roiNumPad + ".tif";
-	roiManager("Select", roiIndex);  // ROI indices start with 0
-	roiManager("Rename", roiNum); // ROI names will start with 1
+	roiManager("Select", roiIndex);
+	roiManager("Rename", roiNum);
 	run("Duplicate...", "title=&cropName duplicate"); // creates the cropped stack
 	selectWindow(cropName);
-
+	
+	// if non-rectangular, clear outside
 	if ((selectionType() != 0) && (selectionType() != -1)) {
 		run("Clear Outside","stack"); // this works because non-rectangular rois are still active on the cropped image
 		run("Select None");// clears the selection that is otherwise saved with the image (although it can be recovered with "restore selection")
@@ -103,14 +98,14 @@ for(roiIndex=0; roiIndex < numROIs; roiIndex++) // loop through ROIs
 	print("Saved",cropName);
 	close();
 	}	
-
-
+	
 // Save ROI set
 run("Select None");
 roiManager("Deselect"); 
 roiSetName = basename + ".zip";
 roiManager("Save", path + File.separator +roiSetName);
 print("Saved ROI set",roiSetName);
+
 
 // ---------- CLEANUP
 
