@@ -1,24 +1,24 @@
 //@File(label = "Output image folder:", style = "directory") imagePath
 //@File(label = "Output ROI folder:", style = "directory") roiPath
 //
-// cropToRoi_ClearOutside.ijm
+// crop_To_Roi.ijm
 // ImageJ/Fiji macro by Theresa Swayne, Columbia University, 2017-2025
-//
-// Input: An image or hyperstack, and a set of ROIs in the ROI manager 
+// Input: An image or hyperstack and a set of ROIs in the ROI manager 
 // Output: A stack (or single plane) corresponding to each ROI, 
 //		plus a snapshot of the ROI locations.
 // 		Output images are numbered from 0 to the number of ROIs, 
 //		and are saved in a folder of the user's choice.
 //		Non-rectangular ROIs are cropped to their bounding box and the area outside the ROI is cleared to black.
 //		The ROIs are also saved with their numbers, using the same base name as the image.
-// Usage: Open an image. 
-//		For each area you want to crop out, draw an ROI and press T to add to the ROI Manager. (Or open a saved ROIset.)
+// Special feature: fixes colors that are messed up by exporting Volocity OME TIFFs
+// Usage: Open an image. For each area you want to crop out, 
+// 		draw an ROI and press T to add to the ROI Manager. (Or open a saved ROIset.)
 //		Then run the macro.
 
-
-// ---------- SETUP
+// ---- Setup ----
 
 IJ.log("\\Clear");
+//path = getDirectory("image");
 id = getImageID();
 title = getTitle();
 dotIndex = indexOf(title, ".");
@@ -42,8 +42,19 @@ setBackgroundColor(0, 0, 0); // set background to black for proper clearing outs
 
 // ---------- DOCUMENT ROI LOCATIONS
 
-// save a snapshot
-Stack.getPosition(channel, slice, frame); // how does the user currently have the stack set up
+
+// fix colors for Cue5 images
+Stack.setDisplayMode("color");
+Stack.setChannel(3);
+run("Grays");
+resetMinAndMax;
+Stack.setChannel(4);
+run("Red");
+resetMinAndMax;
+Stack.setChannel(5);
+run("Green");
+resetMinAndMax;
+
 if (is("composite")) {
 	Stack.setDisplayMode("composite"); // this command raises error if image is not composite
 	run("Stack to RGB", "keep");
@@ -57,7 +68,7 @@ rgbID = getImageID();
 selectImage(rgbID);
 
 roiManager("Show All with labels");
-Stack.setPosition(channel, slice, frame); // restore the previous setup
+//Stack.setPosition(channel, slice, frame); // restore the previous setup
 run("Flatten");
 flatID = getImageID();
 selectImage(flatID);
