@@ -1,9 +1,9 @@
-//@File(label = "Input directory", style = "directory") inputDir
+//@File(label = "Raw image input directory", style = "directory") imageInputDir
+//@File(label = "Segmented image input directory", style = "directory") binaryInputDir
 //@File(label = "Output directory", style = "directory") outputDir
 //@String (label = "File suffix", value = ".tif") fileSuffix
-//@ int(label="Min threshold:")  minThresh
 
-// batch_3DSeg.ijm
+// batch_template.ijm
 // ImageJ/Fiji script to process a batch of images
 // Theresa Swayne, 2025
 //  -------- Suggested text for acknowledgement -----------
@@ -21,16 +21,19 @@
 //	Limitation -- cannot have >1 dots in the filename
 // 	
 
+// see also https://mcib3d.frama.io/3d-suite-imagej/plugins/3DManager/3D-Manager-macros/
+
 // ---- Setup ----
 
 while (nImages>0) { // clean up open images
 	selectImage(nImages);
 	close();
-}
+	}
 print("\\Clear"); // clear Log window
 
 setBatchMode(true); // faster performance
 run("Bio-Formats Macro Extensions"); // support native microscope files
+
 
 
 // ---- Run ----
@@ -39,7 +42,7 @@ print("Starting");
 
 // Call the processFolder function, including the parameters collected at the beginning of the script
 
-processFolder(inputDir, outputDir, fileSuffix, minThresh);
+processFolder(imageInputDir, binaryInputDir, outputDir, fileSuffix);
 
 // Clean up images and get out of batch mode
 
@@ -54,73 +57,79 @@ print("Finished");
 selectWindow("Log");
 saveAs("text", outputDir + File.separator + "Log.txt");
 
+
 // ---- Functions ----
 
-function processFolder(input, output, suffix, minthresh) {
+function processFolder(imginput, bininput, output, suffix) {
 
 	// this function searches for files matching the criteria and sends them to the processFile function
 	filenum = -1;
-	print("Processing folder", input, "with minimum threshold",minthresh);
-	
+	print("Processing folder", imginput);
 	// scan folder tree to find files with correct suffix
-	list = getFileList(input);
+	list = getFileList(imginput);
 	list = Array.sort(list);
 	for (i = 0; i < list.length; i++) {
-		if(File.isDirectory(input + File.separator + list[i])) {
-			processFolder(input + File.separator + list[i], output, suffix); // handles nested folders
+		if(File.isDirectory(imginput + File.separator + list[i])) {
+			processFolder(imginput + File.separator + list[i], bininput, output, suffix); // handles nested folders
 		}
 		if(endsWith(list[i], suffix)) {
 			filenum = filenum + 1;
-			processFile(input, output, list[i], filenum, minthresh); // passes the filename and parameters to the processFile function
+			processFile(imginput, bininput, output, list[i], filenum); // passes the filename and parameters to the processFile function
 		}
 	}
 } // end of processFolder function
 
 
-function processFile(inputFolder, outputFolder, fileName, fileNumber, minThreshold) {
+function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, fileNumber) {
 	
 	// this function processes a single image
 	
-	path = inputFolder + File.separator + fileName;
-	print("Processing file",fileNumber," at path" ,path);	
+	imgPath = imgInputFolder + File.separator + imgFile;
+	print("Processing file",fileNumber," at path" ,imgPath);	
 
 	// determine the name of the file without extension
-	dotIndex = lastIndexOf(fileName, ".");
-	basename = substring(fileName, 0, dotIndex); 
-	extension = substring(fileName, dotIndex);
+	dotIndex = lastIndexOf(imgFile, ".");
+	basename = substring(imgFile, 0, dotIndex); 
+	extension = substring(imgFile, dotIndex);
 	
 	print("File basename is",basename);
-	time = getTime();
 	
-	// open the file
-	run("Bio-Formats", "open=&path");
+	// open the image file
+	run("Bio-Formats", "open=&imgPath");
 	
 	// Look at only channel 5
 	dupName = basename + "-c5";
 	run("Duplicate...", "title="+dupName+" duplicate channels=5");
 
-	selectWindow(dupName);
-	run("3D Iterative Thresholding", "min_vol_pix=4 max_vol_pix=2000 min_threshold="+minThreshold+" min_contrast=0 criteria_method=MSER threshold_method=STEP segment_results=Best value_method=1");
+	// close the original
+	selectWindow(imgFile);
+	close();
+
+	// check for the segmented image
+	binFile = basename + "_seg.tif";
 	
-	// save the output, if any
-	if (isOpen("Objects")) {
-		selectWindow("Objects");
-		outputName = basename + "_seg.tif";
-		saveAs("tiff", outputFolder + File.separator + outputName);
-	
-		// report completion of this image
-		print("Segmented image " + basename + " in " + (getTime() - time) + " msec");
+	// open the segmented image
+	binPath = binInputFolder + File.separator + binFile;
+	if (!(File.exists(binPath))) {
+		print("No segmented image found for", basename);
+		return; // go to next file in folder
 	}
 	else {
-		print("Image " + basename + " did not contain any detected objects.");
-	}
-	
-	// clean up
-	while (nImages > 0) { // clean up open images
-		selectImage(nImages);
-		close(); 
-	}
-	
+		run("Bio-Formats", "open=&binPath");
+		
+		// set up options with redirect
+		run("3D OC Options", "volume nb_of_obj._voxels integrated_density mean_gray_value median_gray_value maximum_gray_value centroid dots_size=5 font_size=10 store_results_within_a_table_named_after_the_image_(macro_friendly) redirect_to="+dupName);
+
+		selectImage(binFile);
+		run("3D Objects Counter", "threshold=1 slice=10 min.=1 max.=723975 statistics");
+		
+		// save results
+		statsName = "Statistics for " + binFile + " redirect to " + dupName;
+		selectWindow(statsName);
+		saveAs("Results", outputDir + File.separator + basename + "_results.csv");
+		run("Close");
+		
+	}	
 
 } // end of processFile function
 
