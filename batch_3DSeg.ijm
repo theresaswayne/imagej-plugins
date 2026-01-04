@@ -13,6 +13,7 @@
 
 // TO USE: Place all input images in the input folder.
 // 	Create a folder for the output files. 
+// 	Place your desired processing steps in the processFile function.
 // 	Collect any desired parameters in the script parameters at the top. 
 //		See ImageJ wiki for more script parameter options.
 //		Remember to pass your parameters into the processFolder and processFile functions!
