@@ -96,7 +96,7 @@ function processFile(inputFolder, outputFolder, fileName, fileNumber, minThresho
 	run("Duplicate...", "title="+dupName+" duplicate channels=5");
 
 	selectWindow(dupName);
-	run("3D Iterative Thresholding", "min_vol_pix=4 max_vol_pix=2000 min_threshold="+minThreshold+" min_contrast=0 criteria_method=VOLUME threshold_method=STEP segment_results=Best value_method=1");
+	run("3D Iterative Thresholding", "min_vol_pix=4 max_vol_pix=2000 min_threshold="+minThreshold+" min_contrast=0 criteria_method=MSER threshold_method=STEP segment_results=Best value_method=1");
 	
 	// save the output, if any
 	if (isOpen("Objects")) {
