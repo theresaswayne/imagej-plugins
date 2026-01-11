@@ -50,7 +50,7 @@ print("Finished");
 
 // save Log
 selectWindow("Log");
-saveAs("text", outputDir + File.separator + "Log.txt");
+saveAs("text", outputSegDir + File.separator + "Log.txt");
 
 // ---- Functions ----
 
