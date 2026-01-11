@@ -3,7 +3,6 @@
 //@File(label = "Output directory", style = "directory") outputDir
 //@String (label = "File suffix", value = ".tif") fileSuffix
 
-// batch_template.ijm
 // ImageJ/Fiji script to process a batch of images
 // Theresa Swayne, 2025
 //  -------- Suggested text for acknowledgement -----------
@@ -13,10 +12,6 @@
 
 // TO USE: Place all input images in the input folder.
 // 	Create a folder for the output files. 
-// 	Place your desired processing steps in the processFile function.
-// 	Collect any desired parameters in the script parameters at the top. 
-//		See ImageJ wiki for more script parameter options.
-//		Remember to pass your parameters into the processFolder and processFile functions!
 //  Run the script in Fiji. 
 //	Limitation -- cannot have >1 dots in the filename
 // 	
