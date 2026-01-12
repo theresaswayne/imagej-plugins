@@ -84,7 +84,9 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 
 	// determine the name of the file without extension
 	dotIndex = lastIndexOf(imgFile, ".");
-	basename = substring(imgFile, 0, dotIndex); 
+	rawBasename = substring(imgFile, 0, dotIndex); 
+	reslIndex = indexOf(rawBasename, "_resliced");
+	basename = substring(rawBasename, 0, reslIndex);
 	extension = substring(imgFile, dotIndex);
 	
 	print("File basename is",basename);
@@ -92,9 +94,10 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 	// open the image file
 	run("Bio-Formats", "open=&imgPath");
 	
-	// Look at only channel 5
-	dupName = basename + "-c5";
-	run("Duplicate...", "title="+dupName+" duplicate channels=5");
+	// Duplicate the image
+	dupName = basename;
+	// run("Duplicate...", "title="+dupName+" duplicate channels=5");
+	run("Duplicate...", "title="+dupName+" duplicate");
 
 	// close the original
 	selectWindow(imgFile);
@@ -119,7 +122,7 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 		run("3D Objects Counter", "threshold=1 slice=10 min.=1 max.=723975 statistics");
 		
 		// save results
-		statsName = "Statistics for " + binFile + " redirect to " + dupName;
+		statsName = "Statistics for " + binFile + " redirect to " + basename;
 		selectWindow(statsName);
 		saveAs("Results", outputDir + File.separator + basename + "_results.csv");
 		run("Close");
