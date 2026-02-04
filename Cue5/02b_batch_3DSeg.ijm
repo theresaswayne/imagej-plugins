@@ -5,6 +5,8 @@
 
 // batch_3DSeg.ijm
 // ImageJ/Fiji script to process a batch of images
+// Applies 3D iterative thresholding using MSER criteria
+// Saves the 3D mask
 // Theresa Swayne, 2025
 //  -------- Suggested text for acknowledgement -----------
 //   "These studies used the Confocal and Specialized Microscopy Shared Resource 
