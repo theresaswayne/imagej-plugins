@@ -84,9 +84,10 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 
 	// determine the name of the file without extension
 	dotIndex = lastIndexOf(imgFile, ".");
-	rawBasename = substring(imgFile, 0, dotIndex); 
-	reslIndex = indexOf(rawBasename, "_resliced");
-	basename = substring(rawBasename, 0, reslIndex);
+	//rawBasename = substring(imgFile, 0, dotIndex); 
+	//reslIndex = indexOf(rawBasename, "_resliced");
+	//basename = substring(rawBasename, 0, reslIndex);
+	basename = substring(imgFile, 0, dotIndex);
 	extension = substring(imgFile, dotIndex);
 	
 	print("File basename is",basename);
