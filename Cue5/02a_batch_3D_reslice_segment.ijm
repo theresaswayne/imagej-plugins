@@ -7,6 +7,9 @@
 
 // batch_3D_reslice_segment.ijm
 // ImageJ/Fiji script to process a batch of images
+// Reslices Z at a spacing specified by the user, for creating isotropic stacks
+// Performs 3D segmentation using 3D iterative thresholding
+// Saves the resliced image and the 3D mask
 // Theresa Swayne, 2025
 //  -------- Suggested text for acknowledgement -----------
 //   "These studies used the Confocal and Specialized Microscopy Shared Resource 
