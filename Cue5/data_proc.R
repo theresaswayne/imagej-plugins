@@ -19,5 +19,5 @@ avg <- summ %>% group_by(ManualScore) %>% summarise(avgPuncta = mean(nPuncta), s
 
 
 # save in R working directory
-write_csv(avg, "meas_2000_avg.csv")
-write_csv(summ, "meas_2000_summ.csv")
+write_csv(avg, "meas_2400_avg.csv")
+write_csv(summ, "meas_2400_summ.csv")
