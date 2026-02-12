@@ -117,17 +117,24 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 		run("Bio-Formats", "open=&binPath");
 		
 		// set up options with redirect
-		run("3D OC Options", "volume nb_of_obj._voxels integrated_density mean_gray_value median_gray_value maximum_gray_value centroid dots_size=5 font_size=10 store_results_within_a_table_named_after_the_image_(macro_friendly) redirect_to="+dupName);
-
+		//run("3D OC Options", "volume nb_of_obj._voxels integrated_density mean_gray_value median_gray_value maximum_gray_value centroid dots_size=5 font_size=10 store_results_within_a_table_named_after_the_image_(macro_friendly) redirect_to="+dupName);
+		run("3D OC Options", "volume nb_of_obj._voxels integrated_density mean_gray_value median_gray_value maximum_gray_value centroid mean_distance_to_surface median_distance_to_surface bounding_box dots_size=5 font_size=10 store_results_within_a_table_named_after_the_image_(macro_friendly) redirect_to="+dupName);
 		selectImage(binFile);
-		run("3D Objects Counter", "threshold=1 slice=10 min.=1 max.=723975 statistics");
 		
-		// save results
-		statsName = "Statistics for " + binFile + " redirect to " + basename;
-		selectWindow(statsName);
-		saveAs("Results", outputDir + File.separator + basename + "_results.csv");
-		run("Close");
-		
+		// check for objects (if there are none, 3D OC will crash)
+		Stack.getStatistics(area, mean, min, max, std, histogram);
+		if (max == 0) {
+			print("No objects in", basename);
+			continue;
+		}
+		else {
+			run("3D Objects Counter", "threshold=1 slice=10 min.=1 max.=723975 statistics");
+			// save results
+			statsName = "Statistics for " + binFile + " redirect to " + basename;
+			selectWindow(statsName);
+			saveAs("Results", outputDir + File.separator + basename + "_results.csv");
+			run("Close");
+		}
 	}	
 
 } // end of processFile function
