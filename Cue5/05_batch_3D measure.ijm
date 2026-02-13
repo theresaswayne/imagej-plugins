@@ -1,4 +1,4 @@
-//@File(label = "Raw image input directory", style = "directory") imageInputDir
+//@File(label = "Resliced image input directory", style = "directory") imageInputDir
 //@File(label = "Segmented image input directory", style = "directory") binaryInputDir
 //@File(label = "Output directory", style = "directory") outputDir
 //@String (label = "File suffix", value = ".tif") fileSuffix

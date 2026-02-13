@@ -14,10 +14,18 @@ keys_renamed <- factor(keys,
 df_mod <- df %>% mutate(ManualScore = keys_renamed, .after = filename)
 
 # summarize measurements for each image and group
-summ <- df_mod %>% group_by(ManualScore, filename) %>% summarise(nPuncta = n())
-avg <- summ %>% group_by(ManualScore) %>% summarise(avgPuncta = mean(nPuncta), sdPuncta = sd(nPuncta))
+summ <- df_mod %>% 
+  group_by(ManualScore, filename) %>% 
+  summarise(nPuncta = n(),
+            meanDist = mean(`Mean dist. to surf. (micron)`))
+avg <- summ %>% 
+  group_by(ManualScore) %>% 
+  summarise(avgPuncta = mean(nPuncta), 
+            sdPuncta = sd(nPuncta), 
+            meanDist = mean(meanDist))
+
 
 
 # save in R working directory
-write_csv(avg, "meas_2400_avg.csv")
-write_csv(summ, "meas_2400_summ.csv")
+write_csv(avg, "erg6_700_avg.csv")
+write_csv(summ, "erg6_700_summ.csv")
