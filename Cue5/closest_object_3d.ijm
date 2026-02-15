@@ -138,7 +138,7 @@ Ext.Manager3D_Reset();
 run("3D Manager");
 Ext.Manager3D_Reset();
 // options: important to NOT show as IJ results table beause it conflicts with the other table
-run("3D Manager Options", "volume feret distance_to_surface objects radial_distance distance_between_centers distance_max_contact drawing=Contour use_0");
+run("3D Manager Options", "volume feret centroid_(pix) centroid_(unit) distance_to_surface objects radial_distance distance_between_centers distance_max_contact drawing=Contour use_0");
 
 // generate an image of only the colocalizing Ergs
 selectWindow(ergTitle);
@@ -182,7 +182,7 @@ Ext.Manager3D_CloseResult("M");
 
 // --- get measurements for all objects
 Ext.Manager3D_Reset();
-run("3D Manager Options", "volume feret centroid_(pix) distance_to_surface objects radial_distance distance_between_centers=0 distance_max_contact=0 drawing=Contour use_0");
+run("3D Manager Options", "volume feret centroid_(pix) centroid_(unit) distance_to_surface objects radial_distance distance_between_centers=0 distance_max_contact=0 drawing=Contour use_0");
 
 // add nup objects and rename
 selectWindow(nupTitle);
