@@ -29,8 +29,6 @@ print("\\Clear"); // clear Log window
 setBatchMode(true); // faster performance
 run("Bio-Formats Macro Extensions"); // support native microscope files
 
-
-
 // ---- Run ----
 
 print("Starting");

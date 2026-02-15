@@ -16,6 +16,19 @@ while (nImages>0) { // clean up open images
 print("\\Clear"); // clear Log window
 
 
+// close one or more results windows
+while (isOpen("Results")) {
+     selectWindow("Results"); 
+     run("Close" );
+}
+while (isOpen("ClosestObjectsWithinCriterion.csv")) {
+ 	selectWindow("ClosestObjectsWithinCriterion.csv"); 
+ 	run("Close" );
+}
+
+// options: important to NOT show as IJ results table beause it conflicts with the other table
+run("3D Manager Options", "volume feret centroid_(pix) distance_to_surface objects radial_distance distance_between_centers=0 distance_max_contact=0 drawing=Contour use_0");
+
 // open datasets
 open(NupFile);
 nupTitle = getTitle();
@@ -23,18 +36,25 @@ nupTitle = getTitle();
 dotIndex = lastIndexOf(nupTitle, ".");
 nupBasename = substring(nupTitle, 0, dotIndex);
 
-
 open(ErgFile);
 ergTitle = getTitle();
 dotIndex = lastIndexOf(ergTitle, ".");
 ergBasename = substring(ergTitle, 0, dotIndex);
+
+// create a folder for all the results
+
+imageBasename = substring(nupBasename, 0, dotIndex-8);
+subFolder = outDir + File.separator + imageBasename + File.separator;
+File.makeDirectory(subFolder);
+if (!File.exists(subFolder))
+      exit("Unable to create directory");
 
 // find objects matching criteria
 run("3D Distances Closest", "image_a="+nupBasename+" image_b="+ergBasename+" number=1 distance=DistCenterCenterUnit distance_maximum="+dist);
 
 // save the data
 distTableName = "ClosestObjectsWithinCriterion.csv";
-saveAs("Results", outDir + File.separator + distTableName);
+saveAs("Results", subFolder + distTableName);
 
 // read the results
 
@@ -66,8 +86,6 @@ if (rowCount > 0) { // if there are any colocalization (behavior varies; may be 
 		}
 	}
 	
-
-
 	print("Colocalizing Nups:");
 	Array.print(nupColocs);
 	print("Non-colocalizing Nups:");
@@ -84,8 +102,7 @@ print("total colocalizations: ",colocCount);
 // initialize 3D functions
 run("3D Manager");
 Ext.Manager3D_Reset();
-// options: important to NOT show as IJ results table beause it conflicts with the other table
-run("3D Manager Options", "volume feret distance_to_surface objects radial_distance distance_between_centers distance_max_contact drawing=Contour use_0");
+run("3D Manager Options", "volume feret centroid_(pix) distance_to_surface objects radial_distance distance_between_centers=0 distance_max_contact=0 drawing=Contour use_0");
 
 // generate an image of only the colocalizing Nups
 selectWindow(nupTitle);
@@ -108,12 +125,11 @@ Ext.Manager3D_Measure(); // measure only the coloc nups
 
 // save the image
 selectWindow("nupColoc");
-saveAs("Tiff", outDir + File.separator + "nupColoc.tif");
+saveAs("Tiff", subFolder  + "nupColoc.tif");
 
 // save the measurements
-Ext.Manager3D_SaveResult("M",outDir + File.separator + "nupColocMeas.csv");
+Ext.Manager3D_SaveResult("M",subFolder + "nupColocMeas.csv");
 Ext.Manager3D_CloseResult("M");
-
 
 // --- Erg coloc ----
 
@@ -157,9 +173,51 @@ Ext.Manager3D_Measure(); // measure only the coloc ergs
 
 // save the image
 selectWindow("ergColoc");
-saveAs("Tiff", outDir + File.separator + "ergColoc.tif");
+saveAs("Tiff", subFolder  + "ergColoc.tif");
 
 // save the measurements
-Ext.Manager3D_SaveResult("M",outDir + File.separator + "ergColocMeas.csv");
+Ext.Manager3D_SaveResult("M",subFolder + "ergColocMeas.csv");
 Ext.Manager3D_CloseResult("M");
 
+
+// --- get measurements for all objects
+Ext.Manager3D_Reset();
+run("3D Manager Options", "volume feret centroid_(pix) distance_to_surface objects radial_distance distance_between_centers=0 distance_max_contact=0 drawing=Contour use_0");
+
+// add nup objects and rename
+selectWindow(nupTitle);
+Ext.Manager3D_AddImage();
+Ext.Manager3D_SelectAll();
+Ext.Manager3D_Rename("Nup");
+Ext.Manager3D_DeselectAll();
+Ext.Manager3D_Count(nupCount); // number of nup objects
+
+selectWindow(ergTitle);
+Ext.Manager3D_AddImage();
+Ext.Manager3D_Count(allCount); // number of nup objects
+Ext.Manager3D_SelectFor(nupCount, allCount, 1);
+Ext.Manager3D_Rename("Erg");
+Ext.Manager3D_DeselectAll();
+
+Ext.Manager3D_Measure(); 
+Ext.Manager3D_SaveResult("M",subFolder + "allMeas.csv");
+Ext.Manager3D_CloseResult("M");
+
+// clean up
+while (nImages>0) { // clean up open images
+	selectImage(nImages);
+	close();
+	}
+print("\\Clear"); // clear Log window
+
+Ext.Manager3D_Reset();
+
+// close one or more results windows
+while (isOpen("Results")) {
+     selectWindow("Results"); 
+     run("Close" );
+}
+while (isOpen("ClosestObjectsWithinCriterion.csv")) {
+ 	selectWindow("ClosestObjectsWithinCriterion.csv"); 
+ 	run("Close" );
+}
