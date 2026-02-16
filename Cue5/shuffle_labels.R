@@ -1,8 +1,10 @@
 # shuffle_labels.R
 # R script to randomize object labels and recalculate distances 
 
+# Input: The M_allMeas.csv file from closest_object_3D.ijm (table of positions of all objects)
+
 # ---- Parameters ----
-distCriterion = 1.2 # center-center distance in MICRONS to define association
+distCriterion = 0.4 # center-center distance in MICRONS to define association
 trials = 1000 # number of shuffles to do
 
 # ---- Setup ----
@@ -77,6 +79,15 @@ results_plus_expt <- c(results, totalColoc)
 expt_rank_pct <- percent_rank(results_plus_expt)[match(totalColoc, results_plus_expt)]
 confInts <- quantile(results_plus_expt, probs = c(0.05, 0.95))
 
+# create an output table
+summary <- data.frame(Filename = basename(inputFolder))
+summary <- summary %>% mutate(NupCount = nupCount) %>%
+  mutate(ErgCount = ergCount) %>%
+  mutate(NupColoc = totalColoc) %>%
+  mutate(FxnNupColoc = totalColoc/nupCount) %>%
+  mutate(SimColoc = mean(results)) %>%
+           mutate(FxnSimColoc = mean(results)/nupCount)
+
 # visualize results
 #hist(results)
 #hist(results, breaks = seq(0:nupCount+1), right=FALSE) # shows counts of 1 between 1 and 2, etc.
@@ -98,6 +109,8 @@ nn2_idx <- nupNearErg[[1]]
 nn2_dists <- nupNearErg[[2]]
 nupNearErgDF <- data.frame("NeighborIndex" = nn2_idx, "Distance" = nn2_dists)
 
+outputSumm = paste0("summary", crit, ".csv")
+write_csv(summary, file.path(inputFolder, outputSumm))
 outputNearest = paste0("nearest",crit,".csv")
 write_csv(nupNearErgDF,file.path(inputFolder, outputNearest))
 outputTrials = paste0("simulations",crit,".csv")

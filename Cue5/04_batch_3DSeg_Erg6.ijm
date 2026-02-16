@@ -13,13 +13,9 @@
 //   of the Herbert Irving Comprehensive Cancer Center at Columbia University, 
 //   funded in part through the NIH/NCI Cancer Center Support Grant P30CA013696."
 
-// TO USE: Place all input images (single-channel resliced images) in the input folder.
-// 	Create a folder for the output files. 
-// 	Place your desired processing steps in the processFile function.
-// 	Collect any desired parameters in the script parameters at the top. 
-//		See ImageJ wiki for more script parameter options.
-//		Remember to pass your parameters into the processFolder and processFile functions!
-//  Run the script in Fiji. 
+// Input: A folder of single-channel Z stacks. Isotropic scaling is recommended.
+// Output: Label stacks showing detected objects.
+// User supplies local difference at runtime. Other parameters are in the line calling "3D Spot Segmentation"
 //	Limitation -- cannot have >1 dots in the filename
 // 	
 

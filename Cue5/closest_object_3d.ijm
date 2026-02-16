@@ -8,6 +8,8 @@
 // output: multichannel stack with channel 1= all objects in stack 1 that are within the given distance (center-center) of an object in stack 2
 // channel 2 = all objects in stack 2 that are within that distance of some object in stack 1 
 
+// TODO: Catch error and show message if no objects found in either of the original datasets 
+
 // setup general
 while (nImages>0) { // clean up open images
 	selectImage(nImages);
@@ -43,7 +45,7 @@ ergBasename = substring(ergTitle, 0, dotIndex);
 
 // create a folder for all the results
 
-imageBasename = substring(nupBasename, 0, dotIndex-8);
+imageBasename = substring(nupBasename, 0, dotIndex-13);
 subFolder = outDir + File.separator + imageBasename + File.separator;
 File.makeDirectory(subFolder);
 if (!File.exists(subFolder))

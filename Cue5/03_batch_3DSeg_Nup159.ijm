@@ -13,13 +13,9 @@
 //   of the Herbert Irving Comprehensive Cancer Center at Columbia University, 
 //   funded in part through the NIH/NCI Cancer Center Support Grant P30CA013696."
 
-// TO USE: Place all input images in the input folder.
-// 	Create a folder for the output files. 
-// 	Place your desired processing steps in the processFile function.
-// 	Collect any desired parameters in the script parameters at the top. 
-//		See ImageJ wiki for more script parameter options.
-//		Remember to pass your parameters into the processFolder and processFile functions!
-//  Run the script in Fiji. 
+// Input: A folder of single-channel Z stacks. Isotropic scaling is recommended.
+// Output: Label stacks showing detected objects.
+// User supplies minimum threshold at runtime. Other parameters are in the line calling "3D Iterative Thresholding"
 //	Limitation -- cannot have >1 dots in the filename
 // 	
 
@@ -98,10 +94,10 @@ function processFile(inputFolder, outputFolder, fileName, fileNumber, minThresho
 	run("Bio-Formats", "open=&path");
 	
 	// Look at only channel 5
-	dupName = basename + "-c5";
-	run("Duplicate...", "title="+dupName+" duplicate channels=5");
+	//dupName = basename + "-c5";
+	//run("Duplicate...", "title="+dupName+" duplicate channels=5");
 
-	selectWindow(dupName);
+	selectWindow(fileName);
 	run("3D Iterative Thresholding", "min_vol_pix=4 max_vol_pix=2000 min_threshold="+minThreshold+" min_contrast=0 criteria_method=MSER threshold_method=STEP segment_results=Best value_method=1");
 	
 	// save the output, if any

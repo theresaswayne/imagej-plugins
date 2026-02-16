@@ -10,9 +10,10 @@
 //   of the Herbert Irving Comprehensive Cancer Center at Columbia University, 
 //   funded in part through the NIH/NCI Cancer Center Support Grant P30CA013696."
 
-// TO USE: Place all input images in the input folder.
-// 	Create a folder for the output files. 
-//  Run the script in Fiji. 
+// Input: 2 folders, of single-channel fluorescence images and label images showing segmented objects
+// Output: Measurements of position, size, intensity (1 table per image)
+// File name constraint: The label image name must be the name of the fluorescence image plus "_seg"
+
 //	Limitation -- cannot have >1 dots in the filename
 // 	
 
@@ -94,8 +95,7 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 	run("Bio-Formats", "open=&imgPath");
 	
 	// Duplicate the image
-	dupName = basename;
-	// run("Duplicate...", "title="+dupName+" duplicate channels=5");
+	dupName = "dup";
 	run("Duplicate...", "title="+dupName+" duplicate");
 
 	// close the original
@@ -116,9 +116,16 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 		
 		// set up options with redirect
 		//run("3D OC Options", "volume nb_of_obj._voxels integrated_density mean_gray_value median_gray_value maximum_gray_value centroid dots_size=5 font_size=10 store_results_within_a_table_named_after_the_image_(macro_friendly) redirect_to="+dupName);
-		run("3D OC Options", "volume nb_of_obj._voxels integrated_density mean_gray_value median_gray_value maximum_gray_value centroid mean_distance_to_surface median_distance_to_surface bounding_box dots_size=5 font_size=10 store_results_within_a_table_named_after_the_image_(macro_friendly) redirect_to="+dupName);
+		run("3D OC Options", "volume nb_of_obj._voxels integrated_density mean_gray_value median_gray_value maximum_gray_value centroid mean_distance_to_surface median_distance_to_surface bounding_box dots_size=5 font_size=10 store_results_within_a_table_named_after_the_image_(macro_friendly) redirect_to=dup");
+
 		selectImage(binFile);
+		run("Duplicate...", "title=seg duplicate");
+
+		// close the original
+		selectWindow(binFile);
+		close();
 		
+		selectWindow("seg");
 		// check for objects (if there are none, 3D OC will crash)
 		Stack.getStatistics(area, mean, min, max, std, histogram);
 		if (max == 0) {
@@ -128,11 +135,17 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 		else {
 			run("3D Objects Counter", "threshold=1 slice=10 min.=1 max.=723975 statistics");
 			// save results
-			statsName = "Statistics for " + binFile + " redirect to " + basename;
+			statsName = "Statistics for seg redirect to dup"; // renaming the images helps with referring to this window
 			selectWindow(statsName);
 			saveAs("Results", outputDir + File.separator + basename + "_results.csv");
 			run("Close");
 		}
+		// clean up images before next cycle
+		selectWindow("dup");
+		close();
+		selectWindow("seg");
+		close();
+		run("Collect Garbage");
 	}	
 
 } // end of processFile function

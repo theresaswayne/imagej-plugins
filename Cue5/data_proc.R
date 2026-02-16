@@ -24,8 +24,6 @@ avg <- summ %>%
             sdPuncta = sd(nPuncta), 
             meanDist = mean(meanDist))
 
-
-
 # save in R working directory
-write_csv(avg, "erg6_700_avg.csv")
-write_csv(summ, "erg6_700_summ.csv")
+write_csv(avg, "iso_erg_700_avg.csv")
+write_csv(summ, "iso_erg_700_summ.csv")
