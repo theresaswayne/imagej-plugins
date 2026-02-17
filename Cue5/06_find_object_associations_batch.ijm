@@ -12,8 +12,6 @@
 //		3D Manager size/position measurements for all objects and associated objects;
 //		table giving IDs of closest associated Erg object for each Nup object, or 0 if no associated object
 
-// TODO: Collect counts in a simple table
-
 // Limitation: Erg count of associations could be inaccurate if the same LD is associated with 2 Nup aggregates
 
 
@@ -40,7 +38,7 @@ n = 0;
 // collect association counts in a table with a time/date stamp
 headerString = "ImageName,TotalNup,TotalErg,AssociatedNup";
 getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
-timeString = year + "-" + month + "-" + dayOfMonth + "-" + hour + "-" + minute;
+timeString = "" + year + "-" + month + "-" + dayOfMonth + "-" + hour + "-" + minute; // have to start with empty string
 summaryName = timeString + "_results.csv";
 summaryFile = outDir + File.separator + summaryName;
 if (File.exists(summaryFile)==false) { // start the file with headers
