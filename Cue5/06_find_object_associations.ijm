@@ -12,6 +12,7 @@
 //		table giving IDs of closest associated Erg object for each Nup object, or 0 if no associated object
 
 // TODO: Collect counts in a simple table
+// TODO: Make batchable
 
 // setup general
 while (nImages>0) { // clean up open images
@@ -155,8 +156,10 @@ if (!nupEmpty && !ergEmpty) {
 		print("No data in table between",nupTitle, "and",ergTitle);
 	}
 	print("total associations: ",assocCount);
-	
+
+
 	// generate an image of only the associated Nups
+	Ext.Manager3D_Reset();
 	selectWindow(nupTitle);
 	run("Duplicate...", "title=nupAssoc duplicate");
 	Ext.Manager3D_AddImage();
@@ -180,23 +183,15 @@ if (!nupEmpty && !ergEmpty) {
 	//saveAs("Tiff", subFolder  + "nupAssoc.tif");
 	saveAs("Tiff", outDir  + File.separator + imageBasename + "_nupAssoc.tif");
 	
-	
-	// save the measurements
+	// save the measurements for Nups with associations
 	// Ext.Manager3D_SaveResult("M",subFolder + "nupAssocMeas.csv");
 	Ext.Manager3D_SaveResult("M",outDir + File.separator + imageBasename + "_nupAssocMeas.csv");
 	//Ext.Manager3D_SaveResult(outDir + File.separator + imageBasename + "_nupAssocMeas.csv");
 	Ext.Manager3D_CloseResult("M");
 	
-	// --- Erg assoc ----
-	
-	// initialize 3D functions
-	Ext.Manager3D_Reset();
-	run("3D Manager");
-	Ext.Manager3D_Reset();
-	// options: important to NOT show as IJ results table beause it conflicts with the other table
-	run("3D Manager Options", "volume feret centroid_(pix) centroid_(unit) distance_to_surface objects radial_distance distance_between_centers distance_max_contact drawing=Contour use_0");
-	
+
 	// generate an image of only the associated Ergs
+	Ext.Manager3D_Reset();
 	selectWindow(ergTitle);
 	run("Duplicate...", "title=ergAssoc duplicate");
 	Ext.Manager3D_AddImage();

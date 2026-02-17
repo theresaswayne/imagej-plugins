@@ -2,7 +2,7 @@
 // @File(label = "Output directory", style = "directory") outputdir
 // @String(label = "File suffix", value = ".tif") suffix
 //@ int(label="Channel to process:")  chan
-//@Double (label = "Reslice Z step size", value = 0.06, stepSize=0.01) reslice
+//@Double (label = "Reslice Z step size", value = 0.0645, stepSize=0.01) reslice
 
 // Note: DO NOT DELETE OR MOVE THE FIRST FEW LINES -- they supply essential parameters.
 
