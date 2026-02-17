@@ -1,7 +1,7 @@
 # shuffle_labels.R
 # R script to randomize object labels and recalculate distances 
 
-# Input: The M_allMeas.csv file from closest_object_3D.ijm (table of positions of all objects)
+# Input: The allMeas.csv file from find_object_associations.ijm (table of positions of all objects)
 
 # ---- Parameters ----
 distCriterion = 0.4 # center-center distance in MICRONS to define association
@@ -12,15 +12,20 @@ require(tidyverse)
 require(spatstat) # maybe in future because it is more sophisticated
 require(RANN) # for nearest neighbor analysis
 require(ggplot2) # for plot
+require(stringr) # for string manipulations
 
 
 # prompt for a file
 origFile = file.choose()
-inputFolder <- dirname(origFile) # the input is the parent of the selected file
+inputFolder <- dirname(origFile) # parent of the selected file
 
 # Read the data from the file
 origData <- read_csv(origFile,
                        locale = locale())
+# Retrieve the file name
+substringLength <- nchar(basename(origFile))-12
+imageName <- substring(basename(origFile), 1,substringLength)
+
 
 # Parse the object names
 type <- substr(origData$Name, 0, 3)
@@ -70,7 +75,7 @@ for (i in 1:trials) {
   # If there are no neighbours then nn.idx will contain 0 and nn.dists will contain 1.340781e+154 for that point.
   shufColoc <- sum(shufNupNearErg[[1]] != 0) # looks at the nn.idx showing the index of the rows that are closest
   
-  # append to resuts
+  # append to results
   results[i] <- shufColoc
 }
 
@@ -79,8 +84,8 @@ results_plus_expt <- c(results, totalColoc)
 expt_rank_pct <- percent_rank(results_plus_expt)[match(totalColoc, results_plus_expt)]
 confInts <- quantile(results_plus_expt, probs = c(0.05, 0.95))
 
-# create an output table
-summary <- data.frame(Filename = basename(inputFolder))
+# create an output table comparing experimental to shuffled
+summary <- data.frame(Filename = imageName)
 summary <- summary %>% mutate(NupCount = nupCount) %>%
   mutate(ErgCount = ergCount) %>%
   mutate(NupColoc = totalColoc) %>%
@@ -88,11 +93,7 @@ summary <- summary %>% mutate(NupCount = nupCount) %>%
   mutate(SimColoc = mean(results)) %>%
            mutate(FxnSimColoc = mean(results)/nupCount)
 
-# visualize results
-#hist(results)
-#hist(results, breaks = seq(0:nupCount+1), right=FALSE) # shows counts of 1 between 1 and 2, etc.
-
-#  histogram
+# visualize results as histogram
 p <- ggplot(as.data.frame(results), aes(x=results)) + 
   geom_histogram(binwidth=1) +
   geom_vline(xintercept = confInts[1], color = "red", alpha = 0.5, linetype = "dashed", linewidth = 2) +
@@ -107,13 +108,13 @@ crit <- paste0(c("_within_"),str_replace(as.character(distCriterion), "\\.","x")
 # unnest the nn2 results
 nn2_idx <- nupNearErg[[1]]
 nn2_dists <- nupNearErg[[2]]
-nupNearErgDF <- data.frame("NeighborIndex" = nn2_idx, "Distance" = nn2_dists)
+nupNearErgDF <- data.frame("NupIndex" = seq(1:nupCount), "NeighborIndex" = nn2_idx, "Distance" = nn2_dists)
 
-outputSumm = paste0("summary", crit, ".csv")
+outputSumm = paste0(imageName,"_summary", crit, ".csv")
 write_csv(summary, file.path(inputFolder, outputSumm))
-outputNearest = paste0("nearest",crit,".csv")
+outputNearest = paste0(imageName,"_nearest",crit,".csv")
 write_csv(nupNearErgDF,file.path(inputFolder, outputNearest))
-outputTrials = paste0("simulations",crit,".csv")
+outputTrials = paste0(imageName,"_simulations",crit,".csv")
 write_csv(as.data.frame(results),file.path(inputFolder, outputTrials))
-outputHisto = paste0("simulations_plot",crit,".png")
+outputHisto = paste0(imageName,"_simulations_plot",crit,".png")
 ggsave(file.path(inputFolder, outputHisto))

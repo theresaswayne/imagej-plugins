@@ -21,7 +21,7 @@ while (nImages>0) { // clean up open images
 	close();
 	}
 print("\\Clear"); // clear Log window
-
+run("Collect Garbage"); // clear memory
 
 // close one or more results windows
 while (isOpen("Results")) {
@@ -311,6 +311,8 @@ function processImage(nupFolder, ergFolder, name, outDir, suffix, dist)
 	while (isOpen(distTableName)) {
 	 	selectWindow(distTableName); 
 	 	run("Close" );
+	 	
+	run("Collect Garbage");
 	}
 } // end processImage function
 
