@@ -13,7 +13,9 @@
 //		table giving IDs of closest associated Erg object for each Nup object, or 0 if no associated object
 
 // TODO: Collect counts in a simple table
-// TODO: Rename Nup and Erg ROIs in association tables
+
+// Limitation: Erg count of associations could be inaccurate if the same LD is associated with 2 Nup aggregates
+
 
 // setup general
 while (nImages>0) { // clean up open images
@@ -34,6 +36,17 @@ run("3D Manager Options", "volume feret centroid_(pix) centroid_(unit) distance_
 
 // dataset counter
 n = 0;
+
+// collect association counts in a table with a time/date stamp
+headerString = "ImageName,TotalNup,TotalErg,AssociatedNup";
+getDateAndTime(year, month, dayOfWeek, dayOfMonth, hour, minute, second, msec);
+timeString = year + "-" + month + "-" + dayOfMonth + "-" + hour + "-" + minute;
+summaryName = timeString + "_results.csv";
+summaryFile = outDir + File.separator + summaryName;
+if (File.exists(summaryFile)==false) { // start the file with headers
+	File.append(headerString, summaryFile);	
+	print("Added headings");
+    }
 
 
 // ---- Commands to run the processing functions
@@ -136,6 +149,7 @@ function processImage(nupFolder, ergFolder, name, outDir, suffix, dist)
 		Ext.Manager3D_SelectFor(nupCount, allCount, 1); // select all the ergs
 		Ext.Manager3D_Rename("Erg");
 		Ext.Manager3D_DeselectAll();
+		ergCount = allCount - nupCount;
 	}
 	else {
 		ergCount = 0;
@@ -195,13 +209,19 @@ function processImage(nupFolder, ergFolder, name, outDir, suffix, dist)
 			print("No data in table between",nupTitle, "and",ergTitle);
 		}
 		print("total associations: ",assocCount);
-	
+		
+		// collect association counts in a table
+		//headerString = "ImageName,TotalNup,TotalErg,AssociatedNup";
+		summaryString = imageBasename + "," + nupCount + "," + ergCount + "," + assocCount;
+		File.append(summaryString, summaryFile);
 	
 		// generate an image of only the associated Nups
 		Ext.Manager3D_Reset();
 		selectWindow(nupTitle);
 		run("Duplicate...", "title=nupAssoc duplicate");
 		Ext.Manager3D_AddImage();
+		Ext.Manager3D_SelectAll();
+		Ext.Manager3D_Rename("Nup");
 		Ext.Manager3D_DeselectAll();
 		
 		Ext.Manager3D_MultiSelect();
@@ -234,6 +254,8 @@ function processImage(nupFolder, ergFolder, name, outDir, suffix, dist)
 		selectWindow(ergTitle);
 		run("Duplicate...", "title=ergAssoc duplicate");
 		Ext.Manager3D_AddImage();
+		Ext.Manager3D_SelectAll();
+		Ext.Manager3D_Rename("Erg");
 		Ext.Manager3D_DeselectAll();
 		
 		// make a list of nonassociated Ergs, that is everything that is not in the ergAssocs array
