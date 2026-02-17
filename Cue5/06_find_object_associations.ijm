@@ -11,7 +11,7 @@
 //		3D Manager size/position measurements for all objects and associated objects;
 //		table giving IDs of closest associated Erg object for each Nup object, or 0 if no associated object
 
-// TODO: Catch error and show message if no objects found in either of the original datasets 
+// TODO: Collect counts in a simple table
 
 // setup general
 while (nImages>0) { // clean up open images
