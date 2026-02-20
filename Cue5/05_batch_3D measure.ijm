@@ -109,6 +109,9 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 	binPath = binInputFolder + File.separator + binFile;
 	if (!(File.exists(binPath))) {
 		print("No segmented image found for", basename);
+		selectWindow("dup");
+		close();
+		run("Collect Garbage");
 		return; // go to next file in folder
 	}
 	else {
@@ -130,6 +133,7 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 		Stack.getStatistics(area, mean, min, max, std, histogram);
 		if (max == 0) {
 			print("No objects in", basename);
+			run("Collect Garbage");
 			continue;
 		}
 		else {
