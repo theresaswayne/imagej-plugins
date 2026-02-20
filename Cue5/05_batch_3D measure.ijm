@@ -102,6 +102,8 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 	selectWindow(imgFile);
 	close();
 
+	wait(1000); // a little space to let things catch up
+	
 	// check for the segmented image
 	binFile = basename + "_seg.tif";
 	
@@ -134,7 +136,8 @@ function processFile(imgInputFolder, binInputFolder, outputFolder, imgFile, file
 		if (max == 0) {
 			print("No objects in", basename);
 			run("Collect Garbage");
-			continue;
+			//continue;
+			return; // go to next file in folder
 		}
 		else {
 			run("3D Objects Counter", "threshold=1 slice=10 min.=1 max.=723975 statistics");

@@ -1,6 +1,6 @@
-# batch_template.R
+# shuffle_labels_batch.R
 
-# Theresa Swayne, Columbia University, 2025
+# Theresa Swayne, Columbia University, 2026
 # -------- Suggested text for acknowledgement -----------
 #   "These studies used the Confocal and Specialized Microscopy Shared Resource 
 #   of the Herbert Irving Comprehensive Cancer Center at Columbia University, 
@@ -44,6 +44,7 @@ dir.create(outputFolder) # creates within the input folder if it does not alread
 # change the pattern if needed to match other file types
 
 files <- list.files(inputFolder, pattern = filenameString)
+files <- sort(files)
 
 # ----- Function to process a single file ------
 
@@ -117,8 +118,11 @@ process_file_func <- function(f, out) {
     
     # create an output table comparing experimental to shuffled
     summary <- data.frame(Filename = imageName)
-    summary <- summary %>% mutate(NupCount = nupCount) %>%
-      mutate(ErgCount = ergCount) %>%
+    summary <- summary %>% 
+      mutate(NupCount = nupCount) %>%
+      mutate(ErgCount = ergCount)
+    
+    summary <- summary %>%
       mutate(NupColoc = totalColoc) %>%
       mutate(FxnNupColoc = totalColoc/nupCount) %>%
       mutate(SimColoc = mean(results)) %>%
