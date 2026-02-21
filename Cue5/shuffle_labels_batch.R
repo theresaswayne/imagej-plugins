@@ -14,7 +14,7 @@
 # Remove the M_ from the filename for nicer output.
 
 # ---- Parameters ----
-distCriterion = 0.4 # center-center distance in MICRONS to define association
+distCriterion = 0.6 # center-center distance in MICRONS to define association
 trials = 1000 # number of shuffles to do
 filenameString = "*_allMeas.csv"
 
@@ -126,7 +126,7 @@ process_file_func <- function(f, out) {
       mutate(NupColoc = totalColoc) %>%
       mutate(FxnNupColoc = totalColoc/nupCount) %>%
       mutate(SimColoc = mean(results)) %>%
-      mutate(FxnSimColoc = mean(results)/nupCount) %>% 
+      mutate(FxnSimColoc = mean(results)/nupCount)
       
     
     

@@ -51,7 +51,14 @@ if (File.exists(summaryFile)==false) { // start the file with headers
 
 processFolder(NupFolder, ErgFolder, outDir, suffix, dist); // actually do the analysis
 showMessage("Finished.");
-//setBatchMode(false);
+run("Clear Results");
+print("Finished");
+
+// save Log
+selectWindow("Log");
+saveAs("text", outDir + File.separator + "Log.txt");
+
+
 
 // ---- Function for processing folders
 function processFolder(inputNup, inputErg, outputdir, suffix, distance) 
@@ -227,7 +234,7 @@ function processImage(nupFolder, ergFolder, name, outDir, suffix, dist)
 		for (j = 0; j < nonAssocCount; j++) {
 			nupObject = nupNonAssocs[j];
 			nupIndex = nupObject-1;
-			print("Selecting ROI index",nupIndex,",Nup object number",nupObject);
+			//print("Selecting ROI index",nupIndex,",Nup object number",nupObject);
 			Ext.Manager3D_Select(nupIndex);
 		}
 		
@@ -273,7 +280,7 @@ function processImage(nupFolder, ergFolder, name, outDir, suffix, dist)
 		
 			ergObject = ergNonAssocs[k];
 			ergIndex = ergObject-1;
-			print("Selecting ROI index",ergIndex,",Erg object number",ergObject);
+			//print("Selecting ROI index",ergIndex,",Erg object number",ergObject);
 			Ext.Manager3D_Select(ergIndex);
 		}
 		
