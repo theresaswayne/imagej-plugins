@@ -15,9 +15,6 @@
 // File name constraint: The label image name must be the name of the fluorescence image plus "_seg"
 
 //	Limitation -- cannot have >1 dots in the filename
-//  Limitation -- runs out of memory after ~100 cropped cell images (~1.4MB ea). 
-//  Recommended to aliquot datasets into groups. (Only the raw images need to be aliquoted)
-// Also restart fiji after each run
 // 	
 
 // Updated to use 3D Manager rather than 3D Object Counter as 3D OC is older and less efficient with memory -- tended to fail on a large (>100 image) dataset
@@ -140,7 +137,7 @@ function processFile(imgInputFolder, segInputFolder, outputFolder, imgFile, file
 	// open the segmented image
 	segPath = segInputFolder + File.separator + segFile;
 	if (!(File.exists(segPath))) {
-		logString = "No segmented image found for " + basename + "/n");
+		logString = "No segmented image found for " + basename + "/n";
 		File.append(logString, logFile);
 		//print("No segmented image found for", basename);
 		close("*");
