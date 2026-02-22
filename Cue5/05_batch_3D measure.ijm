@@ -111,7 +111,7 @@ function processFile(imgInputFolder, segInputFolder, outputFolder, imgFile, file
 	basename = substring(imgFile, 0, dotIndex);
 	extension = substring(imgFile, dotIndex);
 	
-	logString = "Processing file " + fileNumber + " at path " + imgPath + " with basename " + basename+ "/n";
+	logString = "Processing file " + fileNumber + " at path " + imgPath + " with basename " + basename;
 	File.append(logString, logFile);	
 
 	// open the image file
@@ -137,7 +137,7 @@ function processFile(imgInputFolder, segInputFolder, outputFolder, imgFile, file
 	// open the segmented image
 	segPath = segInputFolder + File.separator + segFile;
 	if (!(File.exists(segPath))) {
-		logString = "No segmented image found for " + basename + "/n";
+		logString = "No segmented image found for " + basename;
 		File.append(logString, logFile);
 		//print("No segmented image found for", basename);
 		close("*");
@@ -165,7 +165,7 @@ function processFile(imgInputFolder, segInputFolder, outputFolder, imgFile, file
 		selectWindow("seg");
 		Stack.getStatistics(area, mean, min, max, std, histogram);
 		if (max == 0) {
-			logString = "No objects in " + basename + "/n";
+			logString = "No objects in " + basename;
 			File.append(logString, logFile);
 			//print("No objects in", basename);
 			run("Collect Garbage");
@@ -180,7 +180,7 @@ function processFile(imgInputFolder, segInputFolder, outputFolder, imgFile, file
 			Ext.Manager3D_DeselectAll();
 			Ext.Manager3D_Count(objCount); // number of objects
 			
-			logString = "Found " + objCount + " objects in image " + basename + "/n";
+			logString = "Found " + objCount + " objects in image " + basename;
 			File.append(logString, logFile);
 			//print("Found", objCount, "objects in image", basename);
 			
