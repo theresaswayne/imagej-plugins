@@ -9,17 +9,30 @@ require(ggplot2)
 require(ggpubr)
 require(ggbeeswarm)
 
-# these commands assume you've loaded a dataset called df
+# **** Before running these commands, update parameters and load dataset as df ****
 
-# parse the filename to get genotype (1st 6 chars of ImageName) 
-#    and treatment (search for CON or 6hrDTT)
+# ---- Gather information on dataset and groups ---- 
+
+# parse image filename to get genotype (1st 6 chars) 
+#    and treatment (search for CON or 6hr)
+
+# **** change data name and levels as needed here!! ****
+dataName = "Nup159"
 geno <- substr(df$filename, 0, 6)
 treat <- substr(df$filename, 8, 10)
-table(geno, treat) #gives n(particles)
 
+# how many observations per group?
+# count number of rows; detects NAs ONLY if they are in the geno and treat columns
+table(geno, treat, useNA = "ifany") 
+
+# how many NAs?
+# count fraction of NAs anywhere in the dataset (including columns we are not analyzing)
+df <- df %>% select(-`...19`)
+fxnNA <- sum(is.na(df))/(sum(is.na(df)) + sum(!is.na(df)))
+# convert groups of interest to factors with human-readable labels
 geno_factor <- factor(geno,
                        levels = c("CTY132", "CTY212"),
-                       labels = c("WT", "cue5del"))
+                       labels = c("WT", "cue5∆"))
 
 treat_factor <- factor(treat,
                        levels = c("CON", "6hr"),
@@ -28,19 +41,25 @@ treat_factor <- factor(treat,
 df_mod <- df %>% mutate(Genotype = geno_factor, .after = filename)
 df_mod <- df_mod %>% mutate(Treatment = treat_factor, .after = Genotype)
 
-# count particles per cell
+# ---- Determine average counts per cell by group ----
+
+# count particles per cell across all groups
 counts <- df_mod %>% 
   group_by(filename, Genotype, Treatment) %>% 
   summarise(ObjectsInCell = n())
 
-# find average particles per cell in different groups
+# check for missing data
+# use drop_na(columnName) if any are found
+fxnNAcounts <- sum(is.na(counts$ObjectsInCell))/(sum(is.na(counts$ObjectsInCell)) + sum(!is.na(counts$ObjectsInCell)))
+
+# find average particles per cell in different groups, to 2 decimal places
 counts_summ <- counts %>% group_by(Genotype, Treatment) %>%
   summarise(ObjectsInCell = round(mean(ObjectsInCell), 2), 
             nCells = n())
 
 # save count tables in R working directory
-write_csv(counts, "particle_counts.csv")
-write_csv(counts_summ, "particle_counts_summary.csv")
+write_csv(counts, paste0(dataName,"_particle_counts.csv"))
+write_csv(counts_summ, paste0(dataName,"_particle_counts_summary.csv"))
             
 # visualize in a box plot
 
@@ -62,21 +81,25 @@ write_csv(counts_summ, "particle_counts_summary.csv")
 #   facet_wrap(~Genotype) +
 #   theme(legend.position="none")
 
-q <- ggplot(counts, aes(x=Treatment,y=ObjectsInCell, fill = Treatment)) +
+q <- ggplot(counts, aes(x=Treatment,y=ObjectsInCell, fill = Treatment, na.rm = TRUE)) +
   geom_boxplot() +
   scale_fill_manual(values = c("white", "grey")) +
-  theme_minimal() +
+  theme_minimal(base_size = 24) +
   facet_wrap(~Genotype) +
-  theme(legend.position="none")
+  stat_summary(fun=mean, geom="point", shape=18,
+                 size=3, color="red") +
+  theme(legend.position="none") +
+  labs(y = "Puncta Per Cell")
 
-ggsave("boxplot.pdf", width=7, height = 7)
+ggsave(paste0(dataName,"_count_boxplot.png"), width=5, height = 5)
+
 
 # basic hypothesis testing
 
 wt_con <- counts %>% filter(Genotype == "WT" & Treatment == "control")
 wt_dtt <- counts %>% filter(Genotype == "WT" & Treatment == "DTT")
-cue5_con <- counts %>% filter(Genotype == "cue5del" & Treatment == "control")
-cue5_dtt <- counts %>% filter(Genotype == "cue5del" & Treatment == "DTT")
+cue5_con <- counts %>% filter(Genotype == "cue5∆" & Treatment == "control")
+cue5_dtt <- counts %>% filter(Genotype == "cue5∆" & Treatment == "DTT")
 
 #are variances equal? NO
 v <- var.test(ObjectsInCell ~ Genotype, data = counts)
@@ -107,8 +130,6 @@ w[[3]] # p-value
 # compare wt DTT vs cue5 DTT
 w <- wilcox.test(wt_dtt$ObjectsInCell, cue5_dtt$ObjectsInCell, exact = FALSE) 
 w[[3]] # p-value
-
-# non-parametric test
 
 # Analysis of Variance (ANOVA)
 res<- lm(ObjectsInCell ~ Genotype, data = counts)
