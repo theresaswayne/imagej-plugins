@@ -1,0 +1,7 @@
+// paste this text into the Batch Process window in ImageJ/Fiji 
+//     (Process > Batch > Macro)
+// Set your pixel size (um per pixel) in the next line:
+
+pixsize = 0.7154;
+run("Properties...", "pixel_width=&pixsize pixel_height=&pixsize"); 
+Stack.setXUnit("um"); 

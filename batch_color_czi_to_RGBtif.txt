@@ -1,0 +1,13 @@
+// paste this text into the Batch Process window in ImageJ/Fiji 
+//     (Process > Batch > Macro)
+
+getPixelSize(unit, pw, ph, pd); // find out the scale set by Zen
+run("Conversions...", " ");  // make sure the image is not rescaled
+Stack.setDisplayMode("composite"); // display all channels
+resetMinAndMax(); // reset display contrast
+run("RGB Color");  // convert to RGB tiff
+run("Gamma...", "value=0.45"); // set gamma to the standard histology value
+run("Properties...", "pixel_width=&pw pixel_height=&ph"); // set pixel size on the new image
+Stack.setXUnit("um"); // set size unit on the new image
+
+run("Conversions...", " scale");  // reset conversion behavior to default
