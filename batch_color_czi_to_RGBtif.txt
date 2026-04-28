@@ -3,8 +3,15 @@
 
 getPixelSize(unit, pw, ph, pd); // find out the scale set by Zen
 run("Conversions...", " ");  // make sure the image is not rescaled
+Stack.setDisplayMode("color"); // display indiv channels
+Stack.setChannel(1);
+setMinAndMax(0, 255);
+Stack.setChannel(2);
+setMinAndMax(0, 255);
+Stack.setChannel(3);
+setMinAndMax(0, 255);
 Stack.setDisplayMode("composite"); // display all channels
-resetMinAndMax(); // reset display contrast
+//resetMinAndMax(); // reset display contrast
 run("RGB Color");  // convert to RGB tiff
 run("Gamma...", "value=0.45"); // set gamma to the standard histology value
 run("Properties...", "pixel_width=&pw pixel_height=&ph"); // set pixel size on the new image
